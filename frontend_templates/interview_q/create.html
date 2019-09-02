@@ -1,0 +1,16 @@
+<h2>Create Interview Question</h2>
+
+<h3>Step 0: Name Your Question:</h3<br/>
+
+<h3>Step 1: Define Your API</h3><br/>
+
+<h3>Step 2: Provide Useful Example Code</h3><br />
+
+<h3>Step 3: Write Your Question</h3>
+
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Create Interview Question</button>
+</form>

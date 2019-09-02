@@ -1,0 +1,13 @@
+{% if user %}
+Your Interview Questions: <br />
+<ul>
+    {% for interview_q in interview_questions %}
+    <li><a href="/interview_q/question/{{template.id}}">{{ interview_q.name }}</a></li>
+    {% endfor %}
+</ul>
+<br />
+Create a new interview question: <br />
+<a href="/interview_questions/create">Create</a>
+
+{% else %}
+{% endif %}
