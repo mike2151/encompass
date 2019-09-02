@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'interview_q_instance',
     'api_q',
     'method_signature',
+    'example_code'
 ]
 
 MIDDLEWARE = [

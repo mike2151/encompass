@@ -2,7 +2,7 @@
 Your Interview Questions: <br />
 <ul>
     {% for interview_q in interview_questions %}
-    <li><a href="/interview_q/question/{{template.id}}">{{ interview_q.name }}</a></li>
+    <li><a href="/interview_questions/question/{{interview_q.id}}">{{ interview_q.name }}</a></li>
     {% endfor %}
 </ul>
 <br />
