@@ -3,6 +3,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic import ListView
 from .forms import InterviewQuestionCreationForm
 from .models import InterviewQuestion
+from interview_q_instance.models import InterviewQuestionInstance
 from api_q.models import InterviewAPI
 from example_code.models import ExampleCode
 from method_signature.models import Method
@@ -68,3 +69,17 @@ class IndividualQuestionView(View):
 
 class CreateQuestionInstanceView(View):
     template_name = "interview_q/create_instance.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+    def post(self, request,  *args, **kwargs):
+        user_email = self.request.POST.get('email_of_user', '')
+        path = self.request.path
+        # get the question id from path
+        question_id_num = int(path.split("/")[2])
+        base_question = InterviewQuestion.objects.get(pk=question_id_num)
+        if len(user_email) == 0:
+            return render(request, self.template_name, {"error_message": "email field not filled out"})
+        question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question)
+        question_instance.save()
+        return HttpResponseRedirect("/interview_questions/")
+        

@@ -1,0 +1,11 @@
+{% if user %}
+Your Interview Questions To Answer: <br />
+<ul>
+    {% for question in questions %}
+    <li><a href="/questions/answer/{{question.id}}">{{ question.base_question.name }}</a></li>
+    {% endfor %}
+</ul>
+<br />
+
+{% else %}
+{% endif %}

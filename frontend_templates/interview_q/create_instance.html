@@ -1,0 +1,18 @@
+{% load static %}
+<script src="{% static 'main/js/create.js' %}"></script>
+
+<h2>Send Interview Question To User</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <div id="form_errors">
+        {% if error_message %}
+            {{ error_message }}
+        {% endif %}
+    </div>
+
+    <label htmlFor="email_of_user">User Email</label>
+    <input id="email_of_user" maxlength="128" name="email_of_user" type="email" /><br />
+    
+    <button type="submit">Send Interview Question</button>
+</form
