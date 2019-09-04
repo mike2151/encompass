@@ -11,13 +11,17 @@
         {% endif %}
     </div>
 
-    <h3>Step 0: Name Your Question:</h3><br />
+    <h3>Step 0: Name + Description of Your Question:</h3><br />
         <label htmlFor="name">Name of Question</label>
         <input id="name" maxlength="128" name="name" type="text" /><br />
-        
-    <h3>Step 1: Define Your API</h3><br />
+    
+    <h3>Step 1: Write Your Code (Class)</h3><br />
+    <label htmlFor="supporting_code">Supporting Code</label> <br />
+    <textarea id="supporting_code" name="supporting_code"></textarea><br/>
 
-    <label htmlFor="api_description">Description of Question</label>
+    <h3>Step 2: Define Your API</h3><br />
+
+    <label htmlFor="api_description">Description of API</label> <br />
     <textarea id="api_description" name="api_description"></textarea><br/>
 
         <div id="api_fields">
@@ -29,7 +33,7 @@
         <button type="button" onclick="add_api_field()">Add</button>
 
 
-    <h3>Step 2: Provide Useful Example Code</h3><br />
+    <h3>Step 3: Provide Useful Example Code</h3><br />
         <div id="code_fields">
             <div>
                 <label htmlFor="code_body_1">Code:</label><br/>
@@ -38,10 +42,19 @@
         </div>
         <button type="button" onclick="add_code_body()">Add</button>
 
-    <h3>Step 3: Write Your Question</h3><br>
+    <h3>Step 4: Write Your Question</h3><br>
 
     <label htmlFor="description">Description of Question</label>
     <input id="description" maxlength="128" name="description" type="text" /><br/>
 
+    <h3>Step 5: Provide Test Cases</h3><br />
+    <div id="test_cases">
+        <div>
+            <label htmlFor="test_case_1">Test Case:</label><br/>
+            <textarea id="test_case_1" name="test_case_1" ></textarea><br />
+        </div>
+    </div>
+    <button type="button" onclick="add_test_case()">Add</button>
+    <br /><br />
     <button type="submit">Create Interview Question</button>
-</form
+</form>

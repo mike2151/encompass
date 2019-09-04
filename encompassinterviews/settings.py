@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
+SILENCED_SYSTEM_CHECKS = ['urls.W002', 'security.W019']
+
 
 # Application definition
 
@@ -46,7 +48,11 @@ INSTALLED_APPS = [
     'interview_q_instance',
     'api_q',
     'method_signature',
-    'example_code'
+    'example_code',
+    'compile',
+    'interview_code_file',
+    'interview_test_case',
+    'submission_result'
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,6 @@
 from django.db import models
 
-class Method(models.Model):
-    body = models.TextField()
+class MethodSignature(models.Model):
+    api_signature = models.TextField(default="")
+    method_description = models.TextField(default="")
     interview_question_api = models.ForeignKey('api_q.InterviewAPI', on_delete=models.CASCADE)

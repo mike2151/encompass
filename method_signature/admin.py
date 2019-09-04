@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import Method
+from .models import MethodSignature
 
-admin.site.register(Method)
+admin.site.register(MethodSignature)

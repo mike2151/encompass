@@ -11,7 +11,7 @@
 
   <!-- Bootstrap core CSS -->
   <link href="{% static 'main/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'main/css/answer.css' %}" rel="stylesheet">
+  <link href="{% static 'main/css/answer.css' %}" rel="stylesheet"  type="text/css">
 
 </head>
 
@@ -19,7 +19,7 @@
     <!-- Navigation -->
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-          <a class="navbar-brand" href="index.html">Encompass Interviews</a>
+          <a class="navbar-brand" href="/">Encompass Interviews</a>
           <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -60,22 +60,64 @@
     <div class="main_container">
         <div class="row">
                 <div class="col-lg-3 mb-3">
+                    <center><h2>OVERVIEW</h2></center>
+                    <center><h2>QUESTION</h2></center>
+                    {{ question.base_question.description }}
                     <center><h2>API DOCUMENTATION</h2></center>
+                    <ul>
+                    {% for api_method in api_methods %}
+                      <li>{{ api_method.api_signature }}</li>
+                    {% endfor %}
+                    </ul>
+                    
+                    <center><h2>EXAMPLE CODE</h2></center>
+                    <ul>
+                        {% for example_code in example_code_snippets %}
+                          <li>{{ example_code.body }}</li>
+                        {% endfor %}
+                        </ul>
                 </div>
-                <div class="col-lg-9 mb-9">
-                    <div class="col-lg-9 mb-9">
-                        Action Bar
-                    </div>
-                    <div class="col-lg-9 mb-9">
-                        Editor
-                    </div>
-                    <div class="col-lg-9 mb-9">
-                        Terminal
-                    </div>
-                </div>
+                  <div class="col-lg-9 mb-9">
+                      <form method="post">
+                      {% csrf_token %}
+                      <div class="col-lg-9 mb-9" style="background-color: #DCDCDC; max-width: 100%;">
+                        <div style="float: right">
+                            <button type="button" class="btn btn-info">Question</button>
+                            <button type="button" class="btn btn-info">API</button>
+                            <button type="button" class="btn btn-info">Example Code</button>
+                            <button type="button" class="btn btn-light">Run Code</button>
+                            <button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button>
+                        </div>
+                      </div>
+                      <br />
+                      <div class="col-lg-9 mb-9" style="max-width: 100%">
+                        
+                        <div id="editor" style="height: 70vh; width: 100%">print("hello world")</div>
+                        <textarea name="editor"></textarea>
+                      </div>
+                      <div class="col-lg-9 mb-9">
+                          Test Cases <br/>
+                          Enter Your Test Case: </br>
+                          <textarea id="test case">Test Goes Here</textarea><br />
+                          Output
+
+                      </div>
+                      </form>
+                  </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
+    <script>
+      var editor = ace.edit("editor");
+      editor.setTheme("ace/theme/chrome");
+      editor.session.setMode("ace/mode/python");
 
-    
-</body>
+      var textarea = $('textarea[name="editor"]').hide();
+      textarea.val(editor.getSession().getValue());
+      editor.getSession().on('change', function(){
+        textarea.val(editor.getSession().getValue());
+      });
+  </script>
+  </body>
 </html>

@@ -22,5 +22,7 @@ urlpatterns = [
     path('users/', include('django.contrib.auth.urls')),
     path('interview_questions/', include('interview_q.urls')),
     path('questions/answer', include('interview_q_instance.urls')),
-    path('', include('info.urls'))
+    path('', include('info.urls')),
+    path('compile/', include('compile.urls'))
+    paht('results/', include('submission_result.urls'))
 ]

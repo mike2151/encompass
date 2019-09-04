@@ -1,6 +1,12 @@
 from django.views import View
 from django.shortcuts import render
 from .models import InterviewQuestionInstance
+from method_signature.models import MethodSignature
+from example_code.models import ExampleCode
+from .util import create_submission
+from compile.util.runner import run_code
+from django.http import HttpResponseRedirect
+from submission_result.models import SubmissionResult
 
 class AllQuestionsToAnswerView(View):
     template_name = "interview_q_instance/browse.html"
@@ -13,4 +19,36 @@ class QuestionAnswerView(View):
     template_name = "interview_q_instance/answer.html"
     def get(self, request, *args, **kwargs):
         question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
-        return render(request, self.template_name, {'question': question})
+        api_methods = MethodSignature.objects.filter(interview_question_api=question.base_question.api)
+        example_code_snippets = ExampleCode.objects.filter(interview_question=question.base_question)
+
+        return render(request, self.template_name, {
+            'question': question,
+            'api_methods': api_methods,
+            'example_code_snippets': example_code_snippets
+            })
+
+    def post(self, request, *args, **kwargs):
+        if request.POST['action'] == 'submit_code':
+            question_instance_num = int((self.request.path.split("/")[3]))
+            question_instance = InterviewQuestionInstance.objects.get(pk=question_instance_num)
+            code_to_run = create_submission(self.request.POST['editor'], question_instance.base_question)
+            
+            passed = False
+            try:
+                output = run_code(code_to_run, 'python', 3)
+                result = output['result'] if 'result' in output else 'failed'
+                if len(result) == 0:
+                    passed = True
+                else:
+                    passed = False
+            except e:
+                passed = False
+            
+            # pass results to results page
+            submission_result = SubmissionResult(passed=passed)
+            submission_result.save()
+            question_instance.submission_result = submission_result
+            question_instance.save()
+            return HttpResponseRedirect("/results/" + submission_result.id)
+            

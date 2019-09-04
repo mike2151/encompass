@@ -1,3 +1,7 @@
 .main_container {
     margin-top: 5vh;
 }
+
+.action-bar-text {
+    font-size: 2em;
+}

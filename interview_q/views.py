@@ -3,10 +3,12 @@ from django.views.generic.edit import CreateView
 from django.views.generic import ListView
 from .forms import InterviewQuestionCreationForm
 from .models import InterviewQuestion
+from interview_code_file.models import InterviewCodeFile
+from interview_test_case.models import InterviewTestCase
 from interview_q_instance.models import InterviewQuestionInstance
 from api_q.models import InterviewAPI
 from example_code.models import ExampleCode
-from method_signature.models import Method
+from method_signature.models import MethodSignature
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -24,6 +26,12 @@ class CreateInterviewView(View):
             return render(request, self.template_name, {"error_message": "description field not filled out"})
         question = InterviewQuestion(name=name, description=description, creator=self.request.user)
         question.save()
+        
+        # handle supporting code
+        supporting_code = self.request.POST.get("supporting_code", "")
+        interview_code_file = InterviewCodeFile(body=supporting_code, interview_question=question)
+        interview_code_file.save()
+
         api_description = self.request.POST.get("api_description", "")
 
         # handle api methods
@@ -34,8 +42,10 @@ class CreateInterviewView(View):
             if curr_api_method == 1:
                 api = InterviewAPI(description=api_description)
                 api.save()
+                question.api = api
+                quesiton.save()
             # create new method object
-            method = Method(body=curr_field, interview_question_api=api)
+            method = MethodSignature(api_signature=curr_field, interview_question_api=api)
             method.save()
             curr_api_method = curr_api_method + 1
             curr_field = self.request.POST.get('api_method_' + str(curr_api_method), '')
@@ -48,6 +58,15 @@ class CreateInterviewView(View):
             example_code.save()
             curr_code_body_num = curr_code_body_num + 1
             curr_body = self.request.POST.get('code_body_' + str(curr_code_body_num), '')
+
+        # handle test cases
+        curr_test_case_num = 1
+        curr_test_case = self.request.POST.get('test_case_' + str(curr_test_case_num), '')
+        while (len(curr_test_case) > 0):
+            test_case = InterviewTestCase(body=curr_test_case, interview_question=question)
+            test_case.save()
+            curr_test_case_num = curr_test_case_num + 1
+            curr_test_case = self.request.POST.get('test_case_' + str(curr_test_case_num), '')
 
         return HttpResponseRedirect("/interview_questions/")
 
