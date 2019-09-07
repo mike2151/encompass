@@ -20,3 +20,36 @@ body {
 .portfolio-item {
   margin-bottom: 30px;
 }
+
+.image-title {
+  color: white;
+  margin-top: 8vh;
+  margin-left: 8vw;
+  max-width: 30vw;
+}
+
+.image-title, h1 {
+  font-size: 1.5em;
+}
+
+.image-button {
+  background-color:#4acf6d;
+	-moz-border-radius:42px;
+	-webkit-border-radius:42px;
+	border-radius:42px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:1.2em;
+	font-weight:bold;
+	padding:2vh 4vw;
+  text-decoration:none;
+  margin-left: 10vw;
+  margin-top: 4vh;
+}
+
+.image-button, a:hover {
+  text-decoration: none;
+  color: white;
+}

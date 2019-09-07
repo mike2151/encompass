@@ -1,75 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'main/css/homepage.css' %}" rel="stylesheet">
+{% endblock %}
 
-  <title>Encompass Interviews</title>
 
-  <!-- Bootstrap core CSS -->
-  <link href="{% static 'main/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-
-  <!-- Custom styles for this template -->
-  <link href="{% static 'main/css/modern-business.css' %}" rel="stylesheet">
-
-</head>
-
-<body>
-
-  <!-- Navigation -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">Encompass Interviews</a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contact">Contact</a>
-          </li>
-          {% if user %}
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Interview Questions
-              </a>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                <a class="dropdown-item" href="/questions/answer">Answer</a>
-                <a class="dropdown-item" href="/interview_questions">Create</a>
-              </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/users/logout">Logout</a>
-            </li>
-          {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="/users/login">Login</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/users/signup">Sign Up</a>
-            </li>
-          {% endif %}
-          
-        </ul>
-      </div>
-    </div>
-  </nav>
-
+{% block content %}
   <header>
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner" role="listbox">
-        <!-- Slide One - Set the background image for this slide in the line below -->
-        <div class="carousel-item active" style="background-image: url('http://placehold.it/1900x1080')">
-          <div class="carousel-caption d-none d-md-block">
-            <h3>First Slide</h3>
-            <p>This is a description for the first slide.</p>
+        <div class="carousel-item active" style="background-color: #7373fd">
+          <div class="image-title">
+            <h1>Join the Interview <br/> Question Revolution</h1>
+            <p>Stop using low signal algorithm interview questions. Interview like you were doing a job.</p>
           </div>
+          <a class="image-button" href="/users/signup">Sign Up</a>
+          <img class="image-screenshot">
+          Screenshot goes here
         </div>
       </div>
     </div>
@@ -240,6 +187,4 @@
   <script src="{% static 'main/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'main/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-</body>
-
-</html>
+{% endblock %}

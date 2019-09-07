@@ -1,13 +1,49 @@
-{% if user %}
-Your Interview Questions: <br />
-<ul>
-    {% for interview_q in interview_questions %}
-    <li><a href="/interview_questions/question/{{interview_q.id}}">{{ interview_q.name }}</a></li>
-    {% endfor %}
-</ul>
-<br />
-Create a new interview question: <br />
-<a href="/interview_questions/create">Create</a>
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+{% endblock %}
 
-{% else %}
-{% endif %}
+{% block content %}
+<div class="container" style="padding-top: 70px; max-width: 90vw;">
+    <div class="row">
+        <div class="col-sm-12">
+             {% if user %}
+                <section class="jumbotron text-center">
+                <div class="container">
+                    <h1 class="jumbotron-heading">Your Interview Questions:</h1>
+                    Create a new interview question: <br />
+                    <a href="/interview_questions/create" class="btn btn-primary">Create</a>
+                    </p>
+                </div>
+                </section>
+        
+                <div class="album py-5 bg-light">
+                <div class="container">
+                    <div class="row">
+                        {% for interview_q in interview_questions %}
+                            <div class="col-md-4">
+                                <div class="card mb-4 box-shadow">
+                                <div class="card-body">
+                                    <p class="card-text">{{ interview_q.name }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    </div>
+                                    <small class="text-muted">9 mins</small>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                </div>
+             
+
+            {% else %}
+            You are not authenticated
+            {% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}

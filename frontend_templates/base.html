@@ -1,13 +1,62 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Encompass Interviews</title>
+
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+  <link href="{% static 'main/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  {% block css_imports %}
+  {% endblock %}
 </head>
 <body>
-  <main>
-    {% block content %}
-    {% endblock %}
-  </main>
+  <!-- Navigation -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="/">Encompass Interviews</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact">Contact</a>
+            </li>
+            {% if user %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Interview Questions
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
+                  <a class="dropdown-item" href="/questions/answer">Answer</a>
+                  <a class="dropdown-item" href="/interview_questions">Create</a>
+                </div>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/users/logout">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                  <a class="nav-link" href="/users/login">Login</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/users/signup">Sign Up</a>
+              </li>
+            {% endif %}
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+  {% block content %}
+  {% endblock %}
 </body>
 </html>

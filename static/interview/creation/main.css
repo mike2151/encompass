@@ -1,0 +1,18 @@
+.step {
+    background-color: #e0e0e0;
+    padding: .6em;
+    margin-bottom: 5vh;
+}
+
+.step, label {
+    font-size: 1.2em;
+}
+
+.step-description {
+    text-align: center;
+}
+
+.step-title {
+    text-align: center;
+
+}

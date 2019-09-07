@@ -8,6 +8,7 @@ var add_api_field = function () {
     var name = "api_method_" + curr_method_number.toString();
 
     var textarea = document.createElement("textarea");
+    textarea.className = "form-control";
     textarea.setAttribute("id", name);
     textarea.setAttribute("name", name);
 
@@ -29,17 +30,18 @@ var add_code_body = function () {
     var name = "code_body_" + curr_code_number.toString();
 
     var textarea = document.createElement("textarea");
-    textarea.setAttribute("id", name);
     textarea.setAttribute("name", name);
 
-    var label = document.createElement("label");
-    label.innerHTML = "Code:";
-    label.setAttribute("htmlFor", name);
+    var editor = document.createElement("div");
+    editor.setAttribute("id", name);
+    editor.setAttribute("style", "height: 20vh; width: 100%; margin-bottom: 1vh");
 
-    added.appendChild(label);
+    added.appendChild(editor);
     added.appendChild(document.createElement("br"));
     added.appendChild(textarea);
     added.appendChild(document.createElement("br"));
+
+    textarea_edit(name);
     
     curr_code_number = curr_code_number + 1;
 }
@@ -52,6 +54,7 @@ var add_test_case = function () {
     var textarea = document.createElement("textarea");
     textarea.setAttribute("id", name);
     textarea.setAttribute("name", name);
+    textarea.className = "form-control";
 
     var label = document.createElement("label");
     label.innerHTML = "Test Case:";
