@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+{% endblock %}
+
+
+{% block content %}
+<center>
+<div style="padding-top: 10vh; max-width: 30vw;">
+    <form class="form-signin" method="post">
+      {% csrf_token %}
+      <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Send {{question.name}}</h1>
+      <label for="email">Interviewee Email address</label>
+      <input type="email" id="email" name="email" class="form-control" placeholder="Interviewee Email address" required autofocus><br />
+      <label for="start_date">Interview Start Date</label>
+      <input class="form-control" type="datetime-local" name="start_date"><br />
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+    </form>
+</div>
+</center>
+{% endblock %}

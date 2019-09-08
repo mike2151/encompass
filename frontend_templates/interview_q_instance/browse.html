@@ -1,11 +1,45 @@
-{% if user %}
-Your Interview Questions To Answer: <br />
-<ul>
-    {% for question in questions %}
-    <li><a href="/questions/answer/{{question.id}}">{{ question.base_question.name }}</a></li>
-    {% endfor %}
-</ul>
-<br />
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'interview/unanswered_questions.css' %}" rel="stylesheet">
+{% endblock %}
 
-{% else %}
-{% endif %}
+{% block content %}
+<div class="container" style="padding-top: 70px; max-width: 90vw;">
+    <div class="row">
+        <div class="col-sm-12">
+             {% if user %}
+                <section class="jumbotron text-center">
+                <div class="container">
+                    <h1 class="jumbotron-heading">Interview Questions Unanswered:</h1>
+                </div>
+                </section>
+        
+                <div class="album py-5 bg-light">
+                <div class="container">
+                    <div class="row">
+                        {% for question in questions %}
+                            <div class="col-md-4">
+                                <div class="card mb-4 box-shadow">
+                                <div class="card-body">
+                                    <center>
+                                    <p class="card-text question-card-title">{{ question.base_question.name }}</p>
+                                    <p>Start Time: {{ question.start_time }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="/questions/answer/{{question.id}}" class="btn btn-outline-primary answer-btn">Answer</a>
+                                    </div>
+                                    </center>
+                                </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                </div>
+            {% else %}
+            You are not authenticated
+            {% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}

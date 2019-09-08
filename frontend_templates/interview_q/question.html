@@ -1,2 +1,141 @@
-{{ question.name }}
-<a href="/interview_questions/{{ question.id }}/create_instance">Create</a>
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'interview/creation/main.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 70px; max-width: 90vw;">
+    <div class="row">
+        <div class="col-sm-12">
+                <div class="py-5 text-center">
+                    <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
+                    <h2>Edit Interview Question: {{question.name}}</h2>
+                </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div id="form_errors">
+                    {% if error_message %}
+                        {{ error_message }}
+                    {% endif %}
+                </div>
+                <div class="form-group, step">
+                    <h2 class="step-title">Step 0: Basic Information About Your Question:</h2><br />
+                    <p class="step-description">In this step, provide a name for your question. 
+                        Additionally, provide the description of what the user has to do .
+                        This description will show up to the user.
+                    </p>
+                    <label htmlFor="name">Name of Question (Visible to users)</label>
+                    <input class="form-control" id="name" maxlength="128" name="name" type="text" value="{{question.name}}"/><br />
+
+                    <label htmlFor="description">Description of Question (Visible to users)</label>
+                    <textarea class="form-control" id="description" name="description" rows=5>{{question.description}}</textarea><br/>
+
+                    <label for="question_language">Question Language</label>
+                    <select class="form-control" id="question_language" name="question_language" selected="{{question.language}}">
+                        <option>Python3</option>
+                    </select> <br/>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_open">
+                        {% if question.is_open %}
+                            <label class="form-check-label" for="is_open" checked>
+                                    Make your question open to the public for all users?
+                            </label>
+                        {% else %}
+                            <label class="form-check-label" for="is_open">
+                                    Make your question open to the public for all users?
+                            </label>
+                        {% endif %} 
+                    </div>
+                </div>
+                <div class="form-group, step">
+                    <h2 class="step-title">Step 1: Write Your Supporting Code</h2><br />
+                    <p class="step-description">In this step, write the code that will run under the hood.
+                        This may be a class for instance.
+                    </p>
+                    <label>Supporting Code (Not visible to users)</label> <br />
+                    <div id="supporting_code" style="height: 20vh; width: 100%">class example:
+    def __init__(self):
+        self.value = 5
+    def return_value(self):
+        return self.value
+                    </div>
+                    <textarea name="supporting_code"></textarea>
+                </div>
+                <div class="form-group, step">
+                    <h1>Step 2: Define Your API</h1><br />
+                    <p class="step-description">In this step, you will declare what methods are available to the user via the API. For example, you might declare that the return_value function is available to them.</p>
+                    <label htmlFor="api_description">Description of API (Visible to users)</label> <br />
+                    <textarea class="form-control" id="api_description" name="api_description" rows=5></textarea><br/>
+
+                    <center><label>Methods Shown To The User (Visible to users)</label><hr /></center>
+                    <div id="api_fields">
+                        <div>
+                            <label htmlFor="api_method_1">Method:</label><br/>
+                            <textarea class="form-control" id="api_method_1" name="api_method_1" ></textarea><br />
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="add_api_field()">Add</button>
+
+                </div>
+                <div class="form-group, step">
+                    <h1>Step 3: Provide Starter Code</h1><br />
+                    <p class="step-description">In this step, you provide some starter code that the user can optionally fill out.</p>
+                    <label>Starter Code (visible to users)</label> <br />
+                    <div id="starter_code" style="height: 20vh; width: 100%"></div>
+                    <textarea name="starter_code"></textarea>
+                </div>
+                <div class="form-group, step">
+                <h1>Step 4: Provide Useful Example Code</h1><br />
+                    <p class="step-description">In this step, you provide example code snippets.</p>
+                    <div id="code_fields">
+                        <div>
+                            <div id="code_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh"></div>
+                            <textarea name="code_body_1"></textarea>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="add_code_body()">Add</button>
+                </div>
+                <div class="form-group, step">
+                    <h1>Step 5: Provide Test Cases</h1><br />
+                    <p class="step-description">In this step, you provide test cases.</p>
+                    <div id="test_cases" style="height: 20vh; width: 100%"></div>
+                    <textarea name="test_cases"></textarea>
+                </div>
+                <div class="form-group, step">
+                    <h1>Step 6: Provide A Solution</h1><br />
+                    <p class="step-description">In this step, you should provide a solution to ensure the code compiles. If you do not provide this, then the only way to validate behavior is to try out the question.</p>
+                    <div id="solution" style="height: 20vh; width: 100%"></div>
+                    <textarea name="solution"></textarea>
+                </div>
+                <br /><br />
+                <center><button class="btn btn-success create-button" type="submit">Edit Interview Question</button></center>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
+<script>
+    function textarea_edit(name) {
+        var editor = ace.edit(name);
+        editor.setTheme("ace/theme/chrome");
+        editor.session.setMode("ace/mode/python");
+
+        var textarea = $('textarea[name="' + name + '"]').hide();
+        textarea.val(editor.getSession().getValue());
+        editor.getSession().on('change', function(){
+            textarea.val(editor.getSession().getValue());
+        });
+    }
+    textarea_edit("supporting_code");
+    textarea_edit("starter_code");
+    textarea_edit("code_body_1");
+    textarea_edit("test_cases");
+    textarea_edit("solution");
+</script>
+<script src="{% static 'main/js/create.js' %}"></script>
+{% endblock %}

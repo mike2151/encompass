@@ -1,8 +1,9 @@
 from django.db import models
+from submission_result.models import SubmissionResult
 
 class InterviewQuestionInstance(models.Model):
     base_question = models.ForeignKey('interview_q.InterviewQuestion', on_delete=models.CASCADE)
-    submission_result = models.ForeignKey('submission_result.SubmissionResult', on_delete=models.CASCADE, null=True)
+    submission_result = models.ForeignKey(SubmissionResult, on_delete=models.CASCADE, null=True)
     interviewee_email = models.CharField(max_length=128)
     submission = models.TextField(blank=True, null=True)
     has_completed = models.BooleanField(default=False)

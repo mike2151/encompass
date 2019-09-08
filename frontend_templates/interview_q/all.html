@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css_imports %}
+<link href="{% static 'interview/all_created_questions.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -11,9 +12,6 @@
                 <section class="jumbotron text-center">
                 <div class="container">
                     <h1 class="jumbotron-heading">Your Interview Questions:</h1>
-                    Create a new interview question: <br />
-                    <a href="/interview_questions/create" class="btn btn-primary">Create</a>
-                    </p>
                 </div>
                 </section>
         
@@ -24,18 +22,23 @@
                             <div class="col-md-4">
                                 <div class="card mb-4 box-shadow">
                                 <div class="card-body">
-                                    <p class="card-text">{{ interview_q.name }}</p>
+                                    <p class="card-text question-card-title">{{ interview_q.name }}</p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <a type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                    </div>
-                                    <small class="text-muted">9 mins</small>
+                                        <div class="btn-toolbar">
+                                            <a href="/interview_questions/question/{{interview_q.id}}/send/" class="btn btn-outline-primary question-card-button">Send</a>
+                                            <a href="/interview_questions/question/{{interview_q.id}}/edit/" class="btn btn-outline-primary question-card-button">Edit</a>
+                                        </div>
                                     </div>
                                 </div>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
+                    
+                    <section class="jumbotron text-center">
+                        <h2 class="footer-title">Create a new interview question: </h2><br />
+                        <a href="/interview_questions/create" class="btn btn-lg btn-primary">Create</a>
+                    </section>
                     </div>
                 </div>
              

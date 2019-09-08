@@ -1,0 +1,9 @@
+.question-card-title {
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.answer-btn {
+    width: 100%;
+}

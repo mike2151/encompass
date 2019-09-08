@@ -64,3 +64,24 @@ body {
   margin-right: 20vw;
   margin-top: -20vh;
 }
+
+.about-section {
+  margin-top: 4vh;
+  max-width: 75%;
+}
+
+.about-section-header {
+  text-align: center;
+}
+
+.about-section-text {
+  color: #adadad;
+}
+
+.footer-header-text {
+  color: #ffffff;
+}
+
+.footer-section {
+  text-align: center;
+}
