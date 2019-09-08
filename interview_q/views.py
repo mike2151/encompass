@@ -12,6 +12,7 @@ from method_signature.models import MethodSignature
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from .utils import is_valid_test_case
 
 class CreateInterviewView(View):
     template_name = 'interview_q/create.html'
@@ -20,11 +21,14 @@ class CreateInterviewView(View):
     def post(self, request,  *args, **kwargs):
         name = self.request.POST.get('name', '')
         description = self.request.POST.get('description', '')
+        is_open = self.request.POST.get('is_open', False)
+        question_language = self.request.POST.get('question_language', '')
+        solution = self.request.POST.get('solution', '')
         if len(name) == 0:
             return render(request, self.template_name, {"error_message": "name field not filled out"})
         if len(description) == 0:
             return render(request, self.template_name, {"error_message": "description field not filled out"})
-        question = InterviewQuestion(name=name, description=description, creator=self.request.user)
+        question = InterviewQuestion(name=name, description=description, creator=self.request.user, is_open=is_open, language=question_language, solution=solution)
         question.save()
         
         # handle supporting code
@@ -60,13 +64,17 @@ class CreateInterviewView(View):
             curr_body = self.request.POST.get('code_body_' + str(curr_code_body_num), '')
 
         # handle test cases
-        curr_test_case_num = 1
-        curr_test_case = self.request.POST.get('test_case_' + str(curr_test_case_num), '')
-        while (len(curr_test_case) > 0):
-            test_case = InterviewTestCase(body=curr_test_case, interview_question=question)
-            test_case.save()
-            curr_test_case_num = curr_test_case_num + 1
-            curr_test_case = self.request.POST.get('test_case_' + str(curr_test_case_num), '')
+        all_test_cases_str = self.request.POST.get('test_cases', '')
+        all_test_cases = all_test_cases_str.split("\n\n")
+        if len(all_test_cases) > 0:
+            curr_test_case_num = 0
+            curr_test_case = all_test_cases[curr_test_case_num]
+            while (len(curr_test_case) > 0):
+                if is_valid_test_case(curr_test_case):
+                    test_case = InterviewTestCase(body=curr_test_case, interview_question=question)
+                    test_case.save()
+                    curr_test_case_num = curr_test_case_num + 1
+                    curr_test_case = all_test_cases[curr_test_case_num]
 
         return HttpResponseRedirect("/interview_questions/")
 

@@ -21,13 +21,6 @@ body {
   margin-bottom: 30px;
 }
 
-.image-title {
-  color: white;
-  margin-top: 8vh;
-  margin-left: 8vw;
-  max-width: 30vw;
-}
-
 .image-title, h1 {
   font-size: 1.5em;
 }
@@ -52,4 +45,22 @@ body {
 .image-button, a:hover {
   text-decoration: none;
   color: white;
+}
+
+.title-box {
+  float: left;
+}
+
+.image-title {
+  color: white;
+  margin-top: 8vh;
+  margin-left: 8vw;
+  max-width: 30vw;
+}
+
+.image-screenshot {
+  float: right;
+  position: relative;
+  margin-right: 20vw;
+  margin-top: -20vh;
 }

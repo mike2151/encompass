@@ -22,7 +22,7 @@
                     {% endif %}
                 </div>
                 <div class="form-group, step">
-                    <h2 class="step-title">Step 0: Name + Description of Your Question:</h2><br />
+                    <h2 class="step-title">Step 0: Basic Information About Your Question:</h2><br />
                     <p class="step-description">In this step, provide a name for your question. 
                         Additionally, provide the description of what the user has to do .
                         This description will show up to the user.
@@ -32,6 +32,18 @@
 
                     <label htmlFor="description">Description of Question (Visible to users)</label>
                     <textarea class="form-control" id="description" name="description" rows=5></textarea><br/>
+
+                    <label for="question_language">Question Language</label>
+                    <select class="form-control" id="question_language" name="question_language">
+                        <option>Python3</option>
+                    </select> <br/>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="is_open">
+                        <label class="form-check-label" for="is_open">
+                                Make your question open to the public for all users?
+                        </label>
+                    </div>
                 </div>
                 <div class="form-group, step">
                     <h2 class="step-title">Step 1: Write Your Supporting Code</h2><br />
@@ -73,22 +85,21 @@
                         </div>
                     </div>
                     <button type="button" onclick="add_code_body()">Add</button>
-               
                 </div>
-                <div class="form-group, step"></div>
+                <div class="form-group, step">
                     <h1>Step 4: Provide Test Cases</h1><br />
                     <p class="step-description">In this step, you provide test cases.</p>
-                    <div id="test_cases">
-                        <div>
-                            <label htmlFor="test_case_1">Test Case:</label><br/>
-                            <textarea id="test_case_1" name="test_case_1" ></textarea><br />
-                        </div>
-                    </div>
+                    <div id="test_cases" style="height: 20vh; width: 100%"></div>
+                    <textarea name="test_cases"></textarea>
                 </div>
-                <button type="button" onclick="add_test_case()">Add</button>
+                <div class="form-group, step">
+                    <h1>Step 5: Provide A Solution</h1><br />
+                    <p class="step-description">In this step, you should provide a solution to ensure the code compiles. If you do not provide this, then the only way to validate behavior is to try out the question.</p>
+                    <div id="solution" style="height: 20vh; width: 100%"></div>
+                    <textarea name="solution"></textarea>
+                </div>
                 <br /><br />
-                <p>Make your question open to the public for all users?</p>
-                <button type="submit">Create Interview Question</button>
+                <center><button class="btn btn-success create-button" type="submit">Create Interview Question</button></center>
             </form>
         </div>
     </div>
@@ -110,6 +121,8 @@
     }
     textarea_edit("supporting_code");
     textarea_edit("code_body_1");
+    textarea_edit("test_cases");
+    textarea_edit("solution");
 </script>
 <script src="{% static 'main/js/create.js' %}"></script>
 {% endblock %}
