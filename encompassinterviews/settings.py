@@ -55,7 +55,10 @@ INSTALLED_APPS = [
     'compile',
     'interview_code_file',
     'interview_test_case',
-    'submission_result'
+    'submission_result',
+    'starter_code',
+    'solution_code',
+    'django_cleanup'
 ]
 
 MIDDLEWARE = [

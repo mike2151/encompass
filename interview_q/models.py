@@ -7,11 +7,8 @@ class InterviewQuestion(models.Model):
     time_limit_minutes = models.IntegerField(default=60)
     language = models.CharField(max_length=128, default="Python3")
     api = models.ForeignKey('api_q.InterviewAPI', on_delete=models.SET_NULL, null=True)
-    starter_code = models.TextField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
-
-    solution = models.TextField(null=True)
 
     id = models.AutoField(primary_key=True)
     is_open = models.BooleanField(default=False)

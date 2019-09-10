@@ -1,4 +1,4 @@
-from interview_code_file.models import InterviewCodeFile
+from interview_code_file.models import SupportCode
 import textwrap
 from interview_test_case.models import InterviewTestCase
 def indent(text, amount, ch=' '):
@@ -7,7 +7,7 @@ def indent(text, amount, ch=' '):
 
 # creates the file to run for tests
 def create_submission(user_code, question):
-    code_file = InterviewCodeFile.objects.filter(interview_question=question).first()
+    code_file = SupportCode.objects.filter(interview_question=question).first()
     main_class = code_file.body
     # indent user solution
     indent_user_code = indent(user_code, 4)

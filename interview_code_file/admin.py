@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import InterviewCodeFile
+from .models import SupportCode
 
-admin.site.register(InterviewCodeFile)
+admin.site.register(SupportCode)

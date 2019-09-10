@@ -105,3 +105,11 @@ input[type=checkbox]
 .inputfile + label:hover {
   background-color: red;
 }
+
+.name-of-file {
+  max-width: 25%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1vh;
+}

@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic import ListView
 from .forms import InterviewQuestionCreationForm
 from .models import InterviewQuestion
-from interview_code_file.models import InterviewCodeFile
+from interview_code_file.models import SupportCode
 from interview_test_case.models import InterviewTestCase
 from interview_q_instance.models import InterviewQuestionInstance
 from api_q.models import InterviewAPI
@@ -14,8 +14,17 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .utils import is_valid_test_case
 from datetime import datetime
+from django.core.files.base import ContentFile
+from starter_code.models import StarterCode
+from solution_code.models import SolutionCode
+
 
 class CreateInterviewView(View):
+    def check_condition(self, request, name, number):
+        cond_one = (len(request.POST.get(name + "_body_name_" + str(number), '')) > 0 and len(request.POST.get(name + "_body_" + str(number), '')) > 0)
+        cond_two = request.FILES.get(name + "_file_" + str(number), False)
+        return cond_one or cond_two
+
     template_name = 'interview_q/create.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {})
@@ -24,21 +33,35 @@ class CreateInterviewView(View):
         description = self.request.POST.get('description', '')
         is_open = self.request.POST.get('is_open', False)
         question_language = self.request.POST.get('question_language', '')
-        solution = self.request.POST.get('solution', '')
-        starter_code = self.request.POST.get('starter_code', '')
         if len(name) == 0:
             return render(request, self.template_name, {"error_message": "name field not filled out"})
         if len(description) == 0:
             return render(request, self.template_name, {"error_message": "description field not filled out"})
-        question = InterviewQuestion(name=name, description=description, creator=self.request.user, is_open=is_open, language=question_language, solution=solution, starter_code=starter_code)
+        question = InterviewQuestion(name=name, description=description, creator=self.request.user, is_open=is_open, language=question_language)
         question.save()
 
         question_id = question.id
         
         # handle supporting code
-        supporting_code = self.request.POST.get("supporting_code", "")
-        interview_code_file = InterviewCodeFile(body=supporting_code, interview_question=question)
-        interview_code_file.save()
+        name = "supporting"
+        number = 1
+        while self.check_condition(request, name, number):
+            if request.POST.get(name + "_switch_" + str(number), False):
+                # file
+                if request.FILES.get(name + "_file_" + str(number), False):
+                    new_file = SupportCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
+                    new_file.save()
+            else:
+                # code
+                # write to file
+                file_name = request.POST.get(name + "_body_name_" + str(number),'')
+                file_contents = request.POST.get(name + "_body_" + str(number),'')
+                if len(file_name) > 0 and len(file_contents) > 0:
+                    new_file = SupportCode(interview_question=question)
+                    new_file.code_file.save(file_name, ContentFile(file_contents))
+                    new_file.save()    
+            number = number + 1
+        
 
         api_description = self.request.POST.get("api_description", "")
 
@@ -59,32 +82,88 @@ class CreateInterviewView(View):
             curr_api_method = curr_api_method + 1
             curr_field = self.request.POST.get('api_method_' + str(curr_api_method), '')
 
+        # handle starter code
+        name = "starter"
+        number = 1
+        while self.check_condition(request, name, number):
+            if request.POST.get(name + "_switch_" + str(number), False):
+                # file
+                if request.FILES.get(name + "_file_" + str(number), False):
+                    new_file = StarterCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
+                    new_file.save()
+            else:
+                # code
+                # write to file
+                file_name = request.POST.get(name + "_body_name_" + str(number),'')
+                file_contents = request.POST.get(name + "_body_" + str(number),'')
+                if len(file_name) > 0 and len(file_contents) > 0:
+                    new_file = StarterCode(interview_question=question)
+                    new_file.code_file.save(file_name, ContentFile(file_contents))
+                    new_file.save()    
+            number = number + 1
+
         # handle example code
-        curr_code_body_num = 1
-        curr_body = self.request.POST.get('code_body_' + str(curr_code_body_num), '')
-        while (len(curr_body) > 0):
-            example_code = ExampleCode(body=curr_body, interview_question=question)
-            example_code.save()
-            curr_code_body_num = curr_code_body_num + 1
-            curr_body = self.request.POST.get('code_body_' + str(curr_code_body_num), '')
+        name = "example"
+        number = 1
+        while self.check_condition(request, name, number):
+            if request.POST.get(name + "_switch_" + str(number), False):
+                # file
+                if request.FILES.get(name + "_file_" + str(number), False):
+                    new_file = ExampleCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
+                    new_file.save()
+            else:
+                # code
+                # write to file
+                file_name = request.POST.get(name + "_body_name_" + str(number),'')
+                file_contents = request.POST.get(name + "_body_" + str(number),'')
+                if len(file_name) > 0 and len(file_contents) > 0:
+                    new_file = ExampleCode(interview_question=question)
+                    new_file.code_file.save(file_name, ContentFile(file_contents))
+                    new_file.save()    
+            number = number + 1
+
 
         # handle test cases
-        all_test_cases_str = self.request.POST.get('test_cases', '')
-        all_test_cases = all_test_cases_str.split("\n\n")
-        if len(all_test_cases) > 0:
-            curr_test_case_num = 0
-            curr_test_case = all_test_cases[curr_test_case_num]
-            while (len(curr_test_case) > 0):
-                if is_valid_test_case(curr_test_case):
-                    test_case = InterviewTestCase(body=curr_test_case, interview_question=question)
-                    test_case.save()
-                    curr_test_case_num = curr_test_case_num + 1
-                    if (curr_test_case_num == len(all_test_cases)):
-                        break
-                    curr_test_case = all_test_cases[curr_test_case_num]
+        name = "test"
+        number = 1
+        while self.check_condition(request, name, number):
+            if request.POST.get(name + "_switch_" + str(number), False):
+                # file
+                if request.FILES.get(name + "_file_" + str(number), False):
+                    new_file = InterviewTestCase(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
+                    new_file.save()
+            else:
+                # code
+                # write to file
+                file_name = request.POST.get(name + "_body_name_" + str(number),'')
+                file_contents = request.POST.get(name + "_body_" + str(number),'')
+                if len(file_name) > 0 and len(file_contents) > 0:
+                    new_file = InterviewTestCase(interview_question=question)
+                    new_file.code_file.save(file_name, ContentFile(file_contents))
+                    new_file.save()    
+            number = number + 1
+
+        # handle solution
+        name = "solution"
+        number = 1
+        while self.check_condition(request, name, number):
+            if request.POST.get(name + "_switch_" + str(number), False):
+                # file
+                if request.FILES.get(name + "_file_" + str(number), False):
+                    new_file = SolutionCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
+                    new_file.save()
+            else:
+                # code
+                # write to file
+                file_name = request.POST.get(name + "_body_name_" + str(number),'')
+                file_contents = request.POST.get(name + "_body_" + str(number),'')
+                if len(file_name) > 0 and len(file_contents) > 0:
+                    new_file = SolutionCode(interview_question=question)
+                    new_file.code_file.save(file_name, ContentFile(file_contents))
+                    new_file.save()    
+            number = number + 1
 
         return HttpResponseRedirect("/interview_questions/")
-
 
 class HomeInterviewView(ListView):
     model = InterviewQuestion
@@ -119,7 +198,7 @@ class EditQuestionView(View):
         
         # handle supporting code
         supporting_code = self.request.POST.get("supporting_code", "")
-        interview_code_file = InterviewCodeFile(body=supporting_code, interview_question=question)
+        interview_code_file = SupportCode(body=supporting_code, interview_question=question)
         interview_code_file.save()
 
         api_description = self.request.POST.get("api_description", "")

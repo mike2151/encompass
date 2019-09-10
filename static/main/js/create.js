@@ -34,12 +34,15 @@ var add_code_file = function (class_name) {
         var textarea = document.createElement("textarea");
         textarea.setAttribute("name", name);
 
+        var file_name = document.createElement("div");
+        file_name.innerHTML = '<input class="form-control name-of-file" id="' + class_name + '_body_name_' + curr_code_number.toString() + '" maxlength="128" name="' + class_name + '_body_name_' + curr_code_number.toString() + '" placeholder="Name of file"></input>'
+
         var editor = document.createElement("div");
         editor.setAttribute("id", name);
         editor.setAttribute("style", "height: 20vh; width: 100%; margin-bottom: 1vh");    
 
         var switch_div = document.createElement("div");
-        switch_div.innerHTML = 'Code <label class="switch"><input type="checkbox" id="' + class_name + '_switch_' + curr_code_number.toString() +'"><span class="slider round"></span></label> File';
+        switch_div.innerHTML = 'Code <label class="switch"><input type="checkbox" name="' + class_name + '_switch_' + curr_code_number.toString() +'" id="' + class_name + '_switch_' + curr_code_number.toString() +'"><span class="slider round"></span></label> File';
 
         var file_div = document.createElement("div");
         file_div.innerHTML = '<input class="form-control" type="file" id="' + class_name + '_file_' + curr_code_number.toString() + '" name="' + class_name + '_file_' + curr_code_number.toString() + '"></input>';
@@ -48,6 +51,7 @@ var add_code_file = function (class_name) {
         added.appendChild(switch_div);
         added.appendChild(document.createElement("center"));
         added.appendChild(file_div);
+        added.appendChild(file_name);
         added.appendChild(editor);
         added.appendChild(document.createElement("br"));
         added.appendChild(textarea);
