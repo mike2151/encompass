@@ -13,6 +13,7 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .utils import is_valid_test_case
+from datetime import datetime
 
 class CreateInterviewView(View):
     template_name = 'interview_q/create.html'
@@ -182,4 +183,20 @@ class CreateQuestionInstanceView(View):
         question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field)
         question_instance.save()
         return HttpResponseRedirect("/interview_questions/")
+
+class CreateOpenQuestionInstanceView(View):
+    def get(self, request,  *args, **kwargs):
+        user_email = self.request.user.email
+        base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+        # see if the user already attempted the question
+        user_question_instance = InterviewQuestionInstance.objects.filter(base_question=base_question, interviewee_email=user_email)
+        question_instance = None
+        if len(user_question_instance) > 0:
+            # already exists
+            question_instance = user_question_instance[0]
+        else:
+            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=datetime.now())
+            question_instance.save()
+        return HttpResponseRedirect("/questions/answer/" + str(question_instance.id) + "/")
+
         

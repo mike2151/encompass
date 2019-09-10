@@ -47,15 +47,17 @@
     <!-- Marketing Icons Section -->
     <div class="row">
       <div class="col-lg-4 mb-4">
-        <div class="card h-100">
-          <h4 class="card-header">Card Title</h4>
-          <div class="card-body">
-            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
+        {% for question in questions %}
+          <div class="card h-100">
+            <h4 class="card-header">{{ question.name }}</h4>
+            <div class="card-body">
+              <p class="card-text open-question-description">{{ question.description }}</p>
+            </div>
+            <div class="card-footer">
+              <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary">Answer</a>
+            </div>
           </div>
-          <div class="card-footer">
-            <a href="#" class="btn btn-primary">Learn More</a>
-          </div>
-        </div>
+        {% endfor %}
       </div>
     </div>
     <!-- /.row -->

@@ -1,123 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'main/css/answer.css' %}" rel="stylesheet"  type="text/css">
+{% endblock %}
 
-  <title>Encompass Interviews</title>r
 
-  <!-- Bootstrap core CSS -->
-  <link href="{% static 'main/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'main/css/answer.css' %}" rel="stylesheet"  type="text/css">
-
-</head>
-
-<body>
-    <!-- Navigation -->
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-          <a class="navbar-brand" href="/">Encompass Interviews</a>
-          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="/about">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/contact">Contact</a>
-              </li>
-              {% if user %}
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Interview Questions
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                    <a class="dropdown-item" href="/questions/answer">Answer</a>
-                    <a class="dropdown-item" href="/interview_questions">Create</a>
-                  </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/logout">Logout</a>
-                </li>
-              {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/users/signup">Sign Up</a>
-                </li>
-              {% endif %}
-              
+{% block content %}
+  <div class="main_container" >
+      <div class="row">
+        <div class="col-lg-3 mb-3 sidebar">
+            <center><h2 class="sidebar-title">QUESTION OVERVIEW</h2></center><hr />
+            <center><h2>Question Description</h2></center>
+            <p class="question-description">{{ question.base_question.description }}</p>
+            <center><h2>API DOCUMENTATION</h2></center>
+            <ul class="api-list">
+            {% for api_method in api_methods %}
+              <li class="api-list-item">{{ api_method.api_signature }}</li>
+            {% endfor %}
             </ul>
-          </div>
+            
+            <center><h2>EXAMPLE CODE</h2></center>
+            <ul class="example-code-list">
+                {% for example_code in example_code_snippets %}
+                  <li><div id="example_code_{{ forloop.counter }}" class="example_code_view" style="height: 70vh; width: 100%">{{ example_code.body }}</div></li>
+                {% endfor %}
+                </ul>
         </div>
-    </nav>
-    <div class="main_container">
-        <div class="row">
-                <div class="col-lg-3 mb-3">
-                    <center><h2>OVERVIEW</h2></center>
-                    <center><h2>QUESTION</h2></center>
-                    {{ question.base_question.description }}
-                    <center><h2>API DOCUMENTATION</h2></center>
-                    <ul>
-                    {% for api_method in api_methods %}
-                      <li>{{ api_method.api_signature }}</li>
-                    {% endfor %}
-                    </ul>
-                    
-                    <center><h2>EXAMPLE CODE</h2></center>
-                    <ul>
-                        {% for example_code in example_code_snippets %}
-                          <li>{{ example_code.body }}</li>
-                        {% endfor %}
-                        </ul>
+          <div class="col-lg-9 mb-9 answer-section">
+              <form method="post">
+              {% csrf_token %}
+              <div class="col-lg-9 mb-9" style="background-color: #DCDCDC; max-width: 100%; margin-top: 1vh;">
+                <div style="float: right">
+                    <button type="button" class="btn btn-info">Question</button>
+                    <button type="button" class="btn btn-info">API</button>
+                    <button type="button" class="btn btn-info">Example Code</button>
+                    <button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button>
                 </div>
-                  <div class="col-lg-9 mb-9">
-                      <form method="post">
-                      {% csrf_token %}
-                      <div class="col-lg-9 mb-9" style="background-color: #DCDCDC; max-width: 100%;">
-                        <div style="float: right">
-                            <button type="button" class="btn btn-info">Question</button>
-                            <button type="button" class="btn btn-info">API</button>
-                            <button type="button" class="btn btn-info">Example Code</button>
-                            <button type="button" class="btn btn-light">Run Code</button>
-                            <button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button>
-                        </div>
-                      </div>
-                      <br />
-                      <div class="col-lg-9 mb-9" style="max-width: 100%">
-                        
-                        <div id="editor" style="height: 70vh; width: 100%">print("hello world")</div>
-                        <textarea name="editor"></textarea>
-                      </div>
-                      <div class="col-lg-9 mb-9">
-                          Test Cases <br/>
-                          Enter Your Test Case: </br>
-                          <textarea id="test case">Test Goes Here</textarea><br />
-                          Output
-
-                      </div>
-                      </form>
-                  </div>
-        </div>
+              </div>
+              <br />
+              <div class="col-lg-9 mb-9 editor-holder">
+                <div id="editor" style="height: 60vh; width: 100%">{{question.base_question.starter_code}}</div>
+                <textarea name="editor"></textarea>
+              </div>
+              <div class="col-lg-9 mb-9 test-case-section">
+                  <hr />
+                  <h3 class="test-case-header">Write Test Cases</h3>
+                  <div id="test_case_editor" style="height: 20vh; width: 100%"></div>
+                  <textarea name="test_case_editor"></textarea>
+                  <center><button type="button" class="btn btn-info test-case-button">Run Test Case</button></center>
+              </div>
+              </form>
+          </div>
+      </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
     <script>
-      var editor = ace.edit("editor");
-      editor.setTheme("ace/theme/chrome");
-      editor.session.setMode("ace/mode/python");
+      function textarea_edit(name) {
+        var editor = ace.edit(name);
+        editor.setTheme("ace/theme/chrome");
+        editor.session.setMode("ace/mode/python");
 
-      var textarea = $('textarea[name="editor"]').hide();
-      textarea.val(editor.getSession().getValue());
-      editor.getSession().on('change', function(){
+        var textarea = $('textarea[name="' + name + '"]').hide();
         textarea.val(editor.getSession().getValue());
-      });
+        editor.getSession().on('change', function(){
+            textarea.val(editor.getSession().getValue());
+        });
+      }
+      textarea_edit("editor");
+      textarea_edit("test_case_editor");
+
+      function set_up_example_code() {
+
+      }
+
+    // populate all of the example code views
+    var example_code_snippets = document.getElementsByClassName('example_code_view');
+    for (var i = 0; i < example_code_snippets.length; ++i) {
+        var example_code = example_code_snippets[i];  
+        var editor = ace.edit(example_code.id);
+        editor.setTheme("ace/theme/chrome");
+        editor.session.setMode("ace/mode/python");
+        editor.setReadOnly(true);
+        editor.setOptions({
+            maxLines: 15
+        });
+    }
+    
   </script>
   </body>
 </html>
+{% endblock %}

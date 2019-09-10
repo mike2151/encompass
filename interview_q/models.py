@@ -9,6 +9,8 @@ class InterviewQuestion(models.Model):
     api = models.ForeignKey('api_q.InterviewAPI', on_delete=models.SET_NULL, null=True)
     starter_code = models.TextField(null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
     solution = models.TextField(null=True)
 
     id = models.AutoField(primary_key=True)

@@ -32,6 +32,9 @@ LOGOUT_REDIRECT_URL = 'home'
 
 SILENCED_SYSTEM_CHECKS = ['urls.W002', 'security.W019']
 
+MEDIA_URL = '/code_files/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'code_files')
+
 
 # Application definition
 

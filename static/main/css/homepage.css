@@ -85,3 +85,10 @@ body {
 .footer-section {
   text-align: center;
 }
+
+.open-question-description {
+  display:block;
+  text-overflow: ellipsis;
+  overflow: hidden; 
+  white-space: nowrap;
+}

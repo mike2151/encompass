@@ -5,3 +5,56 @@
 .action-bar-text {
     font-size: 2em;
 }
+
+.sidebar {
+    background-color: #ABF2A2;
+    height: 110vh;
+}
+
+.sidebar-title {
+    margin-top: .5vh;
+}
+
+.api-list {
+    list-style-type: none;
+    padding-left: 1vw;
+}
+
+.api-list-item {
+    background: #FFF;
+    padding: .2em;
+}
+
+.question-description {
+    margin-left: 3vw;
+    max-width: 90%;
+}
+
+.example-code-list {
+    list-style-type: none;
+    padding-left: 1vw;
+}
+
+.answer-section {
+    background: #EBEBEB;
+}
+
+.editor-holder {
+    max-width: 100%; 
+    padding-left: 0; 
+    padding-right: 1vw;
+}
+
+.test-case-section {
+    max-width: 100%;
+    padding-top: 2vh;
+}
+
+.test-case-header { 
+    text-align: center;
+}
+
+.test-case-button {
+    margin-top: 1vh;
+}
+

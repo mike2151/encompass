@@ -6,5 +6,6 @@ urlpatterns = [
     path('create/', views.CreateInterviewView.as_view()),
     path('', views.HomeInterviewView.as_view()),
     path('question/<int:pk>/edit/', views.EditQuestionView.as_view()),
-    path('question/<int:pk>/send/', views.CreateQuestionInstanceView.as_view())
+    path('question/<int:pk>/send/', views.CreateQuestionInstanceView.as_view()),
+    path('question/<int:pk>/try/', views.CreateOpenQuestionInstanceView.as_view()),
 ]
