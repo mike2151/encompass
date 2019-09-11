@@ -82,12 +82,17 @@
                     <h1 class="step-title">Step 3: Provide Starter Code</h1><br />
                     <p class="step-description">In this step, you provide some starter code that the user can optionally fill out.</p>
                     <label>Starter Code (visible to users)</label> <br />
-
-                    <div>Code<label class="switch"><input type="checkbox" name="starter_switch_1" id="starter_switch_1"><span class="slider round"></span></label> File</div>
-                    <div><input class="inputfile" type="file" id="starter_file_1" name="starter_file_1"></div>
-                    <div><input class="form-control name-of-file" id="starter_body_name_1" maxlength="128" name="starter_body_name_1" placeholder="Name of file"></input></div>
-                    <div id="starter_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh"></div>
-                    <textarea name="starter_body_1"></textarea>
+                    <div id="starter_fields">
+                        <div>
+                            <div>Code<label class="switch"><input type="checkbox" name="starter_switch_1" id="starter_switch_1"><span class="slider round"></span></label> File</div>
+                            <div><input class="inputfile" type="file" id="starter_file_1" name="starter_file_1"></div>
+                            <div><input class="form-control name-of-file" id="starter_body_name_1" maxlength="128" name="starter_body_name_1" placeholder="Name of file"></input></div>
+                            <div id="starter_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh"></div>
+                            <textarea name="starter_body_1"></textarea>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="add_code_file('starter')">Add</button>
+                    <button type="button" class="btn btn-secondary" onclick="remove_code_file('starter')">Remove</button>
                 </div>
                 <div class="form-group, step">
                 <h1 class="step-title">Step 4: Provide Useful Example Code</h1><br />

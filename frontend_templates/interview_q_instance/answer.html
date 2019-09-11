@@ -31,6 +31,11 @@
               {% csrf_token %}
               <div class="col-lg-9 mb-9" style="background-color: #DCDCDC; max-width: 100%; margin-top: 1vh;">
                 <div style="float: right">
+                    <select id="file-drop-down" onchange="onSelectFileChange()">
+                      {% for filename in files_to_work_on_names %}
+                        <option value="{{ filename }}">{{ filename }}</option>
+                      {% endfor %}
+                    </select>
                     <button type="button" class="btn btn-info">Question</button>
                     <button type="button" class="btn btn-info">API</button>
                     <button type="button" class="btn btn-info">Example Code</button>
@@ -55,7 +60,21 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
-    <script>
+    <script type='text/javascript'>      
+      // init select
+      var starter_code_bodies = {{files_to_work_on_bodies|safe}}; 
+      var file_name_to_body = {};
+      var currently_selected_file = $("#file-drop-down option:selected").text();
+      function initSetUpStarterFiles() {
+        var i = 0;
+        $("#file-drop-down > option").each(function() {
+          file_name_to_body[this.text] = starter_code_bodies[i];
+        });
+      }
+
+      initSetUpStarterFiles();
+
+      // ace editor functions
       function textarea_edit(name) {
         var editor = ace.edit(name);
         editor.setTheme("ace/theme/chrome");
@@ -65,27 +84,34 @@
         textarea.val(editor.getSession().getValue());
         editor.getSession().on('change', function(){
             textarea.val(editor.getSession().getValue());
+            file_name_to_body[currently_selected_file] = editor.getSession().getValue();
         });
+        return editor;
       }
-      textarea_edit("editor");
-      textarea_edit("test_case_editor");
+      var code_editor = textarea_edit("editor");
+      var test_case_editor = textarea_edit("test_case_editor");
 
-      function set_up_example_code() {
-
+      // populate all of the example code views
+      var example_code_snippets = document.getElementsByClassName('example_code_view');
+      for (var i = 0; i < example_code_snippets.length; ++i) {
+          var example_code = example_code_snippets[i];  
+          var editor = ace.edit(example_code.id);
+          editor.setTheme("ace/theme/chrome");
+          editor.session.setMode("ace/mode/python");
+          editor.setReadOnly(true);
+          editor.setOptions({
+              maxLines: 15
+          });
       }
 
-    // populate all of the example code views
-    var example_code_snippets = document.getElementsByClassName('example_code_view');
-    for (var i = 0; i < example_code_snippets.length; ++i) {
-        var example_code = example_code_snippets[i];  
-        var editor = ace.edit(example_code.id);
-        editor.setTheme("ace/theme/chrome");
-        editor.session.setMode("ace/mode/python");
-        editor.setReadOnly(true);
-        editor.setOptions({
-            maxLines: 15
-        });
-    }
+      // on change select
+      code_editor.setValue(file_name_to_body[currently_selected_file].toString(), -1);
+      function onSelectFileChange() {
+          currently_selected_file = $("#file-drop-down option:selected").text();
+          code_editor.setValue(file_name_to_body[currently_selected_file].toString(), -1);
+      }
+
+      
     
   </script>
   </body>
