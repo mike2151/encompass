@@ -3,8 +3,7 @@ from django.shortcuts import render
 from .models import InterviewQuestionInstance
 from method_signature.models import MethodSignature
 from example_code.models import ExampleCode
-from .util import create_submission
-from compile.util.runner import run_code
+from .util import create_and_run_submission
 from django.http import HttpResponseRedirect
 from submission_result.models import SubmissionResult
 from starter_code.models import StarterCode
@@ -47,25 +46,16 @@ class QuestionAnswerView(View):
 
     def post(self, request, *args, **kwargs):
         if request.POST['action'] == 'submit_code':
-            question_instance_num = int((self.request.path.split("/")[3]))
-            question_instance = InterviewQuestionInstance.objects.get(pk=question_instance_num)
-            code_to_run = create_submission(self.request.POST['editor'], question_instance.base_question)
+            question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
+
+            all_tests_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance)
             
-            passed = False
-            try:
-                output = run_code(code_to_run, 'python', 3)
-                result = output['result'] if 'result' in output else 'failed'
-                if len(result) == 0:
-                    passed = True
-                else:
-                    passed = False
-            except e:
-                passed = False
-            
+            test_results_json = json.dumps(test_results)
+
             # pass results to results page
-            submission_result = SubmissionResult(passed=passed)
+            submission_result = SubmissionResult(all_tests_passed=all_tests_passed, results_body=test_results_json)
             submission_result.save()
             question_instance.submission_result = submission_result
             question_instance.save()
-            return HttpResponseRedirect("/results/" + submission_result.id)
+            return HttpResponseRedirect("/results/" + str(submission_result.id))
             

@@ -3,5 +3,5 @@ from django.urls import include, path, re_path
 from . import views
 
 urlpatterns = [
-    path('/<int:pk>/', views.SubmissionView.as_view()),
+    path('<int:pk>/', views.SubmissionView.as_view()),
 ]

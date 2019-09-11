@@ -54,6 +54,9 @@
                   <textarea name="test_case_editor"></textarea>
                   <center><button type="button" class="btn btn-info test-case-button">Run Test Case</button></center>
               </div>
+              <div id="file_contents" type="hidden">
+
+              </div>
               </form>
           </div>
       </div>
@@ -69,6 +72,12 @@
         var i = 0;
         $("#file-drop-down > option").each(function() {
           file_name_to_body[this.text] = starter_code_bodies[i];
+          var input = document.createElement("input");
+          input.setAttribute("type", "hidden");
+          input.setAttribute("name", "file_" + this.text);
+          input.setAttribute("id", "file_" + this.text);
+          input.setAttribute("value", starter_code_bodies[i]);
+          document.getElementById("file_contents").appendChild(input);
         });
       }
 
@@ -85,6 +94,7 @@
         editor.getSession().on('change', function(){
             textarea.val(editor.getSession().getValue());
             file_name_to_body[currently_selected_file] = editor.getSession().getValue();
+            document.getElementById('file_' + currently_selected_file).value = editor.getSession().getValue();
         });
         return editor;
       }
@@ -108,7 +118,7 @@
       code_editor.setValue(file_name_to_body[currently_selected_file].toString(), -1);
       function onSelectFileChange() {
           currently_selected_file = $("#file-drop-down option:selected").text();
-          code_editor.setValue(file_name_to_body[currently_selected_file].toString(), -1);
+          code_editor.setValue(file_name_to_body[currently_selected_file].toString(), -1);        
       }
 
       

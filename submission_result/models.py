@@ -1,4 +1,5 @@
 from django.db import models
 
 class SubmissionResult(models.Model):
-    passed = models.BooleanField(default=False)
+    all_tests_passed = models.BooleanField(default=False)
+    results_body = models.TextField(default='')

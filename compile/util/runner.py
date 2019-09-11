@@ -4,37 +4,37 @@ import hashlib
 import multiprocessing
 from compile.service import get_command, get_extension, get_target_method
 from config import LOCAL_DIR, CONTAINER_TIMEOUT
+from distutils.dir_util import copy_tree
+import string
+import random
+import shutil
 
 
-def run_code(code, language, version):
-    # getting the docker client
+def id_generator(size=15, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def run_submission_file(file_name, host_folder_path, language, version):
     client = docker.from_env()
     manager = multiprocessing.Manager()
-
-    # the dict that will be send to the separate python process for collecting the result
     return_dict = manager.dict()
+    container_name = str(hashlib.sha1(os.urandom(128)).hexdigest())[:10]
+    run_folder = id_generator()
 
-    # getting the command to be run
     result, command_string = get_command(language, version)
 
     if not result:
         return_dict['result'] = command_string
         return return_dict
 
-    # saving the code in a temp file 
-    container_name = str(hashlib.sha1(os.urandom(128)).hexdigest())[:10]
-    file_name = container_name + str(get_extension(language))
-    file_path = LOCAL_DIR + '/' + file_name
-    file = open(file_path, 'w')
-    file.write(code)
-    file.close()
+    # copy files over
+    write_file_path = LOCAL_DIR + '/' + run_folder
+    copy_tree(host_folder_path, write_file_path)
 
-    # getting which compiler method will handle this request
     target_method = get_target_method(language)
-
-    # starting the docker container in separate process
     process = multiprocessing.Process(target=target_method,
-                                      args=(client, file_name, container_name, command_string, return_dict))
+                                      args=(client, file_name, container_name, command_string, return_dict, run_folder))
+
     process.start()
 
     # setting the timeout for the process
@@ -51,6 +51,6 @@ def run_code(code, language, version):
     if running_containers:
         running_containers[0].remove(force=True)
 
-    # remove the temp file
-    os.remove(file_path)
+    # remove the folder
+    shutil.rmtree(write_file_path)
     return return_dict

@@ -36,3 +36,4 @@ def get_target_method(language):
 
     elif language == 'java':
         return java_runner
+
