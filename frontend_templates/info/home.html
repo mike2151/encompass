@@ -24,45 +24,44 @@
   </header>
 
   <!-- Page Content -->
-  <div class="container">
+  <div class="container homepage-container">
     
     <!-- About -->
     <div class="row">
       <div class="col-lg-6 mb-6">
         <div class="about-section">
           <h3 class="about-section-header">Do Interviews That Matter</h3>
-          <p class="about-section-text">Stop wasting your time doing algorithm interviews. 
-            Do problems that you will encounter in the real world.</p>
+          <p class="about-section-text">Stop wasting your time doing algorithm interviews. You have spent your career creating impressive personal projects, tackling difficult challenges, and having invaluable industry experience. Your next programming opportunity will allow you to grow and develop even more. There’s only one problem that is stopping you from this dream job. Your college algorithms class. Do problems that you will encounter in the real world.</p>
         </div>
       </div>
       <div class="col-lg-6 mb-6">
           <div class="about-section">
             <h3 class="about-section-header">Prepare For Your Job. For Real.</h3>
-            <p class="about-section-text">Design and implement real systems.</p>
+            <p class="about-section-text">It’s no secret that your job most likely won’t be coming up and implementing creative ways to find the longest palindrome substring. You are going to be a given a code base and a prompt and you need to get going. Practice designing and implementing real systems.</p>
           </div>
       </div>
     </div>
-
-    <h1 class="my-4">Explore Open Questions</h1>
-    <!-- Marketing Icons Section -->
-    <div class="row">
-      <div class="col-lg-4 mb-4">
-        {% for question in questions %}
-          <div class="card h-100">
-            <h4 class="card-header">{{ question.name }}</h4>
-            <div class="card-body">
-              <p class="card-text open-question-description">{{ question.description }}</p>
-            </div>
-            <div class="card-footer">
-              <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary">Answer</a>
-            </div>
+    <div class="open-questions">
+      <h1 class="open-questions-title">Explore Open Questions</h1>
+      <!-- Marketing Icons Section -->
+        <div class="row">
+          <div class="col-lg-4 mb-4">
+            {% for question in questions %}
+              <div class="card h-100">
+                <h4 class="card-header">{{ question.name }}</h4>
+                <div class="card-body">
+                  <p class="card-text open-question-description">{{ question.description }}</p>
+                </div>
+                <div class="card-footer">
+                  <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary">Answer</a>
+                </div>
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
-      </div>
+        </div>
+      <!-- /.row -->
     </div>
-    <!-- /.row -->
-
-  </div>
+    </div>
   <!-- /.container -->
 
   <!-- Footer -->
@@ -85,9 +84,5 @@
     </div>
     <!-- /.container -->
   </footer>
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="{% static 'main/vendor/jquery/jquery.min.js' %}"></script>
-  <script src="{% static 'main/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
 {% endblock %}
