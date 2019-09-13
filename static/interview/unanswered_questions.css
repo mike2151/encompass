@@ -7,3 +7,24 @@
 .answer-btn {
     width: 100%;
 }
+
+body {
+    background-color: #7373fd;
+}
+
+.main-section {
+    padding-top: 70px; 
+    max-width: 90vw;
+}
+
+.page-heading {
+    color: #FFF;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid white;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    padding-left: 4vw;
+    padding-right: 4vw;
+}

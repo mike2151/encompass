@@ -8,8 +8,7 @@ body {
 }
 
 .carousel-item {
-  height: 65vh;
-  min-height: 300px;
+  height: 100%;
   background: no-repeat center center scroll;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -17,12 +16,17 @@ body {
   background-size: cover;
 }
 
+.main-section {
+  height: 100vh;
+  background-color: #7373fd;
+}
+
 .portfolio-item {
   margin-bottom: 30px;
 }
 
 .image-title, h1 {
-  font-size: 1.5em;
+  font-size: 2em;
 }
 
 .image-button {
@@ -53,7 +57,7 @@ body {
 
 .image-title {
   color: white;
-  margin-top: 8vh;
+  margin-top: 20vh;
   margin-left: 8vw;
   max-width: 30vw;
 }
@@ -61,8 +65,8 @@ body {
 .image-screenshot {
   float: right;
   position: relative;
-  margin-right: 15vw;
-  margin-top: -17vh;
+  margin-right: 13vw;
+  margin-top: -37vh;
 }
 
 .about-section {
@@ -71,6 +75,15 @@ body {
   margin-right: 10vw;
   margin-left: 10vw;
 }
+
+.left-section {
+  background: #64BBFD;
+}
+
+.right-section {
+  background: #FFCC87;
+}
+
 
 .homepage-container {
   max-width: 100vw;
@@ -84,7 +97,10 @@ body {
 }
 
 .about-section-text {
-  color: #adadad;
+  color: #000;
+  margin-bottom: 3vh;
+  font-size: 1.2em;
+  margin-top: 1.5vh;
 }
 
 .footer-header-text {

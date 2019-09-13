@@ -35,6 +35,7 @@ hr {
     font-size: 2em;
     letter-spacing: .1em;
     margin-top: 5vh;
+    text-transform: uppercase;
 }
 
 .section-body {
@@ -45,4 +46,26 @@ hr {
 .about-icon {
     margin-top: 2vh;
     margin-left: 2vw;
+}
+
+.person-block {
+
+}
+
+.person-image {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.person-title {
+    text-align: center;
+    margin-top: 2vh;
+    color: white;
+}
+
+.person-text {
+    text-align: center;
+    color: white;
 }
