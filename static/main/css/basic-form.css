@@ -1,0 +1,13 @@
+body {
+    background: rgb(141, 141, 255);
+}
+
+label {
+    color: white;
+    font-size: 1.4em;
+}
+
+.page-title {
+    font-size: 2em;
+    color: white;
+}

@@ -1,3 +1,7 @@
+body {
+    background: rgb(141, 141, 255);
+}
+
 .question-card-title {
     text-align: center;
     font-size: 1.3em;
@@ -17,7 +21,7 @@ body {
     max-width: 90vw;
 }
 
-.page-heading {
+.page-title {
     color: #FFF;
     text-align: center;
     margin-left: auto;

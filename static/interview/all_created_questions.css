@@ -1,3 +1,7 @@
+body {
+    background: rgb(141, 141, 255);
+}
+
 .question-card-title {
     text-align: center;
     font-size: 1.3em;
@@ -8,10 +12,31 @@
     margin-left: 3.5vw;
 }
 
-.footer-title {
-    
+.create-section-title {
+    text-align: center;
 }
 
-.footer-button {
-    
+.create-section-button {
+    text-align: center;
+    max-width: 25%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.create-section {
+    background: white;
+    padding: 1em;
+}
+
+.page-title {
+    color: #FFF;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid white;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    padding-left: 4vw;
+    padding-right: 4vw;
 }

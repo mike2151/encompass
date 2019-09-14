@@ -42,10 +42,12 @@ var add_code_file = function (class_name) {
         editor.setAttribute("style", "height: 20vh; width: 100%; margin-bottom: 1vh");    
 
         var switch_div = document.createElement("div");
+        switch_div.setAttribute("class", "centered");
         switch_div.innerHTML = 'Code <label class="switch"><input type="checkbox" name="' + class_name + '_switch_' + curr_code_number.toString() +'" id="' + class_name + '_switch_' + curr_code_number.toString() +'"><span class="slider round"></span></label> File';
 
         var file_div = document.createElement("div");
-        file_div.innerHTML = '<input class="form-control" type="file" id="' + class_name + '_file_' + curr_code_number.toString() + '" name="' + class_name + '_file_' + curr_code_number.toString() + '"></input>';
+        file_div.setAttribute("class", "centered");
+        file_div.innerHTML = '<input type="file" id="' + class_name + '_file_' + curr_code_number.toString() + '" name="' + class_name + '_file_' + curr_code_number.toString() + '"></input>';
 
         added.appendChild(document.createElement("center"));
         added.appendChild(switch_div);

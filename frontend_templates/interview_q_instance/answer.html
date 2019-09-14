@@ -7,8 +7,8 @@
 
 {% block content %}
   <div class="main_container" >
-      <div class="row">
-        <div class="col-lg-3 mb-3 sidebar">
+      <div class="row" id="row-main">
+          <div class="col-md-3 sidebar" id="sidebar">
             <center><h2 class="sidebar-title">QUESTION OVERVIEW</h2></center><hr />
             <center><h2>Question Description</h2></center>
             <p class="question-description">{{ question.base_question.description }}</p>
@@ -25,35 +25,38 @@
                   <li><div id="example_code_{{ forloop.counter }}" class="example_code_view" style="height: 70vh; width: 100%">{{ example_code.body }}</div></li>
                 {% endfor %}
                 </ul>
-        </div>
-          <div class="col-lg-9 mb-9 answer-section">
+          </div>
+          <div class="col-md-9 answer-section" id="content">
               <form method="post">
               {% csrf_token %}
-              <div class="col-lg-9 mb-9" style="background-color: #DCDCDC; max-width: 100%; margin-top: 1vh;">
-                <div style="float: right">
-                    <select id="file-drop-down" onchange="onSelectFileChange()">
-                      {% for filename in files_to_work_on_names %}
-                        <option value="{{ filename }}">{{ filename }}</option>
-                      {% endfor %}
-                    </select>
-                    <button type="button" class="btn btn-info">Question</button>
-                    <button type="button" class="btn btn-info">API</button>
-                    <button type="button" class="btn btn-info">Example Code</button>
-                    <button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button>
+              <div class="col-md-9" style="background-color: #DCDCDC; max-width: 100%; margin-top: 1vh;">
+                <div class="top-row-left">
+                    <button type="button" class="btn btn-secondary" id="toggle_sidebar"> < </button>
+                    <select class="select-css" id="file-drop-down" onchange="onSelectFileChange()">
+                        {% for filename in files_to_work_on_names %}
+                          <option value="{{ filename }}">{{ filename }}</option>
+                        {% endfor %}
+                      </select>
+                </div>
+                <div class="top-row-right">
                 </div>
               </div>
               <br />
-              <div class="col-lg-9 mb-9 editor-holder">
-                <div id="editor" style="height: 60vh; width: 100%">{{question.base_question.starter_code}}</div>
+              <div class="col-md-9 editor-holder">
+                <div id="editor" style="height: 75vh; width: 100%">{{question.base_question.starter_code}}</div>
                 <textarea name="editor"></textarea>
               </div>
-              <div class="col-lg-9 mb-9 test-case-section">
+              <div class="col-md-9 test-case-section">
                   <hr />
                   <h3 class="test-case-header">Write Test Cases</h3>
                   <div id="test_case_editor" style="height: 20vh; width: 100%"></div>
                   <textarea name="test_case_editor"></textarea>
                   <center><button type="button" class="btn btn-info test-case-button">Run Test Case</button></center>
               </div>
+              <div class="col-md-9 submit-section">
+                  <center><button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button></center>
+              </div>
+             
               <div id="file_contents" type="hidden">
 
               </div>
@@ -64,6 +67,13 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
     <script type='text/javascript'>      
+      // collapsible sidebar
+      $('#toggle_sidebar').click(function(){
+        $("#sidebar").toggleClass("collapsed");
+        $("#content").toggleClass("col-md-12 col-md-9");
+      });
+      
+
       // init select
       var starter_code_bodies = {{files_to_work_on_bodies|safe}}; 
       var file_name_to_body = {};
