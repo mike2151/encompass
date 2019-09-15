@@ -1,141 +1,279 @@
 {% extends "base.html" %}
 {% load static %}
+{% load index %}
 {% block css_imports %}
 <link href="{% static 'interview/creation/main.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
 <div class="container" style="padding-top: 70px; max-width: 90vw;">
-    <div class="row">
-        <div class="col-sm-12">
-                <div class="py-5 text-center">
-                    <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
-                    <h2>Edit Interview Question: {{question.name}}</h2>
-                </div>
-
-            <form method="post">
-                {% csrf_token %}
-                <div id="form_errors">
-                    {% if error_message %}
-                        {{ error_message }}
-                    {% endif %}
-                </div>
-                <div class="form-group, step">
-                    <h2 class="step-title">Step 0: Basic Information About Your Question:</h2><br />
-                    <p class="step-description">In this step, provide a name for your question. 
-                        Additionally, provide the description of what the user has to do .
-                        This description will show up to the user.
-                    </p>
-                    <label htmlFor="name">Name of Question (Visible to users)</label>
-                    <input class="form-control" id="name" maxlength="128" name="name" type="text" value="{{question.name}}"/><br />
-
-                    <label htmlFor="description">Description of Question (Visible to users)</label>
-                    <textarea class="form-control" id="description" name="description" rows=5>{{question.description}}</textarea><br/>
-
-                    <label for="question_language">Question Language</label>
-                    <select class="form-control" id="question_language" name="question_language" selected="{{question.language}}">
-                        <option>Python3</option>
-                    </select> <br/>
-
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="is_open">
-                        {% if question.is_open %}
-                            <label class="form-check-label" for="is_open" checked>
-                                    Make your question open to the public for all users?
-                            </label>
-                        {% else %}
-                            <label class="form-check-label" for="is_open">
-                                    Make your question open to the public for all users?
-                            </label>
-                        {% endif %} 
+        <div class="row">
+            <div class="col-sm-12">
+                    <div class="py-5 text-center">
+                        <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
+                        <h2 class="page-title">Edit Interview Question: {{ question.name }}</h2>
                     </div>
-                </div>
-                <div class="form-group, step">
-                    <h2 class="step-title">Step 1: Write Your Supporting Code</h2><br />
-                    <p class="step-description">In this step, write the code that will run under the hood.
-                        This may be a class for instance.
-                    </p>
-                    <label>Supporting Code (Not visible to users)</label> <br />
-                    <div id="supporting_code" style="height: 20vh; width: 100%">class example:
-    def __init__(self):
-        self.value = 5
-    def return_value(self):
-        return self.value
+            </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div id="form_errors">
+                        {% if error_message %}
+                            {{ error_message }}
+                        {% endif %}
                     </div>
-                    <textarea name="supporting_code"></textarea>
-                </div>
-                <div class="form-group, step">
-                    <h1>Step 2: Define Your API</h1><br />
-                    <p class="step-description">In this step, you will declare what methods are available to the user via the API. For example, you might declare that the return_value function is available to them.</p>
-                    <label htmlFor="api_description">Description of API (Visible to users)</label> <br />
-                    <textarea class="form-control" id="api_description" name="api_description" rows=5></textarea><br/>
-
-                    <center><label>Methods Shown To The User (Visible to users)</label><hr /></center>
-                    <div id="api_fields">
-                        <div>
-                            <label htmlFor="api_method_1">Method:</label><br/>
-                            <textarea class="form-control" id="api_method_1" name="api_method_1" ></textarea><br />
+                    <!-- step -->
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                                <h2 class="step-title">Step 1: Basic Information About Your Question:</h2><br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group, step">
+                                <label htmlFor="name">Name of Question (Visible to users)</label>
+                                <input class="form-control" id="name" maxlength="128" name="name" type="text" value="{{ question.name }}"/><br />
+    
+                                <label htmlFor="description">Description of Question (Visible to users)</label>
+                                <textarea class="form-control" id="description" name="description" rows=5>{{ question.description }}</textarea><br/>
+    
+                                <label for="question_language">Question Language (Visible to users) </label>
+                                <select class="form-control" id="question_language" name="question_language">
+                                    <option {% if question.language == 'Python3' %}selected{% endif %}>Python3</option>
+                                </select> <br/>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="is_open" name="is_open" {% if question.is_open %}checked{% endif %}>
+                                    <label class="form-check-label checkbox-label" for="is_open" >
+                                            Make your question open to the public for all users to try?
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="step-description">In this step, provide a name for your question. 
+                                    Additionally, provide the description of what the user has to do .
+                                    This description will show up to the user.
+                            </p>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-secondary" onclick="add_api_field()">Add</button>
-
-                </div>
-                <div class="form-group, step">
-                    <h1>Step 3: Provide Starter Code</h1><br />
-                    <p class="step-description">In this step, you provide some starter code that the user can optionally fill out.</p>
-                    <label>Starter Code (visible to users)</label> <br />
-                    <div id="starter_code" style="height: 20vh; width: 100%"></div>
-                    <textarea name="starter_code"></textarea>
-                </div>
-                <div class="form-group, step">
-                <h1>Step 4: Provide Useful Example Code</h1><br />
-                    <p class="step-description">In this step, you provide example code snippets.</p>
-                    <div id="code_fields">
-                        <div>
-                            <div id="code_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh"></div>
-                            <textarea name="code_body_1"></textarea>
+                    <!-- end step -->
+                    <!-- step -->
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                                <h2 class="step-title">Step 2: Write Your Supporting Code</h2><br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group, step">
+                            <label class="centered code-label">Supporting Code (Not visible to users)</label> <br />
+                            <div id="supporting_fields">
+                                {% for support_code_name in supporting_code_names %}
+                                    <div>
+                                        <div class="centered">Code<label class="switch"><input type="checkbox" name="supporting_switch_1" id="supporting_switch_1" disabled><span class="slider round"></span></label> File</div>
+                                        <div class="centered"><input class="inputfile" type="file" id="supporting_file_1" name="supporting_file_1"></div>
+                                        <div><input class="form-control name-of-file" id="supporting_body_name_1" maxlength="128" name="supporting_body_name_1" placeholder="Name of file" value="{{ support_code_name }}"></input></div>
+                                        <div id="supporting_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh">{{ supporting_code_contents|index:forloop.counter0 }}</div>
+                                        <textarea name="supporting_body_1"></textarea>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            <button type="button" class="btn btn-light" onclick="add_code_file('supporting')">Add</button>
+                            <button type="button" class="btn btn-light" onclick="remove_code_file('supporting')">Remove</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="step-description">In this step, write the code that will run under the hood.
+                                    This may be a class for instance.
+                            </p>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-secondary" onclick="add_code_body()">Add</button>
-                </div>
-                <div class="form-group, step">
-                    <h1>Step 5: Provide Test Cases</h1><br />
-                    <p class="step-description">In this step, you provide test cases.</p>
-                    <div id="test_cases" style="height: 20vh; width: 100%"></div>
-                    <textarea name="test_cases"></textarea>
-                </div>
-                <div class="form-group, step">
-                    <h1>Step 6: Provide A Solution</h1><br />
-                    <p class="step-description">In this step, you should provide a solution to ensure the code compiles. If you do not provide this, then the only way to validate behavior is to try out the question.</p>
-                    <div id="solution" style="height: 20vh; width: 100%"></div>
-                    <textarea name="solution"></textarea>
-                </div>
-                <br /><br />
-                <center><button class="btn btn-success create-button" type="submit">Edit Interview Question</button></center>
-            </form>
-        </div>
+                    <!-- end step -->
+                    <!-- step -->
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                                <h2 class="step-title">Step 3: Define Your API</h2><br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group, step">
+                                <label htmlFor="api_description">Description of API (Visible to users)</label> <br />
+                                <textarea class="form-control" id="api_description" name="api_description" rows=5></textarea><br/>
+            
+                                <center><label>Methods Shown To The User (Visible to users)</label><hr /></center>
+                                <div id="api_fields">
+                                    <div>
+                                        <label htmlFor="api_method_1">Method:</label><br/>
+                                        <textarea class="form-control" id="api_method_1" name="api_method_1" ></textarea><br />
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light" onclick="add_api_field()">Add</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="step-description">In this step, you will declare what methods are available to the user via the API.
+                                 For example, you might declare that the return_value function is available to them.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- end step -->
+                    <!-- step -->
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                                <h2 class="step-title">Step 4: Provide Starter Code</h2><br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group, step">
+                                <label class="centered code-label">Starter Code (visible to users)</label> <br />
+                                <div id="starter_fields">
+                                    <div>
+                                        <div class="centered">Code<label class="switch"><input type="checkbox" name="starter_switch_1" id="starter_switch_1"><span class="slider round"></span></label> File</div>
+                                        <div class="centered"><input class="inputfile" type="file" id="starter_file_1" name="starter_file_1"></div>
+                                        <div><input class="form-control name-of-file" id="starter_body_name_1" maxlength="128" name="starter_body_name_1" placeholder="Name of file"></input></div>
+                                        <div id="starter_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh"></div>
+                                        <textarea name="starter_body_1"></textarea>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('starter')">Add</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('starter')">Remove</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="step-description">In this step, you provide some starter code that the user can optionally fill out.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- end step -->
+                    <!-- step -->
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                                <h2 class="step-title">Step 5: Provide Useful Example Code</h2><br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group, step">
+                                <label class="centered code-label">Example Code (visible to users)</label> <br />
+                                <div id="example_fields">
+                                    <div>
+                                        <div class="centered">Code<label class="switch"><input type="checkbox" name="example_switch_1" id="example_switch_1"><span class="slider round"></span></label> File</div>
+                                        <div class="centered"><input class="inputfile" type="file" id="example_file_1" name="example_file_1"></div>
+                                        <div><input class="form-control name-of-file" id="example_body_name_1" maxlength="128" name="example_body_name_1" placeholder="Name of file"></input></div>
+                                        <div id="example_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh"></div>
+                                        <textarea name="example_body_1"></textarea>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('example')">Add</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('example')">Remove</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="step-description">In this step, you provide example code snippets and files.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- end step -->
+                    <!-- step -->
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                                <h2 class="step-title">Step 6: Provide Test Cases</h2><br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group, step">
+                                <label class="centered code-label">Test Case Code (Not visible to users)</label> <br />
+                                <div class="centered">Code<label class="switch"><input type="checkbox" name="test_switch_1" id="test_switch_1"><span class="slider round"></span></label> File</div>
+                                <div class="centered"><input class="inputfile" type="file" id="test_file_1" name="test_file_1"></div>
+                                <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="Name of file"></input></div>
+                                <div id="test_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh"></div>
+                                <textarea name="test_body_1"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="step-description">In this step, you provide test cases.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- end step -->
+                    <!-- step -->
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                                <h2 class="step-title">Step 7: Provide A Solution</h2><br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group, step">
+                                <label class="centered code-label">Optional Solution Code (Not visible to users)</label> <br />
+                                <div id="solution_fields">
+                                    <div>
+                                        <div class="centered">Code<label class="switch"><input type="checkbox" name="solution_switch_1" id="solution_switch_1"><span class="slider round"></span></label> File</div>
+                                        <div class="centered"><input class="inputfile" type="file" id="solution_file_1" name="solution_file_1"></div>
+                                        <div><input class="form-control name-of-file" id="solution_body_name_1" maxlength="128" name="solution_body_name_1" placeholder="Name of file"></input></div>
+                                        <div id="solution_body_1" style="height: 20vh; width: 100%; margin-bottom: 1vh"></div>
+                                        <textarea name="solution_body_1"></textarea>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('solution')">Add</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('solution')">Remove</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="step-description">In this step, you should provide a solution to ensure the code compiles. If you do not provide this, then the only way to validate behavior is to try out the question.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- end step -->
+                    <br /><br />
+                    <center><button class="btn btn-success create-button" type="submit">Create Interview Question</button></center>
+                </form>
+            </div>
     </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-<script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
-<script>
-    function textarea_edit(name) {
-        var editor = ace.edit(name);
-        editor.setTheme("ace/theme/chrome");
-        editor.session.setMode("ace/mode/python");
-
-        var textarea = $('textarea[name="' + name + '"]').hide();
-        textarea.val(editor.getSession().getValue());
-        editor.getSession().on('change', function(){
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
+    <script>
+        function textarea_edit(name) {
+            var editor = ace.edit(name);
+            editor.setTheme("ace/theme/chrome");
+            editor.session.setMode("ace/mode/python");
+    
+            var textarea = $('textarea[name="' + name + '"]').hide();
             textarea.val(editor.getSession().getValue());
-        });
-    }
-    textarea_edit("supporting_code");
-    textarea_edit("starter_code");
-    textarea_edit("code_body_1");
-    textarea_edit("test_cases");
-    textarea_edit("solution");
-</script>
-<script src="{% static 'main/js/create.js' %}"></script>
+            editor.getSession().on('change', function(){
+                textarea.val(editor.getSession().getValue());
+            });
+        }
+        textarea_edit("supporting_body_1");
+        textarea_edit("starter_body_1");
+        textarea_edit("example_body_1");
+        textarea_edit("test_body_1");
+        textarea_edit("solution_body_1");
+    
+        function switch_code(number, name) {
+            $("#" + name + "_file_" + number).hide();
+            $("#" + name + "_switch_" + number).change(function() {
+                if(this.checked) {
+                    $("#" + name + "_body_name_" + number).hide();
+                    $("#" + name + "_body_" + number).hide();
+                    $("#" + name + "_file_" + number).show();
+                } else {
+                    $("#" + name + "_body_" + number).show();
+                    $("#" + name + "_body_name_" + number).show();
+                    $("#" + name + "_file_" + number).hide();
+                }
+            });
+        }
+        switch_code("1", "example");
+        switch_code("1", "supporting");
+        switch_code("1", "starter");
+        switch_code("1", "test");
+        switch_code("1", "solution");
+    </script>
+    <script src="{% static 'main/js/create.js' %}"></script>
+
+    <script>
+        
+    </script>
+
 {% endblock %}

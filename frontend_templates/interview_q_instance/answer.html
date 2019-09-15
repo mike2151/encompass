@@ -3,9 +3,8 @@
 {% block css_imports %}
 <link href="{% static 'main/css/answer.css' %}" rel="stylesheet"  type="text/css">
 {% endblock %}
-
-
 {% block content %}
+{% if user.is_authenticated %}
   <div class="main_container" >
       <div class="row" id="row-main">
           <div class="col-md-3 sidebar" id="sidebar">
@@ -136,4 +135,7 @@
   </script>
   </body>
 </html>
+{% else %}
+    {% include "no_auth.html" %}
+{% endif %} 
 {% endblock %}

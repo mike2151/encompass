@@ -15,6 +15,27 @@ class SignUpView(View):
         email = self.request.POST.get('email', '')
         password = self.request.POST.get('password', '')
         password2 = self.request.POST.get('password2', '')
+
+        error_messages = []
+        if password != password2:
+            error_messages.append("passwords do not match")
+
+        if len(password) < 8:
+            error_messages.append("passwords must be longer than 8 characters")
+
+        email_taken = True
+        try:
+            _ = SiteUser.objects.get(email=email)
+        except SiteUser.DoesNotExist:
+            email_taken = False
+
+        if email_taken:
+            error_messages.append("email taken")
+        
+        if len(error_messages) > 0:
+            return render(request, self.template_name, {"error_messages": error_messages})
+
+
         user = SiteUser.objects.create_user(username=email, email=email, password=password)
         return HttpResponseRedirect("/users/login/")
 
@@ -31,4 +52,4 @@ class LoginView(View):
             login(request, user)
             return HttpResponseRedirect("/")
         else:
-            return HttpResponseRedirect("/users/login")
+            return render(request, self.template_name, {"invalid_login": True})

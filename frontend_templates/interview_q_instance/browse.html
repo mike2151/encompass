@@ -8,7 +8,7 @@
 <div class="container main-section">
     <div class="row">
         <div class="col-sm-12">
-             {% if user %}
+             {% if user.is_authenticated %}
                 <h1 class="page-title">Interview Questions Unanswered:</h1>
                 <div class="container">
                     <div class="row">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             {% else %}
-            You are not authenticated
+                {% include "no_auth.html" %}
             {% endif %} 
         </div>
     </div>

@@ -13,7 +13,9 @@ import json
 class AllQuestionsToAnswerView(View):
     template_name = "interview_q_instance/browse.html"
     def get(self, request, *args, **kwargs):
-        questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_started=False).order_by('-creation_time')
+        questions = []
+        if request.user.is_authenticated:
+            questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_started=False).order_by('-creation_time')
         return render(request, self.template_name, {"questions": questions})
 
 

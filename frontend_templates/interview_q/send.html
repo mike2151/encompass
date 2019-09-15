@@ -6,6 +6,7 @@
 
 
 {% block content %}
+{% if user.is_authenticated %}
 <center>
 <div style="padding-top: 10vh; max-width: 30vw;">
     <form class="form-signin" method="post">
@@ -20,4 +21,7 @@
     </form>
 </div>
 </center>
+{% else %}
+    {% include "no_auth.html" %}
+{% endif %} 
 {% endblock %}

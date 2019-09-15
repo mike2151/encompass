@@ -8,7 +8,7 @@
 <div class="container" style="padding-top: 70px; max-width: 90vw;">
     <div class="row">
         <div class="col-sm-12">
-             {% if user %}
+             {% if user.is_authenticated %}
                 <h1 class="page-title">Your Interview Questions:</h1>
                 </section>
         
@@ -40,7 +40,7 @@
              
 
             {% else %}
-            You are not authenticated
+                {% include "no_auth.html" %}
             {% endif %} 
         </div>
     </div>
