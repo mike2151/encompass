@@ -39,18 +39,12 @@ def create_and_run_submission(request, question, instance):
            f.close()
 
     # copy over all files from other dirs in submission
-    example_code_dir = os.path.join(base_question_dir, 'example_code_files')
     supporting_code_dir = os.path.join(base_question_dir, 'supporting_code_files')
     test_code_dir = os.path.join(base_question_dir, 'test_code_files')
-    solution_code_dir = os.path.join(base_question_dir, 'solution_code_files')
-    starter_code_dir = os.path.join(base_question_dir, 'starter_code_files')
 
-    copy_folder_contents(example_code_dir, user_submission_dir)
     copy_folder_contents(supporting_code_dir, user_submission_dir)
     copy_folder_contents(test_code_dir, user_submission_dir)
-    copy_folder_contents(solution_code_dir, user_submission_dir)
-    copy_folder_contents(starter_code_dir, user_submission_dir)
-
+    
     # parse language info
     language_option = question.language.lower()
     language = ''

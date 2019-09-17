@@ -1,6 +1,5 @@
 var curr_method_number = 2;
-var curr_code_number = 2;
-var curr_test_case = 2;
+var curr_code_numbers = {};
 
 var add_api_field = function () {
     var added = document.createElement("div");
@@ -24,18 +23,36 @@ var add_api_field = function () {
     curr_method_number = curr_method_number + 1;
 };
 
+function element_exists(string_id) {
+    var element =  document.getElementById(string_id);
+    return (typeof(element) != 'undefined' && element != null);
+}
+
+function get_starting_num(class_name) {
+    var curr_num = 1;
+    var string_name = class_name + "_switch_" + curr_num.toString();
+    while (element_exists(string_name)) {
+        curr_num = curr_num + 1;
+        string_name = class_name + "_switch_" + curr_num.toString();
+    }
+    return curr_num;
+}
+
 var add_code_file = function (class_name) {
-    if (curr_code_number < 10) {
+    if (!(class_name in curr_code_numbers)) {
+        curr_code_numbers[class_name] = get_starting_num(class_name);
+    }
+    if (curr_code_numbers[class_name] < 10) {
         var added = document.createElement("div");
-        added.setAttribute("id", "div_" + class_name + "_code_" + curr_code_number.toString())
+        added.setAttribute("id", "div_" + class_name + "_code_" + curr_code_numbers[class_name].toString())
         document.getElementById(class_name + "_fields").appendChild(added);
-        var name = class_name + "_body_" + curr_code_number.toString();
+        var name = class_name + "_body_" + curr_code_numbers[class_name].toString();
 
         var textarea = document.createElement("textarea");
         textarea.setAttribute("name", name);
 
         var file_name = document.createElement("div");
-        file_name.innerHTML = '<input class="form-control name-of-file" id="' + class_name + '_body_name_' + curr_code_number.toString() + '" maxlength="128" name="' + class_name + '_body_name_' + curr_code_number.toString() + '" placeholder="Name of file"></input>'
+        file_name.innerHTML = '<input class="form-control name-of-file" id="' + class_name + '_body_name_' + curr_code_numbers[class_name].toString() + '" maxlength="128" name="' + class_name + '_body_name_' + curr_code_numbers[class_name].toString() + '" placeholder="Name of file"></input>'
 
         var editor = document.createElement("div");
         editor.setAttribute("id", name);
@@ -43,11 +60,11 @@ var add_code_file = function (class_name) {
 
         var switch_div = document.createElement("div");
         switch_div.setAttribute("class", "centered");
-        switch_div.innerHTML = 'Code <label class="switch"><input type="checkbox" name="' + class_name + '_switch_' + curr_code_number.toString() +'" id="' + class_name + '_switch_' + curr_code_number.toString() +'"><span class="slider round"></span></label> File';
+        switch_div.innerHTML = 'Code <label class="switch"><input type="checkbox" name="' + class_name + '_switch_' + curr_code_numbers[class_name].toString() +'" id="' + class_name + '_switch_' + curr_code_numbers[class_name].toString() +'"><span class="slider round"></span></label> File';
 
         var file_div = document.createElement("div");
         file_div.setAttribute("class", "centered");
-        file_div.innerHTML = '<input type="file" id="' + class_name + '_file_' + curr_code_number.toString() + '" name="' + class_name + '_file_' + curr_code_number.toString() + '"></input>';
+        file_div.innerHTML = '<input type="file" id="' + class_name + '_file_' + curr_code_numbers[class_name].toString() + '" name="' + class_name + '_file_' + curr_code_numbers[class_name].toString() + '"></input>';
 
         added.appendChild(document.createElement("center"));
         added.appendChild(switch_div);
@@ -60,15 +77,18 @@ var add_code_file = function (class_name) {
         added.appendChild(document.createElement("br"));
 
         textarea_edit(name);
-        switch_code(curr_code_number.toString(), class_name);
+        switch_code(curr_code_numbers[class_name].toString(), class_name);
         
-        curr_code_number = curr_code_number + 1;
+        curr_code_numbers[class_name] = curr_code_numbers[class_name] + 1;
     }
 } 
 
 var remove_code_file = function (class_name) {
-    if (curr_code_number > 2) {
-        document.getElementById("div_" + class_name + "_code_" + (curr_code_number-1).toString()).remove();
-        curr_code_number = curr_code_number - 1;
+    if (!(class_name in curr_code_numbers)) {
+        curr_code_numbers[class_name] = get_starting_num(class_name);
+    }
+    if (curr_code_numbers[class_name] > 2) {
+        document.getElementById("div_" + class_name + "_code_" + (curr_code_numbers[class_name]-1).toString()).remove();
+        curr_code_numbers[class_name] = curr_code_numbers[class_name] - 1;
     }
 }
