@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from submission_result.models import SubmissionResult
 from starter_code.models import StarterCode
 import json
+from api_q.models import InterviewAPI
 
 
 class AllQuestionsToAnswerView(View):
@@ -23,8 +24,12 @@ class QuestionAnswerView(View):
     template_name = "interview_q_instance/answer.html"
     def get(self, request, *args, **kwargs):
         question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
-        api_methods = MethodSignature.objects.filter(interview_question_api=question.base_question.api)
         files_to_work_on = StarterCode.objects.filter(interview_question=question.base_question)
+
+        api_methods = []
+        api = InterviewAPI.objects.filter(interview_question=question.base_question).first()
+        if api is not None:
+            api_methods = MethodSignature.objects.filter(interview_question_api=api)
 
         files_to_work_on_names = []
         files_to_work_on_bodies = []
@@ -50,12 +55,13 @@ class QuestionAnswerView(View):
         if request.POST['action'] == 'submit_code':
             question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
 
-            all_tests_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance)
+            test_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance, False)
             
             test_results_json = json.dumps(test_results)
+            test_passed_json = json.dumps(test_passed)
 
             # pass results to results page
-            submission_result = SubmissionResult(all_tests_passed=all_tests_passed, results_body=test_results_json)
+            submission_result = SubmissionResult(tests_passed_body=test_passed_json, results_body=test_results_json, interview_question=question_instance.base_question)
             submission_result.save()
             question_instance.submission_result = submission_result
             question_instance.save()

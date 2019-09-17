@@ -15,7 +15,7 @@ def copy_folder_contents(src, dest):
         copy_tree(src, dest)
 
 # creates the file to run for tests
-def create_and_run_submission(request, question, instance):
+def create_and_run_submission(request, question, instance, creator_run):
     # create files from the users' submission
     base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(question.pk))
     instance_dir = os.path.join(base_question_dir, 'instances')
@@ -27,16 +27,21 @@ def create_and_run_submission(request, question, instance):
         shutil.rmtree(user_submission_dir)
     os.makedirs(user_submission_dir)
 
-    # go through each submitted file and create it
-    starter_code_objs = StarterCode.objects.filter(interview_question=question)
-    for starter_code_obj in starter_code_objs:
-        filename = starter_code_obj.code_file.name.split("/")[-1]
-        file_contents = request.POST.get("file_" + filename, False)
-        if file_contents:
-           file_path = os.path.join(user_submission_dir, filename)
-           f = open(file_path, "w")
-           f.write(file_contents)
-           f.close()
+    if creator_run:
+        # copy over solution
+        solution_code_dir = os.path.join(base_question_dir, 'solution_code_files')
+        copy_folder_contents(solution_code_dir, user_submission_dir)
+    else:
+        # go through each submitted file and create it
+        starter_code_objs = StarterCode.objects.filter(interview_question=question)
+        for starter_code_obj in starter_code_objs:
+            filename = starter_code_obj.code_file.name.split("/")[-1]
+            file_contents = request.POST.get("file_" + filename, False)
+            if file_contents:
+                file_path = os.path.join(user_submission_dir, filename)
+                f = open(file_path, "w")
+                f.write(file_contents)
+                f.close()
 
     # copy over all files from other dirs in submission
     supporting_code_dir = os.path.join(base_question_dir, 'supporting_code_files')
@@ -63,13 +68,13 @@ def create_and_run_submission(request, question, instance):
 
     # now run the test file
     test_files = InterviewTestCase.objects.filter(interview_question=question)
-    all_tests_passed = True
+    test_passed = {}
     test_output = {}
     for test in test_files:
         passed = False
         test_case_name = str(test.code_file.name.split('/')[-1])
         try:
-            result = run_submission_file(test_case_name, user_submission_dir, language, version)
+            result = run_submission_file(test_case_name, user_submission_dir, language, version)['result']
             if len(result) == 0:
                 passed = True
                 test_output[test_case_name] = ''
@@ -80,10 +85,9 @@ def create_and_run_submission(request, question, instance):
             passed = False
             test_output[test_case_name] = str(e)
         
-        if not passed:
-            all_tests_passed = False
+        test_passed[test_case_name] = passed
 
-    return all_tests_passed, test_output.copy()
+    return test_passed.copy(), test_output.copy()
 
 
     

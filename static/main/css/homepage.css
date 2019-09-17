@@ -111,13 +111,6 @@ body {
   text-align: center;
 }
 
-.open-question-description {
-  display:block;
-  text-overflow: ellipsis;
-  overflow: hidden; 
-  white-space: nowrap;
-}
-
 .open-questions {
   background: rgb(191, 126, 218)
 }
@@ -130,4 +123,15 @@ body {
   padding-top: 2vh;
   color: white;
 }
+
+.open-question-box {
+  margin-left: 3vw;
+}
+
+.open-question-card {
+  width: 18vw;
+  
+}
+
+
 

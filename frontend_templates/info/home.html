@@ -47,14 +47,14 @@
         <div class="row">
           <div class="col-lg-4 mb-4">
             {% for question in questions %}
-              <div class="card h-100">
-                <h4 class="card-header">{{ question.name }}</h4>
-                <div class="card-body">
-                  <p class="card-text open-question-description">{{ question.description }}</p>
-                </div>
-                <div class="card-footer">
-                  <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary">Answer</a>
-                </div>
+              <div class="open-question-box">
+                  <div class="card open-question-card" >
+                    <div class="card-body">
+                      <h5 class="card-title">{{ question.name }}</h5>
+                      <p class="card-text">{{ question.description|truncatechars:200 }}</p>
+                      <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary btn-block">Answer</a>
+                    </div>
+                  </div>
               </div>
             {% endfor %}
           </div>

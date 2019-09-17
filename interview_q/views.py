@@ -17,6 +17,7 @@ from datetime import datetime
 from django.core.files.base import ContentFile
 from starter_code.models import StarterCode
 from solution_code.models import SolutionCode
+from interview_q_instance.util import create_and_run_submission
 
 
 class CreateInterviewView(View):
@@ -142,6 +143,7 @@ class CreateInterviewView(View):
                 number = number + 1
 
             # handle solution
+            submitted_solution = False
             name = "solution"
             number = 1
             while self.check_condition(request, name, number):
@@ -150,6 +152,7 @@ class CreateInterviewView(View):
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = SolutionCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
                         new_file.save()
+                        submitted_solution = True
                 else:
                     # code
                     # write to file
@@ -159,7 +162,11 @@ class CreateInterviewView(View):
                         new_file = SolutionCode(interview_question=question)
                         new_file.code_file.save(file_name, ContentFile(file_contents))
                         new_file.save()    
+                        submitted_solution = True
                 number = number + 1
+
+            if submitted_solution:
+                return HttpResponseRedirect("/interview_questions/question/" + str(question_id) + "/validate/")
 
             return HttpResponseRedirect("/interview_questions/")
         else:
@@ -460,4 +467,17 @@ class CreateOpenQuestionInstanceView(View):
             question_instance.save()
         return HttpResponseRedirect("/questions/answer/" + str(question_instance.id) + "/")
 
+class ValidateQuestionView(View):
+    template_name = "interview_q/validate.html"
+    def get(self, request,  *args, **kwargs):
+        question = None
+        if request.user.is_authenticated:
+            question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+            if request.user == question.creator:
+                # create question instance
+                question_instance = InterviewQuestionInstance(interviewee_email=request.user.email, base_question=question, start_time=datetime.now())
+                question_instance.save()
+                test_passed, test_results = create_and_run_submission(request, question, question_instance, True)
+                return render(request, self.template_name, {'question': question, 'test_passed': test_passed, 'test_results': test_results})
+        return render(request, "no_auth.html", {})
         

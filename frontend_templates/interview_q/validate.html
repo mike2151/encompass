@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'interview/compile_run.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container main-section">
+    <div class="row">
+        <div class="col-sm-12">
+             {% if user.is_authenticated %}
+                <h1 class="page-title">Compilation Result For : {{ question.name }}</h1>
+                <div class="container">
+                    <div class="row">
+                        {% for test_name, test_p in test_passed.items %}
+                            <div class="col-md-4">
+                                <div class="card mb-4 box-shadow">
+                                <div class="card-body">
+                                    <p class="card-text question-card-title">{{ test_name }}</p>
+                                    {% if test_p %}
+                                        <p class="passed">Passed</p>
+                                    {% else %}
+                                        <p class="failed">Failed</p>
+                                        <p class="output">Output: <br /> {{ test_results|get_item:test_name }}</p>
+                                    {% endif %}
+                                </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                </div>
+            {% else %}
+                {% include "no_auth.html" %}
+            {% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}
