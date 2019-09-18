@@ -25,42 +25,48 @@
                 {% endfor %}
                 </ul>
           </div>
+          {% if is_preview %}
           <div class="col-md-9 answer-section" id="content">
-              <form method="post">
-              {% csrf_token %}
-              <div class="col-md-9" style="background-color: #DCDCDC; max-width: 100%; margin-top: 1vh;">
-                <div class="top-row-left">
-                    <button type="button" class="btn btn-secondary" id="toggle_sidebar"> < </button>
-                    <select class="select-css" id="file-drop-down" onchange="onSelectFileChange()">
-                        {% for filename in files_to_work_on_names %}
-                          <option value="{{ filename }}">{{ filename }}</option>
-                        {% endfor %}
-                      </select>
-                </div>
-                <div class="top-row-right">
-                </div>
-              </div>
-              <br />
-              <div class="col-md-9 editor-holder">
-                <div id="editor" style="height: 75vh; width: 100%">{{question.base_question.starter_code}}</div>
-                <textarea name="editor"></textarea>
-              </div>
-              <div class="col-md-9 test-case-section">
-                  <hr />
-                  <h3 class="test-case-header">Write Test Cases</h3>
-                  <div id="test_case_editor" style="height: 20vh; width: 100%"></div>
-                  <textarea name="test_case_editor"></textarea>
-                  <center><button type="button" class="btn btn-info test-case-button">Run Test Case</button></center>
-              </div>
-              <div class="col-md-9 submit-section">
-                  <center><button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button></center>
-              </div>
-             
-              <div id="file_contents" type="hidden">
-
-              </div>
-              </form>
+            <div class="center-screen">You are previewing the question. Please come back when the question opens up.</div>
           </div>
+          {% else %}
+            <div class="col-md-9 answer-section" id="content">
+                <form method="post">
+                {% csrf_token %}
+                <div class="col-md-9" style="background-color: #DCDCDC; max-width: 100%; margin-top: 1vh;">
+                  <div class="top-row-left">
+                      <button type="button" class="btn btn-secondary" id="toggle_sidebar"> < </button>
+                      <select class="select-css" id="file-drop-down" onchange="onSelectFileChange()">
+                          {% for filename in files_to_work_on_names %}
+                            <option value="{{ filename }}">{{ filename }}</option>
+                          {% endfor %}
+                        </select>
+                  </div>
+                  <div class="top-row-right">
+                  </div>
+                </div>
+                <br />
+                <div class="col-md-9 editor-holder">
+                  <div id="editor" style="height: 75vh; width: 100%">{{question.base_question.starter_code}}</div>
+                  <textarea name="editor"></textarea>
+                </div>
+                <div class="col-md-9 test-case-section">
+                    <hr />
+                    <h3 class="test-case-header">Write Test Cases</h3>
+                    <div id="test_case_editor" style="height: 20vh; width: 100%"></div>
+                    <textarea name="test_case_editor"></textarea>
+                    <center><button type="button" class="btn btn-info test-case-button">Run Test Case</button></center>
+                </div>
+                <div class="col-md-9 submit-section">
+                    <center><button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button></center>
+                </div>
+              
+                <div id="file_contents" type="hidden">
+
+                </div>
+                </form>
+            </div>
+          {% endif %}
       </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>

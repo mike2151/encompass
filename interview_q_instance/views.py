@@ -9,6 +9,7 @@ from submission_result.models import SubmissionResult
 from starter_code.models import StarterCode
 import json
 from api_q.models import InterviewAPI
+from datetime import datetime
 
 
 class AllQuestionsToAnswerView(View):
@@ -16,8 +17,13 @@ class AllQuestionsToAnswerView(View):
     def get(self, request, *args, **kwargs):
         questions = []
         if request.user.is_authenticated:
-            questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_started=False).order_by('-creation_time')
-        return render(request, self.template_name, {"questions": questions})
+            now = datetime.now().date()
+            available_questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_completed=False, start_time__lt=now).order_by('-creation_time')
+            preview_questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_completed=False, start_time__gte=now).order_by('-creation_time')
+        return render(request, self.template_name, {
+            "available_questions": available_questions,
+            "preview_questions": preview_questions
+            })
 
 
 class QuestionAnswerView(View):
@@ -42,14 +48,26 @@ class QuestionAnswerView(View):
             f.close()
             files_to_work_on_bodies.append(content)
 
+        is_preview = question.start_time.date() > datetime.now().date()
 
-        return render(request, self.template_name, {
-            'question': question,
-            'api_methods': api_methods,
-            'example_code_snippets': [],
-            'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
-            'files_to_work_on_names': files_to_work_on_names
-            })
+        if is_preview:
+            return render(request, self.template_name, {
+                'question': question,
+                'api_methods': api_methods,
+                'example_code_snippets': [],
+                'files_to_work_on_bodies': [],
+                'files_to_work_on_names': [],
+                'is_preview': is_preview
+                })
+        else:
+            return render(request, self.template_name, {
+                'question': question,
+                'api_methods': api_methods,
+                'example_code_snippets': [],
+                'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
+                'files_to_work_on_names': files_to_work_on_names,
+                'is_preview': is_preview
+                })
 
     def post(self, request, *args, **kwargs):
         if request.POST['action'] == 'submit_code':
