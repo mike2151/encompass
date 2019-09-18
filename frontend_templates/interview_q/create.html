@@ -47,9 +47,8 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="step-description">In this step, provide a name for your question. 
-                                Additionally, provide the description of what the user has to do .
-                                This description will show up to the user.
+                        <p class="step-description">In this step, provide a name for your question and a description detailing what the user has to do. 
+                               Indicate the programming language of your question along with whether or not you want this question to be viewed and attempted by all users on the site.                               
                         </p>
                     </div>
                 </div>
@@ -78,8 +77,8 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="step-description">In this step, write the code that will run under the hood.
-                                This may be a class for instance.
+                        <p class="step-description">In this step, write the code that, with the user submitted code, will determine if the user has correctly implemented your task. This code is not seen 
+                            by the user and is used for compilation. An example would be if you wanted the user to implement a function for some part of your codebase that the user should not see. 
                         </p>
                     </div>
                 </div>
@@ -106,8 +105,8 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="step-description">In this step, you will declare what methods are available to the user via the API.
-                             For example, you might declare that the return_value function is available to them.
+                        <p class="step-description">In this step, you will declare what methods are available to the user when they submit. For instance, you may have a function that you do not want 
+                            the user to see the implementation of but still want it to be used in their solution. Outline what those functions are here along with a general description of your API.
                         </p>
                     </div>
                 </div>
@@ -136,7 +135,9 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="step-description">In this step, you provide some starter code that the user can optionally fill out.
+                        <p class="step-description">In this step, you will detail the files that the user has to submit. For every file that has to be submitted, 
+                            a starter code file should be declared. You can just type the name of the file in the name of file field. You can optionally fill in some parts of the file 
+                            to get the user started.
                         </p>
                     </div>
                 </div>
@@ -165,7 +166,8 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="step-description">In this step, you provide example code snippets and files.
+                        <p class="step-description">In this step, you provide example code snippets and files. These will not be compiled. These are for the user to view to get
+                            a better understanding of your question.
                         </p>
                     </div>
                 </div>
@@ -187,10 +189,25 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="step-description">In this step, you provide test cases.
-                            When importing a file do <br />
-                            import file<br />
-                            file.function
+                        <p class="step-description">In this step, you provide test cases. An example is below:
+                            <div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;" id="test_case_example">
+                               <pre style="margin: 0; line-height: 125%"><span style="color: #008000"># this unittest import is needed</span>
+<span style="color: #0000ff">import</span> unittest
+
+<span style="color: #0000ff">import</span> user_submitted_file
+<span style="color: #008000"># indicate the visibility of your test 
+to the user with a @visible @not_visible annotation</span>
+
+<span style="color: #008000"># all test cases should be written in this class</span>
+<span style="color: #0000ff">class</span> <span style="color: #2b91af">TestCases</span>(unittest.TestCase):
+    @visible
+    <span style="color: #0000ff">def</span> test_user_submitted_file():
+        <span style="color: #0000ff">assert</span> user_submitted_file.custom_function() == 5
+
+    @not_visible
+    <span style="color: #0000ff">def</span> test_user_submitted_file_two():
+        <span style="color: #0000ff">assert</span> user_submitted_file.custom_function() != 5
+</pre></div>
                         </p>
                     </div>
                 </div>
@@ -219,7 +236,8 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <p class="step-description">In this step, you should provide a solution to ensure the code compiles. If you do not provide this, then the only way to validate behavior is to try out the question.
+                        <p class="step-description">In this step, you should provide a solution to ensure the code compiles. The solution files should correspond to the starter files. If you do not provide this, then the only way to validate behavior is to try out the question.
+                            If you submit solution files, we will run your solution and the problem after you create this question to ensure everything is running smoothly. 
                         </p>
                     </div>
                 </div>

@@ -38,7 +38,7 @@ class QuestionAnswerView(View):
             files_to_work_on_names.append(filename)
             f = file_obj.code_file
             f.open(mode='r') 
-            content = f.readlines()
+            content = f.read()
             f.close()
             files_to_work_on_bodies.append(content)
 

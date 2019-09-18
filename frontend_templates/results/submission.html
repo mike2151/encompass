@@ -21,7 +21,9 @@
                                         <p class="passed">Passed</p>
                                     {% else %}
                                         <p class="failed">Failed</p>
-                                        <p class="output">Output: <br /> {{ test_results|get_item:test_name }}</p>
+                                        {% if test_results|get_item_len:test_name > 0 %}
+                                            <p class="output"><br /> {{ test_results|get_item:test_name }}</p>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                                 </div>
