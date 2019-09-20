@@ -447,8 +447,9 @@ class CreateQuestionInstanceView(View):
             return render(request, self.template_name, {"error_message": "email field not filled out"})
         
         start_date_field = self.request.POST.get('start_date', '')
+        expire_date_field = self.request.POST.get('expiration_date', '')
 
-        question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field)
+        question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field)
         question_instance.save()
         return HttpResponseRedirect("/interview_questions/")
 
@@ -477,7 +478,7 @@ class ValidateQuestionView(View):
                 # create question instance
                 question_instance = InterviewQuestionInstance(interviewee_email=request.user.email, base_question=question, start_time=datetime.now())
                 question_instance.save()
-                test_passed, test_results = create_and_run_submission(request, question, question_instance, True)
+                test_passed, test_results = create_and_run_submission(request, question, question_instance, True, '')
                 return render(request, self.template_name, {'question': question, 'test_passed': test_passed, 'test_results': test_results})
         return render(request, "no_auth.html", {})
         

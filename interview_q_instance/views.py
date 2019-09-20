@@ -10,19 +10,24 @@ from starter_code.models import StarterCode
 import json
 from api_q.models import InterviewAPI
 from datetime import datetime
+from django.http import JsonResponse
 
 
 class AllQuestionsToAnswerView(View):
     template_name = "interview_q_instance/browse.html"
     def get(self, request, *args, **kwargs):
-        questions = []
+        preview_questions = []
+        available_questions = []
+        completed_questions = []
         if request.user.is_authenticated:
             now = datetime.now().date()
-            available_questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_completed=False, start_time__lt=now).order_by('-creation_time')
-            preview_questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_completed=False, start_time__gte=now).order_by('-creation_time')
+            available_questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_completed=False, start_time__lt=now, expire_time__gt=now).order_by('-creation_time')
+            preview_questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_completed=False, start_time__gte=now, expire_time__gt=now).order_by('-creation_time')
+            completed_questions = InterviewQuestionInstance.objects.filter(interviewee_email=request.user.email, has_completed=True).order_by('-creation_time')
         return render(request, self.template_name, {
             "available_questions": available_questions,
-            "preview_questions": preview_questions
+            "preview_questions": preview_questions,
+            "completed_questions": completed_questions
             })
 
 
@@ -60,6 +65,8 @@ class QuestionAnswerView(View):
                 'is_preview': is_preview
                 })
         else:
+            question.has_started = True
+            question.save()
             return render(request, self.template_name, {
                 'question': question,
                 'api_methods': api_methods,
@@ -73,7 +80,7 @@ class QuestionAnswerView(View):
         if request.POST['action'] == 'submit_code':
             question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
 
-            test_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance, False)
+            test_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance, False, '')
             
             test_results_json = json.dumps(test_results)
             test_passed_json = json.dumps(test_passed)
@@ -82,6 +89,19 @@ class QuestionAnswerView(View):
             submission_result = SubmissionResult(tests_passed_body=test_passed_json, results_body=test_results_json, interview_question=question_instance.base_question)
             submission_result.save()
             question_instance.submission_result = submission_result
+            question_instance.has_completed = True
             question_instance.save()
             return HttpResponseRedirect("/results/" + str(submission_result.id))
-            
+
+class UserTestCaseView(View):
+    def post(self, request, *args, **kwargs):
+        test_case_body = request.POST.get("test_case_editor", '')
+        test_passed = {}
+        test_results = {}
+        if len(test_case_body) > 0:
+            question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
+            test_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance, False, test_case_body)
+        return JsonResponse({
+            'test_passed': test_passed,
+            'test_results': test_results
+        })

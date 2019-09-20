@@ -31,7 +31,7 @@
           </div>
           {% else %}
             <div class="col-md-9 answer-section" id="content">
-                <form method="post">
+                <form method="post" action="{{ request.path }}">
                 {% csrf_token %}
                 <div class="col-md-9" style="background-color: #DCDCDC; max-width: 100%; margin-top: 1vh;">
                   <div class="top-row-left">
@@ -50,21 +50,22 @@
                   <div id="editor" style="height: 75vh; width: 100%">{{question.base_question.starter_code}}</div>
                   <textarea name="editor"></textarea>
                 </div>
+                <div class="col-md-9 submit-section">
+                  <center><button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button></center>
+                </div>
+                <div id="file_contents" type="hidden">
+                </form>
                 <div class="col-md-9 test-case-section">
                     <hr />
                     <h3 class="test-case-header">Write Test Cases</h3>
                     <div id="test_case_editor" style="height: 20vh; width: 100%"></div>
-                    <textarea name="test_case_editor"></textarea>
-                    <center><button type="button" class="btn btn-info test-case-button">Run Test Case</button></center>
+                    <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
+                    <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test Case</button></center>
                 </div>
-                <div class="col-md-9 submit-section">
-                    <center><button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button></center>
-                </div>
-              
-                <div id="file_contents" type="hidden">
+                
 
                 </div>
-                </form>
+                
             </div>
           {% endif %}
       </div>
@@ -114,8 +115,24 @@
         });
         return editor;
       }
+
+      function textarea_edit_test_case(name) {
+        var editor = ace.edit(name);
+        editor.setTheme("ace/theme/chrome");
+        editor.session.setMode("ace/mode/python");
+
+        var textarea = $('#test_case_editor_textarea').hide();
+        textarea.val(editor.getSession().getValue());
+        editor.getSession().on('change', function(){
+            textarea.val(editor.getSession().getValue());
+            file_name_to_body[currently_selected_file] = editor.getSession().getValue();
+            document.getElementById('test_case_editor_textarea').value = editor.getSession().getValue();
+        });
+        return editor;
+      }
+
       var code_editor = textarea_edit("editor");
-      var test_case_editor = textarea_edit("test_case_editor");
+      var test_case_editor = textarea_edit_test_case("test_case_editor");
 
       // populate all of the example code views
       var example_code_snippets = document.getElementsByClassName('example_code_view');
@@ -137,6 +154,38 @@
           code_editor.setValue(file_name_to_body[currently_selected_file].toString(), -1);        
       }
 
+      
+      function get_all_code_fields() {
+        var return_dict = {};
+        var all_file_fields = $('*[id^="file_"]');
+        for (var i = 0; i < all_file_fields.length; i++) {
+          var curr_element = all_file_fields[i];
+          if (curr_element.id != "file_contents") {
+            return_dict[curr_element.id] = curr_element.value;
+          }
+        }
+        return return_dict;
+      }
+
+      
+      $('#run_test_case_button').click(function(){
+          var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
+
+          var editor_data = $('#test_case_editor_textarea').val();
+
+          data_to_send = get_all_code_fields();
+          data_to_send['test_case_editor'] = editor_data;
+          data_to_send['csrfmiddlewaretoken'] = CSRFtoken;
+
+          $.ajax({
+            type:"POST",
+            url:"/questions/answer/submit_test_case/{{request.resolver_match.kwargs.pk}}/",
+            data: data_to_send,
+            success: function(data) {
+                console.log(data);
+            }
+        });
+      });
       
     
   </script>

@@ -60,7 +60,27 @@
                                     </div>
                                 {% endfor %}
                             </div>
+                    </div>
+                    <!-- Completed -->
+                    <div class="question-section">
+                        <div class="row">
+                            <h2 class="question-row-title">Completed Questions:</h2>
                         </div>
+                        <hr />
+                        <div class="row">
+                            {% for question in available_questions %}
+                                <div class="col-md-4">
+                                    <div class="card mb-4 box-shadow">
+                                    <div class="card-body">
+                                        <center>
+                                        <p class="card-text question-card-title">{{ question.base_question.name }}</p>
+                                        </center>
+                                    </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                </div>
                 </div>
             {% else %}
                 {% include "no_auth.html" %}

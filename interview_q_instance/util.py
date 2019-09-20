@@ -41,22 +41,22 @@ def create_runner_file(user_submission_dir, test_case_file_name, language):
             write_file.write(prepend_str + data)
             write_file.close()
 
-def get_visible_test_cases(test_file_path):
-    visible_test_cases = {}
-    is_visible_line = False
+def get_not_visible_test_cases(test_file_path):
+    not_visible_test_cases = {}
+    is_not_visible_line = False
     with open(test_file_path, "r") as read_file:
         for line in read_file:
-            if "@visible" in line:
-                is_visible_line = True
+            if "@not_visible" in line:
+                is_not_visible_line = True
             else:
-                if is_visible_line:
+                if is_not_visible_line:
                     test_case_name = (line.split("def")[1]).split("(")[0].replace(" ", "")
-                    visible_test_cases[test_case_name] = True
-                    is_visible_line = False
-    return visible_test_cases.copy()
+                    not_visible_test_cases[test_case_name] = True
+                    is_not_visible_line = False
+    return not_visible_test_cases.copy()
 
 # creates the file to run for tests
-def create_and_run_submission(request, question, instance, creator_run):
+def create_and_run_submission(request, question, instance, creator_run, user_test_case):
     # create files from the users' submission
     base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(question.pk))
     instance_dir = os.path.join(base_question_dir, 'instances')
@@ -89,6 +89,21 @@ def create_and_run_submission(request, question, instance, creator_run):
     test_code_dir = os.path.join(base_question_dir, 'test_code_files')
 
     copy_folder_contents(supporting_code_dir, user_submission_dir)
+    
+
+    # if user test case
+    if len(user_test_case) > 0:
+        # create the test file
+        user_test_case_dir = os.path.join(base_question_dir, 'user_test_cases')
+        if os.path.exists(user_test_case_dir):
+            shutil.rmtree(user_test_case_dir)
+        os.makedirs(user_test_case_dir)
+        file_dir = os.path.join(user_test_case_dir, "user_test.py")
+        with open(file_dir, "w") as write_file:
+            write_file.write(user_test_case)
+        write_file.close()
+        test_code_dir = user_test_case_dir
+    
     copy_folder_contents(test_code_dir, user_submission_dir)
 
     
@@ -112,11 +127,18 @@ def create_and_run_submission(request, question, instance, creator_run):
         f.close()         
 
     # now run the test file
-    test_file = InterviewTestCase.objects.filter(interview_question=question).first()
+
+    test_case_file_name = ""
     test_passed = {}
     test_output = {}
-    if test_file is not None:
-        test_case_file_name = str(test_file.code_file.name.split('/')[-1])
+    if len(user_test_case) > 0:
+        test_case_file_name = "user_test.py"
+    else:
+        test_file = InterviewTestCase.objects.filter(interview_question=question).first()
+        if test_file is not None:
+            test_case_file_name = str(test_file.code_file.name.split('/')[-1])
+
+    if len(test_case_file_name) > 0:    
         # prepend decorators to test file
         prepend_to_test_file(user_submission_dir, test_case_file_name, language)
         # create the runner file
@@ -127,8 +149,8 @@ def create_and_run_submission(request, question, instance, creator_run):
 
         test_file_path = os.path.join(user_submission_dir, test_case_file_name)
 
-        # get list of visible
-        visible_test_cases = get_visible_test_cases(test_file_path)
+        # get list of not visible
+        not_visible_test_cases = get_not_visible_test_cases(test_file_path)
 
         curr_failure_output = ""
         is_tracking_failure = False
@@ -137,7 +159,7 @@ def create_and_run_submission(request, question, instance, creator_run):
         # parse results
         for line in all_unit_tests_results_str.split("\n"):
             if is_tracking_failure:
-                if "---" not in line:
+                if ("---" not in line) and ("====" not in line):
                     curr_failure_output = curr_failure_output + line
             if "..." in line:
                 line_split = line.split(" ")
@@ -150,7 +172,7 @@ def create_and_run_submission(request, question, instance, creator_run):
             elif "FAIL" in line:
                 is_tracking_failure = True
                 curr_failure_name = line.split(" ")[1]
-            elif "---" in line:
+            elif "---" in line or "====" in line:
                 if is_tracking_failure and len(curr_failure_output) > 0:
                     is_tracking_failure = False
                     test_output[curr_failure_name] = curr_failure_output
@@ -162,10 +184,10 @@ def create_and_run_submission(request, question, instance, creator_run):
         return_test_output = {}
         curr_test_case_num = 1
         for key, value in test_passed.items():
-            if key in visible_test_cases:
+            if key not in not_visible_test_cases:
                 return_test_passed["Test Case " + str(curr_test_case_num)] = value
                 new_output_str = ""
-                if not value:
+                if value == False:
                     new_output_str = "Output: \n" + test_output[key]
                 return_test_output["Test Case " + str(curr_test_case_num)] = new_output_str
                 curr_test_case_num = curr_test_case_num + 1
