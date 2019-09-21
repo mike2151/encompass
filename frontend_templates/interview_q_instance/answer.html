@@ -1,197 +1,357 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css_imports %}
-<link href="{% static 'main/css/answer.css' %}" rel="stylesheet"  type="text/css">
+<link href="{% static 'main/css/answer.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
-  <div class="main_container" >
-      <div class="row" id="row-main">
-          <div class="col-md-3 sidebar" id="sidebar">
-            <center><h2 class="sidebar-title">QUESTION OVERVIEW</h2></center><hr />
-            <center><h2>Question Description</h2></center>
-            <p class="question-description">{{ question.base_question.description }}</p>
-            <center><h2>API DOCUMENTATION</h2></center>
-            <ul class="api-list">
-            {% for api_method in api_methods %}
-              <li class="api-list-item">{{ api_method.api_signature }}</li>
-            {% endfor %}
-            </ul>
-            
-            <center><h2>EXAMPLE CODE</h2></center>
-            <ul class="example-code-list">
-                {% for example_code in example_code_snippets %}
-                  <li><div id="example_code_{{ forloop.counter }}" class="example_code_view" style="height: 70vh; width: 100%">{{ example_code.body }}</div></li>
+<div class="main_container">
+  <form method="post" action="{{ request.path }}" class="row">
+    {% csrf_token %}
+      <div class="col-md-6 answer-section-one" id="content-one">
+        <div class="col-md-6 editor-section">
+          <div class="top-row-left">
+            <select class="select-css" id="file-drop-down-one" >
+                {% for opt_group in opt_groups %} 
+                  <optgroup label="{{ opt_group }}">
+                    {% if opt_group == 'Question' %}
+                      <option value="Question Description">Question Description</option>
+                    {% elif opt_group == 'Stub Files' %}
+                      {% for filename in files_to_work_on_names %}
+                      <option value="{{ filename }}">{{ filename }}</option>
+                      {% endfor %}
+                    {% elif opt_group == 'API' %}
+                    {% elif opt_group == 'Example Code' %}
+                    {% endif %}
+                  </optgroup>
                 {% endfor %}
-                </ul>
+            </select>
+            <p class="theme-name">Theme: </p><select id="theme-one" onchange="onSelectNewThemeOne()"></select>
           </div>
-          {% if is_preview %}
-          <div class="col-md-9 answer-section" id="content">
-            <div class="center-screen">You are previewing the question. Please come back when the question opens up.</div>
+        </div>
+        <br />
+        <div class="col-md-6 editor-holder">
+          <div id="editor_one" class="actual-editor">{{question.base_question.starter_code}}</div>
+          <textarea name="editor_one"></textarea>
+        </div>
+        <div id="file_contents" type="hidden"></div>
+      </div> <!-- end of section one-->
+      <div class="col-md-6 answer-section-two" id="content-two">
+        <div class="col-md-6 editor-section">
+          <div class="top-row-left">
+            <button type="button" class="btn btn-secondary toggle-button" id="toggle_sidebar"> < </button>
+            <select class="select-css" id="file-drop-down-two">
+                {% for filename in files_to_work_on_names %}
+                  <option value="{{ filename }}">{{ filename }}</option>
+                {% endfor %}
+            </select>
+            <p class="theme-name">Theme: </p><select id="theme-two" onchange="onSelectNewThemeTwo()"> </select>
           </div>
-          {% else %}
-            <div class="col-md-9 answer-section" id="content">
-                <form method="post" action="{{ request.path }}">
-                {% csrf_token %}
-                <div class="col-md-9" style="background-color: #DCDCDC; max-width: 100%; margin-top: 1vh;">
-                  <div class="top-row-left">
-                      <button type="button" class="btn btn-secondary" id="toggle_sidebar"> < </button>
-                      <select class="select-css" id="file-drop-down" onchange="onSelectFileChange()">
-                          {% for filename in files_to_work_on_names %}
-                            <option value="{{ filename }}">{{ filename }}</option>
-                          {% endfor %}
-                        </select>
-                  </div>
-                  <div class="top-row-right">
-                  </div>
-                </div>
-                <br />
-                <div class="col-md-9 editor-holder">
-                  <div id="editor" style="height: 75vh; width: 100%">{{question.base_question.starter_code}}</div>
-                  <textarea name="editor"></textarea>
-                </div>
-                <div class="col-md-9 submit-section">
-                  <center><button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button></center>
-                </div>
-                <div id="file_contents" type="hidden">
-                </form>
-                <div class="col-md-9 test-case-section">
-                    <hr />
-                    <h3 class="test-case-header">Write Test Cases</h3>
-                    <div id="test_case_editor" style="height: 20vh; width: 100%"></div>
-                    <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
-                    <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test Case</button></center>
-                </div>
-                
-
-                </div>
-                
-            </div>
-          {% endif %}
+        </div>
+        <br />
+        <div class="col-md-6 editor-holder">
+          <div id="editor_two" class="actual-editor">{{question.base_question.starter_code}}</div>
+          <textarea name="editor_two"></textarea>
+        </div>
+        <div id="file_contents" type="hidden"></div>
+      </div> <!-- end of section two-->
+      <div class="col-md-12 submit-section">
+          <center>
+            <h4 class="or-upload">Or, upload the filled out stub files...</h4><br />
+            <label for="zip-file" class="or-upload">Zip File:</label>
+            <input type="file" id="zip-file" accept=".zip,.rar,.7zip"></input><br /><br />
+            <button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button>
+          </center>
       </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
-    <script type='text/javascript'>      
-      // collapsible sidebar
-      $('#toggle_sidebar').click(function(){
-        $("#sidebar").toggleClass("collapsed");
-        $("#content").toggleClass("col-md-12 col-md-9");
-      });
-      
+  </form>
+  <div class="col-md-12 test-case-section">
+    <hr />
+    <h3 class="test-case-header">Write Test Cases</h3>
+    <div id="test_case_editor" class="test-case-editor"></div>
+    <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
+    <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test
+        Case</button></center>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM="
+  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script type='text/javascript'>
 
-      // init select
-      var starter_code_bodies = {{files_to_work_on_bodies|safe}}; 
-      var file_name_to_body = {};
-      var currently_selected_file = $("#file-drop-down option:selected").text();
-      function initSetUpStarterFiles() {
-        var i = 0;
-        $("#file-drop-down > option").each(function() {
-          file_name_to_body[this.text] = starter_code_bodies[i];
-          var input = document.createElement("input");
-          input.setAttribute("type", "hidden");
-          input.setAttribute("name", "file_" + this.text);
-          input.setAttribute("id", "file_" + this.text);
-          input.setAttribute("value", starter_code_bodies[i]);
-          document.getElementById("file_contents").appendChild(input);
-          i = i + 1;
-        });
+    // themes for the drop down
+    var themeData = [
+      "gruvbox"                ,
+      "sqlserver"              ,
+      "ambiance"               ,
+      "chaos"                  ,
+      "clouds_midnight"        ,
+      "cobalt"                 ,
+      "gob"                    ,
+      "idle_fingers"           ,
+      "kr_theme"               ,
+      "merbivore"              ,
+      "merbivore_soft"         ,
+      "mono_industrial"        ,
+      "monokai"                ,
+      "pastel_on_dark"         ,
+      "solarized_dark"         ,
+      "terminal"               ,
+      "tomorrow_night"         ,
+      "tomorrow_night_blue"    ,
+      "tomorrow_night_bright"  ,
+      "tomorrow_night_eighties",
+      "twilight"               ,
+      "vibrant_ink"            
+  ]; 
+
+  $.each(themeData, function (i, item) {
+    $('#theme-one').append($('<option>', { 
+        value: item,
+        text : item 
+      }));
+    $('#theme-two').append($('<option>', { 
+      value: item,
+      text : item 
+    }));
+  });
+
+
+  $.fn.extend({
+      toggleText: function(a, b){
+          return this.text(this.text() == b ? a : b);
       }
+  });
 
-      initSetUpStarterFiles();
+  // collapsible sidebar
+  $('#toggle_sidebar').click(function () {
+    $("#content-one").toggleClass("collapsed");
+    $("#content-two").toggleClass("col-md-12 col-md-9");
+    $("#toggle_sidebar").toggleText('<', '+');
+  });
 
-      // ace editor functions
-      function textarea_edit(name) {
-        var editor = ace.edit(name);
-        editor.setTheme("ace/theme/chrome");
-        editor.session.setMode("ace/mode/python");
 
-        var textarea = $('textarea[name="' + name + '"]').hide();
-        textarea.val(editor.getSession().getValue());
-        editor.getSession().on('change', function(){
-            textarea.val(editor.getSession().getValue());
-            file_name_to_body[currently_selected_file] = editor.getSession().getValue();
-            document.getElementById('file_' + currently_selected_file).value = editor.getSession().getValue();
-        });
-        return editor;
+  // init select
+  var starter_code_bodies = {{ files_to_work_on_bodies| safe}};
+  var name_to_body = {};
+  var currently_selected_file_one = $("#file-drop-down-one option:selected").text();
+  var currently_selected_file_two = $("#file-drop-down-two option:selected").text();
+  function initSetUpStarterFiles() {
+    var i = 0;
+    $("#file-drop-down-one > option").each(function () {
+      name_to_body[this.text] = starter_code_bodies[i];
+      var input = document.createElement("input");
+      input.setAttribute("type", "hidden");
+      input.setAttribute("name", "file_" + this.text);
+      input.setAttribute("id", "file_" + this.text);
+      input.setAttribute("value", starter_code_bodies[i]);
+      document.getElementById("file_contents").appendChild(input);
+      i = i + 1;
+    });
+  }
+
+  // set up all of the code in the dropdown
+  function initQuestionSetup() {
+    name_to_body["Question Description"] = {{ question_description | safe}};
+  }
+
+  function initAPISetup() {
+    
+  }
+
+  initSetUpStarterFiles();
+  initQuestionSetup();
+  
+
+  // ace editor functions
+  function textarea_edit(name) {
+    var editor = ace.edit(name);
+    editor.setTheme("ace/theme/gruvbox");
+    editor.session.setMode("ace/mode/python");
+    editor.setOption("showPrintMargin", false)
+
+    var textarea = $('textarea[name="' + name + '"]').hide();
+    textarea.val(editor.getSession().getValue());
+    return editor;
+  }
+
+  function textarea_edit_test_case(name) {
+    var editor = ace.edit(name);
+    editor.setTheme("ace/theme/gruvbox");
+    editor.session.setMode("ace/mode/python");
+    editor.setOption("showPrintMargin", false)
+
+    var textarea = $('#test_case_editor_textarea').hide();
+    textarea.val(editor.getSession().getValue());
+    editor.getSession().on('change', function () {
+      textarea.val(editor.getSession().getValue());
+      document.getElementById('test_case_editor_textarea').value = editor.getSession().getValue();
+    });
+    return editor;
+  }
+
+
+  
+  var code_editor_two = textarea_edit("editor_two");
+  var code_editor_one = textarea_edit("editor_one");
+
+  function setUpOnChangeForEditorOne() {
+    code_editor_one.getSession().on('change', function () {
+      var curr_val = code_editor_one.getSession().getValue();
+      var textarea = $("#editor_one");
+      textarea.val(curr_val);
+      name_to_body[currently_selected_file_one] = curr_val;
+
+      if ($('#file_' + currently_selected_file_one).length > 0) {
+        document.getElementById('file_' + currently_selected_file_one).value = curr_val;
       }
-
-      function textarea_edit_test_case(name) {
-        var editor = ace.edit(name);
-        editor.setTheme("ace/theme/chrome");
-        editor.session.setMode("ace/mode/python");
-
-        var textarea = $('#test_case_editor_textarea').hide();
-        textarea.val(editor.getSession().getValue());
-        editor.getSession().on('change', function(){
-            textarea.val(editor.getSession().getValue());
-            file_name_to_body[currently_selected_file] = editor.getSession().getValue();
-            document.getElementById('test_case_editor_textarea').value = editor.getSession().getValue();
-        });
-        return editor;
+      if (currently_selected_file_one == currently_selected_file_two) {
+        if (code_editor_two.getSession().getValue() != curr_val) {
+          var currentPosition = code_editor_one.selection.getCursor();
+          code_editor_two.setValue(curr_val);
+          code_editor_two.clearSelection();
+          code_editor_one.selection.moveTo(currentPosition.row, currentPosition.column);
+        }
       }
+    });
+  }
 
-      var code_editor = textarea_edit("editor");
-      var test_case_editor = textarea_edit_test_case("test_case_editor");
-
-      // populate all of the example code views
-      var example_code_snippets = document.getElementsByClassName('example_code_view');
-      for (var i = 0; i < example_code_snippets.length; ++i) {
-          var example_code = example_code_snippets[i];  
-          var editor = ace.edit(example_code.id);
-          editor.setTheme("ace/theme/chrome");
-          editor.session.setMode("ace/mode/python");
-          editor.setReadOnly(true);
-          editor.setOptions({
-              maxLines: 15
-          });
-      }
-
-      // on change select
-      code_editor.setValue(file_name_to_body[currently_selected_file].toString(), -1);
-      function onSelectFileChange() {
-          currently_selected_file = $("#file-drop-down option:selected").text();
-          code_editor.setValue(file_name_to_body[currently_selected_file].toString(), -1);        
-      }
-
-      
-      function get_all_code_fields() {
-        var return_dict = {};
-        var all_file_fields = $('*[id^="file_"]');
-        for (var i = 0; i < all_file_fields.length; i++) {
-          var curr_element = all_file_fields[i];
-          if (curr_element.id != "file_contents") {
-            return_dict[curr_element.id] = curr_element.value;
+  function setUpOnChangeForEditorTwo() {
+    code_editor_two.getSession().on('change', function () {
+        var curr_val = code_editor_two.getSession().getValue();
+        var textarea = $("#editor_two");
+        textarea.val(curr_val);
+        name_to_body[currently_selected_file_two] = curr_val;
+        if ($('#file_' + currently_selected_file_two).length > 0) {
+          document.getElementById('file_' + currently_selected_file_two).value = curr_val;
+        }
+        if (currently_selected_file_one == currently_selected_file_two) {
+          if (code_editor_one.getSession().getValue() != curr_val) {
+            var currentPosition = code_editor_two.selection.getCursor();
+            code_editor_one.setValue(curr_val);
+            code_editor_one.clearSelection();
+            code_editor_two.selection.moveTo(currentPosition.row, currentPosition.column);
           }
         }
-        return return_dict;
+    });
+  }
+
+  setUpOnChangeForEditorTwo();
+  
+
+  var test_case_editor = textarea_edit_test_case("test_case_editor");
+
+  // populate all of the example code views
+  var example_code_snippets = document.getElementsByClassName('example_code_view');
+  for (var i = 0; i < example_code_snippets.length; ++i) {
+    var example_code = example_code_snippets[i];
+    var editor = ace.edit(example_code.id);
+    editor.setTheme("ace/theme/gruvbox");
+    editor.session.setMode("ace/mode/python");
+    editor.setOption("showPrintMargin", false)
+    editor.setReadOnly(true);
+    editor.setOptions({
+      maxLines: 15
+    });
+  }
+
+  // on theme change
+  function onSelectNewThemeOne() {
+    var theme = $("#theme-one").val();
+    code_editor_one.setTheme("ace/theme/" + theme);
+  }
+
+  // on theme change
+  function onSelectNewThemeTwo() {
+    var theme = $("#theme-two").val();
+    code_editor_two.setTheme("ace/theme/" + theme);
+  }
+
+
+
+  //code_editor_one.setValue(name_to_body[currently_selected_file_one].toString(), -1);
+  code_editor_two.setValue(name_to_body[currently_selected_file_one].toString(), -1);
+
+
+  // on change select
+
+  $('#file-drop-down-one').change(function() {
+    var selected = $(':selected', this);
+    var opt_group = selected.parent().attr('label');
+    if (opt_group === "Question") {
+      if (code_editor_one !== null) {
+        code_editor_one.destroy();
       }
+      $("#editor_one").html(name_to_body["Question Description"]);
+    } else if (opt_group === "Stub Files") {
+      $("#editor_one").html('')
+      code_editor_one = textarea_edit("editor_one");
+      setUpOnChangeForEditorOne();
+      currently_selected_file_one = $("#file-drop-down-one option:selected").text();
+      code_editor_one.setValue(name_to_body[currently_selected_file_one].toString(), -1);
+    }
+  });
 
-      
-      $('#run_test_case_button').click(function(){
-          var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
 
-          var editor_data = $('#test_case_editor_textarea').val();
+  $('#file-drop-down-two').change(function() {
+    currently_selected_file_two = $("#file-drop-down-two option:selected").text();
+    code_editor_two.setValue(name_to_body[currently_selected_file_two].toString(), -1);
+  });
 
-          data_to_send = get_all_code_fields();
-          data_to_send['test_case_editor'] = editor_data;
-          data_to_send['csrfmiddlewaretoken'] = CSRFtoken;
 
-          $.ajax({
-            type:"POST",
-            url:"/questions/answer/submit_test_case/{{request.resolver_match.kwargs.pk}}/",
-            data: data_to_send,
-            success: function(data) {
-                console.log(data);
-            }
-        });
-      });
-      
-    
-  </script>
-  </body>
+  function get_all_code_fields() {
+    var return_dict = {};
+    var all_file_fields = $('*[id^="file_"]');
+    for (var i = 0; i < all_file_fields.length; i++) {
+      var curr_element = all_file_fields[i];
+      if (curr_element.id != "file_contents") {
+        return_dict[curr_element.id] = curr_element.value;
+      }
+    }
+    return return_dict;
+  }
+
+
+  $('#run_test_case_button').click(function () {
+    var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
+
+    var editor_data = $('#test_case_editor_textarea').val();
+
+    data_to_send = get_all_code_fields();
+    data_to_send['test_case_editor'] = editor_data;
+    data_to_send['csrfmiddlewaretoken'] = CSRFtoken;
+
+    $.ajax({
+      type: "POST",
+      url: "/questions/answer/submit_test_case/{{request.resolver_match.kwargs.pk}}/",
+      data: data_to_send,
+      success: function (data) {
+        console.log(data);
+      }
+    });
+  });
+
+  // click the initial option
+  function setUpScreen() {
+    window.onerror = function(errorMsg, url, lineNumber, column, errorObj){
+      if (errorMsg.indexOf("Uncaught TypeError") == -1) {
+        console.log(errorMsg);
+      }
+      return true;
+      }
+    code_editor_one.destroy();
+    $("#editor_one").html(name_to_body["Question Description"]);
+  }
+
+  setUpScreen();
+
+
+</script>
+</body>
+
 </html>
 {% else %}
-    {% include "no_auth.html" %}
-{% endif %} 
+{% include "no_auth.html" %}
+{% endif %}
 {% endblock %}

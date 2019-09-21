@@ -55,25 +55,31 @@ class QuestionAnswerView(View):
 
         is_preview = question.start_time.date() > datetime.now().date()
 
+        opt_groups = ["Question", "Stub Files", "API", "Example Code"]
+
         if is_preview:
             return render(request, self.template_name, {
                 'question': question,
+                'question_description': json.dumps(question.base_question.description),
                 'api_methods': api_methods,
                 'example_code_snippets': [],
                 'files_to_work_on_bodies': [],
                 'files_to_work_on_names': [],
-                'is_preview': is_preview
+                'is_preview': is_preview,
+                "opt_groups": opt_groups,
                 })
         else:
             question.has_started = True
             question.save()
             return render(request, self.template_name, {
                 'question': question,
+                'question_description': json.dumps(question.base_question.description),
                 'api_methods': api_methods,
                 'example_code_snippets': [],
                 'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
                 'files_to_work_on_names': files_to_work_on_names,
-                'is_preview': is_preview
+                'is_preview': is_preview,
+                "opt_groups": opt_groups,
                 })
 
     def post(self, request, *args, **kwargs):
