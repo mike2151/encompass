@@ -305,6 +305,9 @@ to the user with a @visible @not_visible annotation</span>
         code_names = {{ solution_code_names|safe }};
         populate_array(code_names, "solution");
 
+        textarea_edit("test_body_1");
+        switch_code("1", "test");
+
         
     </script>
     <script src="{% static 'main/js/create.js' %}"></script>

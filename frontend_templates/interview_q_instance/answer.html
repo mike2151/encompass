@@ -6,7 +6,7 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="main_container">
-  <form method="post" action="{{ request.path }}" class="row">
+  <form method="post" action="{{ request.path }}" class="row" enctype="multipart/form-data">
     {% csrf_token %}
       <div class="col-md-6 answer-section-one" id="content-one">
         <div class="col-md-6 editor-section">
@@ -58,8 +58,8 @@
       <div class="col-md-12 submit-section">
           <center>
             <h4 class="or-upload">Or, upload the filled out stub files...</h4><br />
-            <label for="zip-file" class="or-upload">Zip File:</label>
-            <input type="file" id="zip-file" accept=".zip,.rar,.7zip"></input><br /><br />
+            <label for="zip_file" class="or-upload">Zip File:</label>
+            <input type="file" id="zip_file" name="zip_file" accept=".zip,.rar,.7zip"></input><br /><br />
             <button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button>
           </center>
       </div>
@@ -134,20 +134,24 @@
 
   // init select
   var starter_code_bodies = {{ files_to_work_on_bodies| safe}};
+  var starter_code_names = {{ files_to_work_on_names| safe}};
   var name_to_body = {};
   var currently_selected_file_one = $("#file-drop-down-one option:selected").text();
   var currently_selected_file_two = $("#file-drop-down-two option:selected").text();
+
   function initSetUpStarterFiles() {
-    var i = 0;
-    $("#file-drop-down-one > option").each(function () {
-      name_to_body[this.text] = starter_code_bodies[i];
-      var input = document.createElement("input");
-      input.setAttribute("type", "hidden");
-      input.setAttribute("name", "file_" + this.text);
-      input.setAttribute("id", "file_" + this.text);
-      input.setAttribute("value", starter_code_bodies[i]);
-      document.getElementById("file_contents").appendChild(input);
-      i = i + 1;
+    var starter_index = 0;
+    $("#file-drop-down-one option").each(function () {
+      if (starter_code_names.includes(this.text)) {
+        name_to_body[this.text] = starter_code_bodies[starter_index];
+        var input = document.createElement("input");
+        input.setAttribute("type", "hidden");
+        input.setAttribute("name", "file_" + this.text);
+        input.setAttribute("id", "file_" + this.text);
+        input.setAttribute("value", starter_code_bodies[starter_index]);
+        document.getElementById("file_contents").appendChild(input);
+        starter_index = starter_index + 1;
+      }
     });
   }
 
@@ -159,10 +163,8 @@
   function initAPISetup() {
     
   }
-
   initSetUpStarterFiles();
   initQuestionSetup();
-  
 
   // ace editor functions
   function textarea_edit(name) {
@@ -270,8 +272,7 @@
 
 
 
-  //code_editor_one.setValue(name_to_body[currently_selected_file_one].toString(), -1);
-  code_editor_two.setValue(name_to_body[currently_selected_file_one].toString(), -1);
+  code_editor_two.setValue(name_to_body[currently_selected_file_two].toString(), -1);
 
 
   // on change select
@@ -336,7 +337,7 @@
   function setUpScreen() {
     window.onerror = function(errorMsg, url, lineNumber, column, errorObj){
       if (errorMsg.indexOf("Uncaught TypeError") == -1) {
-        console.log(errorMsg);
+        console.error(errorMsg);
       }
       return true;
       }

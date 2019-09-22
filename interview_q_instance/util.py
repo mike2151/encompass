@@ -9,6 +9,7 @@ from distutils.dir_util import copy_tree
 from interview_test_case.models import InterviewTestCase
 from compile.util.runner import run_submission_file
 import re
+import zipfile
 
 def copy_folder_contents(src, dest):
     if os.path.exists(src) and os.path.exists(dest):
@@ -73,16 +74,30 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         solution_code_dir = os.path.join(base_question_dir, 'solution_code_files')
         copy_folder_contents(solution_code_dir, user_submission_dir)
     else:
-        # go through each submitted file and create it
         starter_code_objs = StarterCode.objects.filter(interview_question=question)
-        for starter_code_obj in starter_code_objs:
-            filename = starter_code_obj.code_file.name.split("/")[-1]
-            file_contents = request.POST.get("file_" + filename, False)
-            if file_contents:
-                file_path = os.path.join(user_submission_dir, filename)
-                f = open(file_path, "w")
-                f.write(file_contents)
+        # see if there is a zip file
+        if request.FILES.get("zip_file", False):
+            file = request.FILES['zip_file']
+            if ".zip" in file.name:
+                file_path = os.path.join(user_submission_dir, "submission.zip")
+                f = open(file_path, "wb")
+                f.write(file.read())
                 f.close()
+                # unzip 
+                with zipfile.ZipFile(file_path, 'r') as zip_ref:
+                    zip_ref.extractall(user_submission_dir)
+                # delete file
+                os.remove(file_path)
+        else:
+            # go through each submitted file and create it
+            for starter_code_obj in starter_code_objs:
+                filename = starter_code_obj.code_file.name.split("/")[-1]
+                file_contents = request.POST.get("file_" + filename, False)
+                if file_contents:
+                    file_path = os.path.join(user_submission_dir, filename)
+                    f = open(file_path, "w")
+                    f.write(file_contents)
+                    f.close()
 
     # copy over all files from other dirs in submission
     supporting_code_dir = os.path.join(base_question_dir, 'supporting_code_files')
@@ -138,6 +153,8 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         if test_file is not None:
             test_case_file_name = str(test_file.code_file.name.split('/')[-1])
 
+    return_test_passed = {}
+    return_test_output = {}
     if len(test_case_file_name) > 0:    
         # prepend decorators to test file
         prepend_to_test_file(user_submission_dir, test_case_file_name, language)
@@ -180,8 +197,6 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
                     curr_failure_name = ""
 
         # anonymize test cases
-        return_test_passed = {}
-        return_test_output = {}
         curr_test_case_num = 1
         for key, value in test_passed.items():
             if key not in not_visible_test_cases:
