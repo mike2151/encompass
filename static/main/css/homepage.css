@@ -5,6 +5,12 @@
  */
 body {
   padding-top: 56px;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0px; 
+  background: transparent; 
 }
 
 .carousel-item {

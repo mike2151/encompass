@@ -13,11 +13,12 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .utils import is_valid_test_case
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.core.files.base import ContentFile
 from starter_code.models import StarterCode
 from solution_code.models import SolutionCode
 from interview_q_instance.util import create_and_run_submission
+import pytz
 
 
 class CreateInterviewView(View):
@@ -446,8 +447,14 @@ class CreateQuestionInstanceView(View):
         if len(user_email) == 0:
             return render(request, self.template_name, {"error_message": "email field not filled out"})
         
-        start_date_field = self.request.POST.get('start_date', '')
-        expire_date_field = self.request.POST.get('expiration_date', '')
+        curr_time_zone = 'US/Eastern'
+        num_hours = 4
+
+        start_date_field_str = self.request.POST.get('start_date', '')
+        start_date_field = datetime.strptime(start_date_field_str, "%Y-%m-%dT%H:%M") + timedelta(hours=num_hours)
+
+        expire_date_field_str = self.request.POST.get('expiration_date', '')
+        expire_date_field = datetime.strptime(expire_date_field_str, "%Y-%m-%dT%H:%M").astimezone(pytz.utc) + timedelta(hours=num_hours)
 
         question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field)
         question_instance.save()

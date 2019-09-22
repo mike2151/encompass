@@ -11,6 +11,8 @@ import json
 from api_q.models import InterviewAPI
 from datetime import datetime
 from django.http import JsonResponse
+import pytz
+from django.utils.timezone import utc
 
 
 class AllQuestionsToAnswerView(View):
@@ -57,6 +59,10 @@ class QuestionAnswerView(View):
 
         opt_groups = ["Question", "Stub Files", "API", "Example Code"]
 
+        now = datetime.now().replace(tzinfo=utc)
+        expire_time = question.expire_time
+        expiration_time_in_seconds = (expire_time - now).total_seconds()
+
         if is_preview:
             return render(request, self.template_name, {
                 'question': question,
@@ -80,12 +86,18 @@ class QuestionAnswerView(View):
                 'files_to_work_on_names': files_to_work_on_names,
                 'is_preview': is_preview,
                 "opt_groups": opt_groups,
+                "expiration_time": expiration_time_in_seconds
                 })
 
     def post(self, request, *args, **kwargs):
-        if request.POST['action'] == 'submit_code':
-            question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
+        question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
 
+        # check if maliciously manipulated
+        now = datetime.now().replace(tzinfo=utc)
+        expire_time = question_instance.expire_time
+        expiration_time_in_seconds = (now - expire_time).total_seconds()
+
+        if expiration_time_in_seconds < 35:
             test_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance, False, '')
             
             test_results_json = json.dumps(test_results)
@@ -98,6 +110,8 @@ class QuestionAnswerView(View):
             question_instance.has_completed = True
             question_instance.save()
             return HttpResponseRedirect("/results/" + str(submission_result.id))
+        else:
+            return HttpResponseRedirect("/questions/answer")
 
 class UserTestCaseView(View):
     def post(self, request, *args, **kwargs):

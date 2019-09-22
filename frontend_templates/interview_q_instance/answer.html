@@ -6,8 +6,14 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div class="main_container">
-  <form method="post" action="{{ request.path }}" class="row" enctype="multipart/form-data">
+  <form method="post" action="{{ request.path }}" class="row" enctype="multipart/form-data" id="question_answer">
     {% csrf_token %}
+      <div class="col-md-12 time-section">
+        {% if is_preview %}
+        {% else %}
+          <span id="remaining_time">Remaining Time:</span> 
+        {% endif %}
+      </div>
       <div class="col-md-6 answer-section-one" id="content-one">
         <div class="col-md-6 editor-section">
           <div class="top-row-left">
@@ -345,7 +351,42 @@
     $("#editor_one").html(name_to_body["Question Description"]);
   }
 
-  setUpScreen();
+  function startTimer(duration, display) {
+    var start = Date.now(),
+        diff,
+        hours,
+        minutes,
+        seconds;
+    function timer() {
+        diff = duration - (((Date.now() - start) / 1000) | 0);
+
+        hours = (diff / 3600) | 0;
+        minutes = ((diff / 60) % 60) | 0;
+        seconds = (diff % 60) | 0;
+
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = "Remaining Time: " + hours + ":" + minutes + ":" + seconds; 
+
+        if (diff <= 0) {
+          $("#question_answer").submit();
+        }
+    };
+    timer();
+    setInterval(timer, 1000);
+}
+
+  window.onload = function () {
+    setUpScreen();
+    var is_preview = "{{ is_preview|safe }}";
+    if (is_preview === "False") {
+      var time = {{ expiration_time|safe }};
+      var display = document.querySelector('#remaining_time');
+      startTimer(time, display);
+    }
+  };
 
 
 </script>

@@ -197,3 +197,12 @@ body {
 .theme-name {
     color: white;
 }
+
+.time-section {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.5em;
+    color: white;
+    margin-top: 1vh
+}
