@@ -1,8 +1,3 @@
-/*!
- * Start Bootstrap - Modern Business (https://startbootstrap.com/template-overviews/modern-business)
- * Copyright 2013-2019 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-logomodern-business-nav/blob/master/LICENSE)
- */
 body {
   padding-top: 56px;
   overflow-x: hidden;
@@ -13,26 +8,18 @@ body {
   background: transparent; 
 }
 
-.carousel-item {
-  height: 100%;
-  background: no-repeat center center scroll;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-}
-
 .main-section {
-  height: 100vh;
-  background-color: #7373fd;
-}
-
-.portfolio-item {
-  margin-bottom: 30px;
+  height: 65vh;
+  background-color: white;
 }
 
 .image-title, h1 {
   font-size: 2em;
+  color: #7373fd;
+}
+
+.portfolio-item {
+  margin-bottom: 30px;
 }
 
 .image-button {
@@ -63,7 +50,7 @@ body {
 
 .image-title {
   color: white;
-  margin-top: 20vh;
+  margin-top: 5vh;
   margin-left: 8vw;
   max-width: 30vw;
 }
@@ -72,7 +59,7 @@ body {
   float: right;
   position: relative;
   margin-right: 13vw;
-  margin-top: -37vh;
+  margin-top: -40vh;
 }
 
 .about-section {
@@ -83,7 +70,7 @@ body {
 }
 
 .left-section {
-  background: #64BBFD;
+  background: rgb(125, 197, 252);
 }
 
 .right-section {
@@ -97,6 +84,21 @@ body {
   padding-right: 0;
 }
 
+.offer-section {
+  background: rgb(191, 126, 218);
+}
+
+.offer-section-header {
+  color: white;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.offer-item {
+  text-align: center;
+  color: white;
+}
 
 .about-section-header {
   text-align: center;
@@ -118,7 +120,7 @@ body {
 }
 
 .open-questions {
-  background: rgb(191, 126, 218)
+  background: #7373fd;
 }
 
 .open-questions-title {
