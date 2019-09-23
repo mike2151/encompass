@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'submission_result',
     'starter_code',
     'solution_code',
-    'django_cleanup'
+    'django_cleanup',
+    "django_static_fontawesome"
 ]
 
 MIDDLEWARE = [

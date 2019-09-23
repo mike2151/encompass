@@ -2,6 +2,7 @@
 {% load static %}
 {% block css_imports %}
 <link href="{% static 'main/css/homepage.css' %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static "fontawesome/css/all.min.css" %}" />
 {% endblock %}
 
 
@@ -13,7 +14,9 @@
           <div class="image-box">
             <div class="image-title"> 
               <h1>Join the Interview <br/> Question Revolution</h1>
-              <p>Stop using low signal algorithm interview questions. Interview like you were doing a job.</p>
+              <p>Encompass Interviews allows people to leverage existing code and make new code to offer unique programming challenges to users 
+                similar to challenges they would encounter in the real world. 
+              </p>
             </div>
           </div>
           <a class="image-button" href="/users/signup">Sign Up</a>
@@ -27,7 +30,7 @@
   <div class="container homepage-container">
     
     <!-- About -->
-    <div class="row">
+    <div class="row" style="margin-bottom: 3vh">
       <div class="col-lg-6 mb-6 left-section">
         <div class="about-section">
           <h3 class="about-section-header">Candidates,<br><br> Do Interviews That Matter</h3>
@@ -44,9 +47,26 @@
     </div>
     <div class="row offer-section">
         <h3 class="col-md-12 offer-section-header">What We Offer</h3>
-        <div class="col-md-4 offer-item">Integrated Problems</div>
-        <div class="col-md-4 offer-item">Total Control</div>
-        <div class="col-md-4 offer-item">Library Security</div>
+        <h3 class="col-md-12 offer-section-header" style="letter-spacing: -.5vw; margin-bottom: 4vh;">---</h3>
+        <div class="col-md-4 offer-item">
+          <i class="fas fa-brain fa-4x homepage-icon"></i><br>
+          <p class="offer-title">Integrated Problems</p>
+          <p class="offer-description">We allow you to incorporate your code to create 
+            unique problems that involve APIs, example code and much more.
+          </p>
+        </div>
+        <div class="col-md-4 offer-item">
+          <i class="fas fa-tasks fa-4x homepage-icon"></i>
+          <p class="offer-title">Total Control</p>
+          <p class="offer-description">Use whatever code you would like. Write all the test cases you need. We have you covered.
+          </p>
+        </div>
+        <div class="col-md-4 offer-item">
+          <i class="fas fa-shield-alt fa-4x homepage-icon"></i>
+          <p class="offer-title">Library Security</p>
+          <p class="offer-description">We will make sure that your code that supports the solution is kept safe and away from any prying eyes.
+          </p>
+        </div>
     </div>
     <div class="open-questions">
       <h1 class="open-questions-title">Explore Example Questions</h1>
@@ -58,8 +78,8 @@
                   <div class="card open-question-card" >
                     <div class="card-body">
                       <h5 class="card-title">{{ question.name }}</h5>
-                      <p class="card-text">{{ question.description|truncatechars:200 }}</p>
-                      <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary btn-block">Answer</a>
+                      <p class="card-text question-card-text">{{ question.description|truncatechars:200 }}</p>
+                      <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary btn-block question-btn">Answer</a>
                     </div>
                   </div>
               </div>

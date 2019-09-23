@@ -17,20 +17,20 @@
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-      <div class="container">
-        <a class="navbar-brand" href="/"><img src="{% static 'images/icon.png' %}" width="24" height="24" style="margin-right: .3vw; margin-bottom: .5vh">Encompass Interviews</a>
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark fixed-top" style="background: #d4d4ff">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/" style="color: #7373fd; font-weight: bold;"><img src="{% static 'images/icon.png' %}" width="24" height="24" style="margin-right: .3vw; margin-bottom: .5vh;">Encompass Interviews</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav ml-auto" style="margin-left: 20vw">
             <li class="nav-item">
-              <a class="nav-link" href="/about">About Us</a>
+              <a class="nav-link" href="/about" style="color: #7373fd; font-weight: bold;">About Us</a>
             </li>
             {% if user.is_authenticated %}
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" style="color: #7373fd; font-weight: bold;" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Interview Questions
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
@@ -39,14 +39,14 @@
                 </div>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="/users/logout">Logout</a>
+                  <a class="nav-link" href="/users/logout" style="color: #7373fd; font-weight: bold;">Logout</a>
               </li>
             {% else %}
               <li class="nav-item">
-                  <a class="nav-link" href="/users/login">Login</a>
+                  <a class="nav-link" href="/users/login" style="color: #7373fd; font-weight: bold;">Login</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="/users/signup">Sign Up</a>
+                  <a class="nav-link" href="/users/signup" style="color: #7373fd; font-weight: bold;">Sign Up</a>
               </li>
             {% endif %}
             
