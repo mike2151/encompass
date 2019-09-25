@@ -59,10 +59,6 @@ class QuestionAnswerView(View):
 
         opt_groups = ["Question", "Stub Files", "API", "Example Code"]
 
-        now = datetime.now().replace(tzinfo=utc)
-        expire_time = question.expire_time
-        expiration_time_in_seconds = (expire_time - now).total_seconds()
-
         if is_preview:
             return render(request, self.template_name, {
                 'question': question,
@@ -75,8 +71,20 @@ class QuestionAnswerView(View):
                 "opt_groups": opt_groups,
                 })
         else:
-            question.has_started = True
-            question.save()
+            if not question.expire_time:
+                expiration_time_in_seconds = question.how_many_minutes * 60.0
+
+                num_hours = 4
+                question.expire_time = datetime.now() + timedelta(hours=num_hours)
+                
+                question.has_started = True
+                question.save()
+            else:
+              now = datetime.now().replace(tzinfo=utc)
+              expire_time = question.expire_time
+              expiration_time_in_seconds = (expire_time - now).total_seconds()
+              question.has_started = True
+              question.save()
             return render(request, self.template_name, {
                 'question': question,
                 'question_description': json.dumps(question.base_question.description),

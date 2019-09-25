@@ -1,3 +1,4 @@
+from user_test import TestCases
 
 import unittest
 import sys

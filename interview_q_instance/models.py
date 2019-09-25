@@ -9,6 +9,8 @@ class InterviewQuestionInstance(models.Model):
     has_completed = models.BooleanField(default=False)
     has_started = models.BooleanField(default=False)
     start_time = models.DateTimeField(null=True)
+    is_minutes_expiration = models.BooleanField(default=False)
+    how_many_minutes = models.IntegerField(default=0)
     expire_time = models.DateTimeField(null=True)
     creation_time = models.DateTimeField(auto_now_add=True)
 

@@ -38,7 +38,7 @@ class SignUpView(View):
         is_from_company = request.POST.get('is_from_company', '') == 'on'
         if is_from_company:
             company_org = request.POST.get('comp_org', '')
-            user = SiteUser.objects.create_user(username=email, email=email, password=password, company_org=company_org)
+            user = SiteUser.objects.create_user(username=email, email=email, password=password, company_org=company_org, is_from_company=True)
         else:
             user_role = request.POST.get('user_role', '')
             user = SiteUser.objects.create_user(username=email, email=email, password=password, user_role=user_role)

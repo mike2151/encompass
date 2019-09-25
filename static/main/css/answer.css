@@ -285,3 +285,12 @@ opacity: 0;
 cursor: pointer;
 width: 100%;
 }
+
+.user_test_case_results {
+    margin-top: 2vh;
+}
+
+.test-case-note {
+    text-align: center;
+    color: #7373fd;
+}

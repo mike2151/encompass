@@ -10,4 +10,5 @@ urlpatterns = [
     path('question/<int:pk>/send/', views.CreateQuestionInstanceView.as_view()),
     path('question/<int:pk>/try/', views.CreateOpenQuestionInstanceView.as_view()),
     path('question/<int:pk>/validate/', views.ValidateQuestionView.as_view()),
+    path('open/', views.OpenQuestionView.as_view()),
 ]

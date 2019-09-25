@@ -15,14 +15,34 @@
       <h1 class="h3 mb-3 font-weight-normal page-title">Send {{question.name}}</h1>
       <label for="email">Interviewee Email address</label>
       <input type="email" id="email" name="email" class="form-control" placeholder="Interviewee Email address" required autofocus><br />
-      <label for="start_date">Interview Start Date</label>
+      <label for="start_date">Time When User Can Start Question</label>
       <input class="form-control" type="datetime-local" name="start_date" id="start_date"><br />
-      <label for="start_date">Interview Expiration Date</label>
-      <input class="form-control" type="datetime-local" name="expiration_date" id="expiration_date"><br />
+
+      Do you wish to have a deadline in which the user should finish the question or a time limit to complete it upon opening the question? <br />
+      <div class="onoffswitch">
+          <input type="checkbox" name="minutes_option" class="onoffswitch-checkbox" id="minutes_option">
+          <label class="onoffswitch-label" for="minutes_option">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+          </label>
+      </div>
+      <br />
+
+      <div id="expiration_date_div">
+       <label for="start_date">Interview Expiration Date</label>
+       <input class="form-control" type="datetime-local" name="expiration_date" id="expiration_date"><br />
+     </div>
+     <div id="how_many_minutes_div">
+       <label for="how_many_minutes">How Many Minutes Does the User Have?</label>
+       <input class="form-control" type="number" name="how_many_minutes" id="how_many_minutes"><br />
+    </div>
+
+
       <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Send Interview Question</button>
     </form>
 </div>
 </center>
+
 <script>
 $.fn.setNow = function (onlyBlank) {
 var now = new Date($.now())
@@ -53,7 +73,7 @@ return this;
 }
 
 $.fn.setOneWeek = function (onlyBlank) {
-var now = new Date($.now() + 7 * 24 * 60 * 60 * 1000)
+var now = new Date($.now() + (7 * 24 * 60 * 60 * 1000))
   , year
   , month
   , date
@@ -65,6 +85,9 @@ var now = new Date($.now() + 7 * 24 * 60 * 60 * 1000)
 
 year = now.getFullYear();
 month = now.getMonth().toString().length === 1 ? '0' + (now.getMonth() + 1).toString() : now.getMonth() + 1;
+if (month.length === 3) {
+  month = month.substr(1);
+}
 date = now.getDate().toString().length === 1 ? '0' + (now.getDate()).toString() : now.getDate();
 hours = now.getHours().toString().length === 1 ? '0' + now.getHours().toString() : now.getHours();
 minutes = now.getMinutes().toString().length === 1 ? '0' + now.getMinutes().toString() : now.getMinutes();
@@ -84,6 +107,17 @@ $(function () {
     $('#start_date').setNow();
     $('#expiration_date').setOneWeek();
 
+    // switch stuff
+    $('#how_many_minutes_div').hide();  
+    $("#minutes_option").change(function() {
+        if(this.checked) {
+          $('#how_many_minutes_div').fadeIn();
+          $('#expiration_date_div').fadeOut();
+        } else {
+          $('#expiration_date_div').fadeIn();
+          $('#how_many_minutes_div').fadeOut();
+        }
+    });
 });
 </script>
 {% else %}

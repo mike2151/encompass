@@ -83,10 +83,15 @@
   <div class="col-md-12 test-case-section">
     <hr />
     <h3 class="test-case-header">Write Test Cases</h3>
+    <p class="test-case-note">Note: we disable any standard output your code might execute</p>
     <div id="test_case_editor" class="test-case-editor"></div>
     <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
     <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test
         Case</button></center>
+    <div class="spinner-border" role="status" id="test_case_loading">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <ul id="test_case_results" class="user_test_case_results"></ul>
   </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -342,6 +347,8 @@
 
 
   $('#run_test_case_button').click(function () {
+    $("#test_case_loading").show();
+    $("#test_case_results").html("");
     var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
 
     var editor_data = $('#test_case_editor_textarea').val();
@@ -355,7 +362,18 @@
       url: "/questions/answer/submit_test_case/{{request.resolver_match.kwargs.pk}}/",
       data: data_to_send,
       success: function (data) {
-        console.log(data);
+        $("#test_case_loading").hide();
+        var test_case_results = data["test_passed"];
+        var test_case_output = data["test_results"];
+        for (key in test_case_results) {
+          if (test_case_results[key]) {
+            var row = $('<li class="list-group-item list-group-item-success">' + key + ': Passed</li>');
+            $("#test_case_results").append(row);
+          } else {
+            var row = $('<li class="list-group-item list-group-item-danger">' + key + ': Failed<br /> ' + test_case_output[key] + '</li>');
+            $("#test_case_results").append(row);
+          }
+        }
       }
     });
   });
@@ -400,6 +418,7 @@
 }
 
   window.onload = function () {
+    $("#test_case_loading").hide();
     setUpScreen();
     var is_preview = "{{ is_preview|safe }}";
     if (is_preview === "False") {

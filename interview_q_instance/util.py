@@ -186,13 +186,19 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
                 test_passed[test_case_name] = did_test_passed
                 if did_test_passed:
                     test_output[test_case_name] = ''
-            elif "FAIL" in line:
+            elif ("FAIL:" in line) or ("ERROR:" in line):
                 is_tracking_failure = True
                 curr_failure_name = line.split(" ")[1]
             elif "---" in line or "====" in line:
                 if is_tracking_failure and len(curr_failure_output) > 0:
                     is_tracking_failure = False
-                    test_output[curr_failure_name] = curr_failure_output
+
+                    output_msg_to_show = curr_failure_output
+                    parts_of_output = curr_failure_output.split('",')
+                    if len(parts_of_output) > 1:
+                        output_msg_to_show = parts_of_output[1]
+                    
+                    test_output[curr_failure_name] = output_msg_to_show
                     curr_failure_output = ""
                     curr_failure_name = ""
 
