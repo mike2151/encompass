@@ -10,13 +10,24 @@ from django.contrib.auth import authenticate, login
 class SignUpView(View):
     template_name = 'registration/signup.html'
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
+        if request.user.is_authenticated:
+            return HttpResponseRedirect("/")
+        else:
+            return render(request, self.template_name, {})
     def post(self, request,  *args, **kwargs):
         email = self.request.POST.get('email', '')
         password = self.request.POST.get('password', '')
         password2 = self.request.POST.get('password2', '')
+        first_name = self.request.POST.get('first_name', '')
+        last_name = self.request.POST.get('last_name', '')
 
         error_messages = []
+        if len(first_name) == 0:
+            error_messages.append("No first name given")
+
+        if len(last_name) == 0:
+            error_messages.append("No last name given")
+
         if password != password2:
             error_messages.append("passwords do not match")
 
@@ -38,16 +49,19 @@ class SignUpView(View):
         is_from_company = request.POST.get('is_from_company', '') == 'on'
         if is_from_company:
             company_org = request.POST.get('comp_org', '')
-            user = SiteUser.objects.create_user(username=email, email=email, password=password, company_org=company_org, is_from_company=True)
+            user = SiteUser.objects.create_user(username=email, email=email, password=password, company_org=company_org, is_from_company=True, first_name=first_name, last_name=last_name)
         else:
             user_role = request.POST.get('user_role', '')
-            user = SiteUser.objects.create_user(username=email, email=email, password=password, user_role=user_role)
+            user = SiteUser.objects.create_user(username=email, email=email, password=password, user_role=user_role, first_name=first_name, last_name=last_name)
         return HttpResponseRedirect("/users/login/")
 
 class LoginView(View):
     template_name = 'registration/login.html'   
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
+        if request.user.is_authenticated:
+            return HttpResponseRedirect("/")
+        else:
+            return render(request, self.template_name, {})
     def post(self, request,  *args, **kwargs):
         email = self.request.POST.get('email', '')
         password = self.request.POST.get('password', '')

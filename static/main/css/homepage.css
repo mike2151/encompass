@@ -36,9 +36,9 @@ body {
 	cursor:pointer;
 	color:#ffffff;
 	font-family:Arial;
-	font-size:1.2em;
+	font-size:1.4em;
 	font-weight:bold;
-	padding:2vh 4vw;
+	padding:2.3vh 4.2vw;
   text-decoration:none;
   margin-top: 4vh;
   
@@ -68,7 +68,7 @@ body {
 }
 
 .homepage-icon {
-  color: white;
+  color: #000;
 }
 
 .about-section {
@@ -123,6 +123,13 @@ body {
   margin-right: auto;
   text-align: center;
   font-size: 3em;
+}
+
+.offer-section-description {
+  font-size: 1.4em;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .offer-item {
@@ -199,13 +206,17 @@ body {
   top: 50%; 
   left: 50%; 
   transform: translate(-50%, -50%);
+  width: 70vw;
 }
 
 .landing-title {
-  font-size: 3em;
+  font-size: 4.5em;
+  text-align: center;
 }
 
 .landing-description {
   text-align: center;
+  font-size: 2em;
 }
+
 

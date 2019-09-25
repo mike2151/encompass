@@ -84,7 +84,9 @@
     <hr />
     <h3 class="test-case-header">Write Test Cases</h3>
     <p class="test-case-note">Note: we disable any standard output your code might execute</p>
-    <div id="test_case_editor" class="test-case-editor"></div>
+    <div id="test_case_editor" class="test-case-editor">
+      
+    </div>
     <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
     <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test
         Case</button></center>
@@ -222,6 +224,16 @@
       textarea.val(editor.getSession().getValue());
       document.getElementById('test_case_editor_textarea').value = editor.getSession().getValue();
     });
+
+    // set the init value
+    var test_case_body = "# this import is needed\nimport unittest\n# these import the required files\n";
+    var starter_code_names = {{ files_to_work_on_names| safe}};
+    for (var i = 0; i < starter_code_names.length; i++) {
+      var curr_name = starter_code_names[i].split(".")[0];
+      test_case_body = test_case_body + "import " + curr_name + "\n";
+    }
+    test_case_body += "# this class contains your test cases\nclass TestCases(unittest.TestCase):\n\t# this method has assert statements\n\tdef example_test(self):\n\t\tassert True";
+    editor.setValue(test_case_body, 1);
     return editor;
   }
 
