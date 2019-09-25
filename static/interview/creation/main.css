@@ -1,18 +1,34 @@
 body {
-  background: rgb(141, 141, 255);
+  background: #FFF;
+}
+
+input {
+  box-shadow: 0 0 5px #7373fd;
+}
+
+input:focus {
+  box-shadow: 0 0 5px #7373fd;
+}
+
+textarea {
+  box-shadow: 0 0 5px #7373fd;
+}
+
+textarea:focus {
+  box-shadow: 0 0 5px #7373fd;
 }
 
 .page-title {
-  color: white;
+  color: #7373fd;
   font-size: 3em;
 }
 
 .page-description {
-  color: white;
+  color: #7373fd;
 }
 
 label {
-  color: white;
+  color: #7373fd;
   text-align: center;
 }
 
@@ -27,7 +43,7 @@ label {
 
 .step-description {
     text-align: center;
-    color: white;
+    color: #7373fd;
     padding: .6em;
     margin-top: 2vh;
     font-size: 1.4em;
@@ -35,7 +51,7 @@ label {
 
 .step-title {
     text-align: center;
-    color: white;
+    color: #7373fd;
     font-size: 2.3em;
 }
 
@@ -149,7 +165,7 @@ input[type=checkbox]
 
 hr {
   display: block; height: 1px;
-  border: 0; border-top: 1px solid #FFF;
+  border: 0; border-top: 1px solid #7373fd;
   margin: 1em 0; padding: 0; 
 }
 
@@ -158,9 +174,28 @@ hr {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  color: white;
+  color: #7373fd;
 }
 
 .code-label {
   font-size: 1.6em;
+  color: #7373fd;
+}
+
+.code-editor {
+  height: 20vh; 
+  width: 100%; 
+  margin-bottom: 1vh;
+  border: 2px solid #7373fd;
+}
+
+.btn-light {
+  background-color: #FFF; 
+  color: #7373fd;
+  border: 1px solid #7373fd;
+}
+
+.btn-light:hover {
+  background-color: #7373fd;
+  color: #FFF;
 }

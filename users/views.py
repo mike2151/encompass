@@ -35,8 +35,13 @@ class SignUpView(View):
         if len(error_messages) > 0:
             return render(request, self.template_name, {"error_messages": error_messages})
 
-
-        user = SiteUser.objects.create_user(username=email, email=email, password=password)
+        is_from_company = request.POST.get('is_from_company', '') == 'on'
+        if is_from_company:
+            company_org = request.POST.get('comp_org', '')
+            user = SiteUser.objects.create_user(username=email, email=email, password=password, company_org=company_org)
+        else:
+            user_role = request.POST.get('user_role', '')
+            user = SiteUser.objects.create_user(username=email, email=email, password=password, user_role=user_role)
         return HttpResponseRedirect("/users/login/")
 
 class LoginView(View):

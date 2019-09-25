@@ -1,5 +1,5 @@
 body {
-    background: rgb(141, 141, 255);
+    background: #FFF;
 }
 
 hr { 
@@ -13,7 +13,7 @@ hr {
 }
 
 .section-header {
-    color: white;
+    color: #7373fd;
     font-size: 3em;
     letter-spacing: .1em;
 }
@@ -22,7 +22,7 @@ hr {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    color: white;
+    color: #7373fd;
     font-size: 4em;
     letter-spacing: .1em;
 }
@@ -31,7 +31,7 @@ hr {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    color: white;
+    color: #7373fd;
     font-size: 2em;
     letter-spacing: .1em;
     margin-top: 5vh;
@@ -39,7 +39,7 @@ hr {
 }
 
 .section-body {
-    color: white;
+    color: #7373fd;
     font-size: 1.2em;
 }
 
@@ -62,10 +62,10 @@ hr {
 .person-title {
     text-align: center;
     margin-top: 2vh;
-    color: white;
+    color: #7373fd;
 }
 
 .person-text {
     text-align: center;
-    color: white;
+    color: #7373fd;
 }

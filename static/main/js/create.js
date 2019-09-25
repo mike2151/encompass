@@ -56,7 +56,7 @@ var add_code_file = function (class_name) {
 
         var editor = document.createElement("div");
         editor.setAttribute("id", name);
-        editor.setAttribute("style", "height: 20vh; width: 100%; margin-bottom: 1vh");    
+        editor.setAttribute("class", "code-editor");    
 
         var switch_div = document.createElement("div");
         switch_div.setAttribute("class", "centered");

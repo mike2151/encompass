@@ -1,5 +1,5 @@
 body {
-    background: rgb(141, 141, 255);
+    background: #FFF;
 }
 
 .question-card-title {
@@ -10,7 +10,14 @@ body {
 
 .answer-btn {
     width: 100%;
+    color: #7373fd;
+    border: 1px solid #7373fd;
 }
+
+.answer-btn:hover {
+    color: #FFF;
+    background-color: #7373fd;
+  }
 
 .main-section {
     padding-top: 70px; 
@@ -18,11 +25,11 @@ body {
 }
 
 .page-title {
-    color: #FFF;
+    color: #7373fd;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    border: 2px solid white;
+    border: 2px solid #7373fd;
     padding-top: 3vh;
     padding-bottom: 3vh;
     padding-left: 4vw;
@@ -30,7 +37,7 @@ body {
 }
 
 .question-row-title {
-    color: white;
+    color: #7373fd;
     margin-right: auto;
     margin-left: auto;
     content: block;
@@ -38,7 +45,26 @@ body {
 
 hr {
     display: block; height: 1px;
-    border: 0; border-top: 1px solid #FFF;
+    border: 0; border-top: 1px solid #7373fd;
     margin: 1em 0; padding: 0; 
   }
+
+.question-card {
+    border: 2px solid #7373fd;
+}
+
+.open-q-btn {
+    margin-left: auto;
+    margin-right: auto;
+    content: block;
+    color: #FFF; 
+    background-color: #7373fd;
+    border: 1px solid #FFF;
+}
+
+.open-q-btn:hover {
+    color: #7373fd;
+    background-color: #FFF;
+    border: 1px solid #7373fd;
+}
   

@@ -1,5 +1,5 @@
 body {
-    background: rgb(141, 141, 255);
+    background: #FFF;
     overflow-x: hidden;
 }
 
@@ -63,17 +63,36 @@ body {
     padding-top: 2vh;
 }
 
+.submit-content {
+    border: 2px solid #7373fd;
+    max-width: 30vw;
+    padding: 1vw 1vh;
+    margin-bottom: 1vh;
+}
+
 .test-case-section {
     max-width: 100%;
     padding-top: 2vh;
+    margin-bottom: 2vh;
 }
 
 .test-case-header { 
     text-align: center;
+    color: #7373fd;
 }
 
 .test-case-button {
     margin-top: 1vh;
+    background-color: #FFF;
+    color: #7373fd;
+    border: 1px solid #7373fd;
+}
+
+.test-case-button:hover {
+    margin-top: 1vh;
+    background-color: #7373fd;
+    color: #FFF;
+    border: 1px solid #7373fd;
 }
 
 .top-row-right {
@@ -167,7 +186,8 @@ body {
 
 .actual-editor {
     height: 70vh; 
-    width: 100%
+    width: 100%;
+    border: 2px solid #7373fd;
 }
 
 .test-case-editor {
@@ -175,10 +195,12 @@ body {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
+    border: 2px solid #7373fd;
 }
 
 .or-upload {
-    color: white;
+    color: #7373fd;
+    font-size: 1.3em;
 }
 
 .toggle-button {
@@ -195,7 +217,13 @@ body {
 }
 
 .theme-name {
-    color: white;
+    color: #7373fd;
+    font-size: 1.3em;
+}
+
+.file-name {
+    color: #7373fd;
+    font-size: 1.3em;
 }
 
 .time-section {
@@ -204,5 +232,56 @@ body {
     margin-right: auto;
     font-size: 1.5em;
     color: white;
-    margin-top: 1vh
+    margin-top: 2vh;
+    margin-bottom: 1vh;
+}
+
+#remaining_time {
+    color: #7373fd;
+}
+
+.question-title {
+    color: #7373fd;
+}
+
+.editor_options-left {
+    margin-left: 1vw;
+}
+
+.editor_options-right {
+    margin-left: 1vw;
+}
+
+input[type='file']{
+    color:#7373fd;
+    font-size:1.2em;
+}
+
+#file_name_field {
+width: 15vw;
+height: 5vh;
+box-sizing: border-box;
+border-radius: 2px;
+border: 1px solid #ccc;
+margin-right: .5vw;
+}
+
+#file_span {
+background: #7373fd;
+border: 0;
+color: #fff;
+padding: 1.5vh 1.2vw;
+text-align: center;
+cursor: pointer;
+}
+
+#zip_file {
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+opacity: 0;
+cursor: pointer;
+width: 100%;
 }

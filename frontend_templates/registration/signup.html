@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css_imports %}
+<link href="{% static 'main/css/signup.css' %}" rel="stylesheet">
 {% endblock %}
 
 
@@ -26,10 +27,51 @@
       <label for="password" class="sr-only">Password</label>
       <input type="password" id="password" name="password" class="form-control" placeholder="Password" required><br />
       <label for="password2" class="sr-only">Confirm Password</label>
-      <input type="password" id="password2" name="password2" class="form-control" placeholder="Confirm Password" required>
-      <br /><br />
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+      <input type="password" id="password2" name="password2" class="form-control" placeholder="Confirm Password" required> <br>
+      
+
+      Do you wish to make or assign interview questions (will you be interviewing candidates)? <br />
+      <div class="onoffswitch">
+          <input type="checkbox" name="is_from_company" class="onoffswitch-checkbox" id="is_from_company">
+          <label class="onoffswitch-label" for="is_from_company">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+          </label>
+      </div>
+      <br />
+
+      <div id="is_user">
+        <label>Which best describes your role?</label>
+        <select class="form-control" id="user_role" name="user_role">
+          <option>College Student</option>
+          <option>High School Student</option>
+          <option>Current Employee</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div id="is_creator">
+          <label>Which company/organization do you represent?</label>
+          <input type="text" id="comp_org" name="comp_org" class="form-control" maxlength="128"><br />
+      </div>
+
+      <br />
+      
+      <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Sign Up</button>
     </form>
 </div>
+
+<script>
+$('#is_creator').hide();  
+$("#is_from_company").change(function() {
+    if(this.checked) {
+      $('#is_creator').fadeIn();
+      $('#is_user').fadeOut();
+    } else {
+      $('#is_user').fadeIn();
+      $('#is_creator').fadeOut();
+    }
+});
+</script>
 </center>
 {% endblock %}

@@ -9,6 +9,7 @@
   <form method="post" action="{{ request.path }}" class="row" enctype="multipart/form-data" id="question_answer">
     {% csrf_token %}
       <div class="col-md-12 time-section">
+        <h3 class="question-title">{{ question.base_question.name }}</h3>
         {% if is_preview %}
         {% else %}
           <span id="remaining_time">Remaining Time:</span> 
@@ -17,22 +18,24 @@
       <div class="col-md-6 answer-section-one" id="content-one">
         <div class="col-md-6 editor-section">
           <div class="top-row-left">
-            <select class="select-css" id="file-drop-down-one" >
-                {% for opt_group in opt_groups %} 
-                  <optgroup label="{{ opt_group }}">
-                    {% if opt_group == 'Question' %}
-                      <option value="Question Description">Question Description</option>
-                    {% elif opt_group == 'Stub Files' %}
-                      {% for filename in files_to_work_on_names %}
-                      <option value="{{ filename }}">{{ filename }}</option>
-                      {% endfor %}
-                    {% elif opt_group == 'API' %}
-                    {% elif opt_group == 'Example Code' %}
-                    {% endif %}
-                  </optgroup>
-                {% endfor %}
-            </select>
-            <p class="theme-name">Theme: </p><select id="theme-one" onchange="onSelectNewThemeOne()"></select>
+            <div class="editor_options-left">
+              <p class="file-name">File: </p><select class="select-css" id="file-drop-down-one" >
+                  {% for opt_group in opt_groups %} 
+                    <optgroup label="{{ opt_group }}">
+                      {% if opt_group == 'Question' %}
+                        <option value="Question Description">Question Description</option>
+                      {% elif opt_group == 'Stub Files' %}
+                        {% for filename in files_to_work_on_names %}
+                        <option value="{{ filename }}">{{ filename }}</option>
+                        {% endfor %}
+                      {% elif opt_group == 'API' %}
+                      {% elif opt_group == 'Example Code' %}
+                      {% endif %}
+                    </optgroup>
+                  {% endfor %}
+              </select>
+              <p class="theme-name">Theme: </p><select id="theme-one" class="select-css" onchange="onSelectNewThemeOne()"></select>
+            </div>
           </div>
         </div>
         <br />
@@ -46,12 +49,14 @@
         <div class="col-md-6 editor-section">
           <div class="top-row-left">
             <button type="button" class="btn btn-secondary toggle-button" id="toggle_sidebar"> < </button>
-            <select class="select-css" id="file-drop-down-two">
-                {% for filename in files_to_work_on_names %}
-                  <option value="{{ filename }}">{{ filename }}</option>
-                {% endfor %}
-            </select>
-            <p class="theme-name">Theme: </p><select id="theme-two" onchange="onSelectNewThemeTwo()"> </select>
+            <div class="editor_options-right">
+              <p class="file-name">File: </p><select class="select-css" id="file-drop-down-two">
+                  {% for filename in files_to_work_on_names %}
+                    <option value="{{ filename }}">{{ filename }}</option>
+                  {% endfor %}
+              </select>
+              <p class="theme-name">Theme: </p><select id="theme-two" class="select-css" onchange="onSelectNewThemeTwo()"> </select>
+            </div>
           </div>
         </div>
         <br />
@@ -63,11 +68,16 @@
       </div> <!-- end of section two-->
       <div class="col-md-12 submit-section">
           <center>
-            <h4 class="or-upload">Or, upload the filled out stub files...</h4><br />
-            <label for="zip_file" class="or-upload">Zip File:</label>
+        <div class="submit-content">
+            <h4 class="or-upload">Or, upload the filled out stub files in a zip file:</h4><br />
+
+            <input type="text" id="file_name_field">
+            <span id="file_span">Select Zip File</span>
             <input type="file" id="zip_file" name="zip_file" accept=".zip,.rar,.7zip"></input><br /><br />
-            <button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button>
-          </center>
+
+        </div>
+        <button type="submit" name="action" value="submit_code" class="btn btn-success">Submit Code</button>
+      </center>
       </div>
   </form>
   <div class="col-md-12 test-case-section">
@@ -86,11 +96,22 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script type='text/javascript'>
 
+
     // themes for the drop down
     var themeData = [
-      "gruvbox"                ,
+      "textmate"                ,
+      "chrome"         ,
+      "clouds"         ,
+      "dawn"           ,
+      "dreamweaver"    ,
+      "eclipse"        ,
+      "github"         ,
+      "iplastic"       ,
+      "tomorrow"       ,
+      "xcode"          ,
       "sqlserver"              ,
       "ambiance"               ,
+      "gruvbox",
       "chaos"                  ,
       "clouds_midnight"        ,
       "cobalt"                 ,
@@ -175,9 +196,9 @@
   // ace editor functions
   function textarea_edit(name) {
     var editor = ace.edit(name);
-    editor.setTheme("ace/theme/gruvbox");
+    editor.setTheme("ace/theme/textmate");
     editor.session.setMode("ace/mode/python");
-    editor.setOption("showPrintMargin", false)
+    editor.setOptions({"showPrintMargin": false, fontSize: "12pt"});
 
     var textarea = $('textarea[name="' + name + '"]').hide();
     textarea.val(editor.getSession().getValue());
@@ -186,9 +207,9 @@
 
   function textarea_edit_test_case(name) {
     var editor = ace.edit(name);
-    editor.setTheme("ace/theme/gruvbox");
+    editor.setTheme("ace/theme/textmate");
     editor.session.setMode("ace/mode/python");
-    editor.setOption("showPrintMargin", false)
+    editor.setOptions({"showPrintMargin": false, fontSize: "12pt"});
 
     var textarea = $('#test_case_editor_textarea').hide();
     textarea.val(editor.getSession().getValue());
@@ -255,9 +276,9 @@
   for (var i = 0; i < example_code_snippets.length; ++i) {
     var example_code = example_code_snippets[i];
     var editor = ace.edit(example_code.id);
-    editor.setTheme("ace/theme/gruvbox");
+    editor.setTheme("ace/theme/textmate");
     editor.session.setMode("ace/mode/python");
-    editor.setOption("showPrintMargin", false)
+    editor.setOptions({"showPrintMargin": false, fontSize: "12pt"});
     editor.setReadOnly(true);
     editor.setOptions({
       maxLines: 15
@@ -387,6 +408,14 @@
       startTimer(time, display);
     }
   };
+
+  // file upload stuff
+  $('#zip_file').on('change', function() {
+      $('#file_name_field').val($(this).get(0).files.item(0).name);
+    });
+    $('#file_span').on('click', function() {
+      $('#file_name_field').val($('#zip_file').val());
+    });
 
 
 </script>

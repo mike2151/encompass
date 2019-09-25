@@ -23,7 +23,7 @@
                             {% for question in preview_questions %}
                                 <div class="col-md-4">
                                     <div class="card mb-4 box-shadow">
-                                    <div class="card-body">
+                                    <div class="card-body question-card">
                                         <center>
                                         <p class="card-text question-card-title">{{ question.base_question.name }}</p>
                                         <p>Start Time: {{ question.start_time }}</p>
@@ -47,7 +47,7 @@
                                 {% for question in available_questions %}
                                     <div class="col-md-4">
                                         <div class="card mb-4 box-shadow">
-                                        <div class="card-body">
+                                        <div class="card-body question-card">
                                             <center>
                                             <p class="card-text question-card-title">{{ question.base_question.name }}</p>
                                             <p>Start Time: {{ question.start_time }}</p>
@@ -71,7 +71,7 @@
                             {% for question in available_questions %}
                                 <div class="col-md-4">
                                     <div class="card mb-4 box-shadow">
-                                    <div class="card-body">
+                                    <div class="card-body question-card">
                                         <center>
                                         <p class="card-text question-card-title">{{ question.base_question.name }}</p>
                                         </center>
@@ -80,7 +80,10 @@
                                 </div>
                             {% endfor %}
                         </div>
-                </div>
+                    </div>
+                    <div class="row">
+                     <a href="/questions/open" class="btn btn-primary btn-lg open-q-btn">Browse Open Questions</a>
+                    </div>
                 </div>
             {% else %}
                 {% include "no_auth.html" %}

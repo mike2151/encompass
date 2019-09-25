@@ -40,8 +40,8 @@ body {
 	font-weight:bold;
 	padding:2vh 4vw;
   text-decoration:none;
-  margin-left: 10vw;
   margin-top: 4vh;
+  
 }
 
 .image-button, a:hover {
@@ -188,5 +188,24 @@ body {
   background-color: #FFF;
 }
 
+.landing-section {
+  height: 100vh;
+  background-image: url("/static/images/background_tile.png");
+  background-repeat: repeat;
+}
 
+.landing-text {
+  position: absolute;
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.landing-title {
+  font-size: 3em;
+}
+
+.landing-description {
+  text-align: center;
+}
 

@@ -1,13 +1,27 @@
 body {
-    background: rgb(141, 141, 255);
+    background: #FFF
 }
 
 label {
-    color: white;
+    color: #7373fd;
     font-size: 1.4em;
 }
 
 .page-title {
     font-size: 2em;
-    color: white;
+    color: #7373fd;
 }
+
+.form-block {
+    color: #7373fd;
+    border: 1px solid #7373fd;
+    background: #FFF;
+}
+
+.form-block:hover {
+    color: #FFF;
+    background-color: #7373fd;
+    border: 1px solid #7373fd;
+}
+
+

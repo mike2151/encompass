@@ -11,8 +11,10 @@ class SiteUser(AbstractUser):
     first_name = models.CharField(max_length=32)
     last_name = models.CharField(max_length=32)
 
-    is_interview_creator = models.BooleanField(default=False)
-    company = models.CharField(max_length=256, null=True, blank=True)
+    is_from_company = models.BooleanField(default=False)
+
+    company_org = models.CharField(max_length=256, null=True, blank=True)
+    user_role = models.CharField(max_length=256, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
 
