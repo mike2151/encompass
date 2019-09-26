@@ -16,7 +16,12 @@
       <label for="email">Interviewee Email address</label>
       <input type="email" id="email" name="email" class="form-control" placeholder="Interviewee Email address" required autofocus><br />
       <label for="start_date">Time When User Can Start Question</label>
-      <input class="form-control" type="datetime-local" name="start_date" id="start_date"><br />
+      <input class="form-control" type="datetime-local" name="start_date" id="start_date">
+      <label for="start_time_tz">Timezone:</label>
+      <select class="form-control" id="start_time_tz", name="start_time_tz">
+        </select>											
+               
+      <br />
 
       Do you wish to have a deadline in which the user should finish the question or a time limit to complete it upon opening the question? <br />
       <div class="onoffswitch">
@@ -29,9 +34,8 @@
       <br />
 
       <div id="expiration_date_div">
-       <label for="start_date">Interview Expiration Date</label>
-       <input class="form-control" type="datetime-local" name="expiration_date" id="expiration_date"><br />
-     </div>
+       <label for="start_date">Interview Expiration Date (Same timezone as above)</label>
+       <input class="form-control" type="datetime-local" name="expiration_date" id="expiration_date">
      <div id="how_many_minutes_div">
        <label for="how_many_minutes">How Many Minutes Does the User Have?</label>
        <input class="form-control" type="number" name="how_many_minutes" id="how_many_minutes"><br />
@@ -42,8 +46,26 @@
     </form>
 </div>
 </center>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.3/moment-timezone-with-data.min.js"></script>
 <script>
+function loadTimeZoneList(){   
+    let select = document.getElementById("start_time_tz");
+    select.innerHTML = ""; 
+    let browserTimeZone = moment.tz.guess();
+    let timeZones = moment.tz.names();
+       timeZones.forEach((timeZone) =>{
+       option = document.createElement("option");      
+         option.textContent = `${timeZone} (GMT${moment.tz(timeZone).format('Z')})`; 
+         option.value = moment.tz(timeZone).format('Z');
+         if (timeZone == browserTimeZone){
+             option.selected = true;
+         }
+         select.appendChild(option);
+       });
+    
+  }
+  
 $.fn.setNow = function (onlyBlank) {
 var now = new Date($.now())
   , year
@@ -104,6 +126,7 @@ return this;
 }
 
 $(function () {
+    loadTimeZoneList();
     $('#start_date').setNow();
     $('#expiration_date').setOneWeek();
 

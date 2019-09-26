@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'interview/open.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container main-section">
+    <div class="row">
+        <div class="col-sm-12">
+             {% if user.is_authenticated %}
+                <div class="row">
+                    <h1 class="page-title">Browse Open Questions:</h1>
+                </div>
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for question in questions %}
+                                <tr>
+                                <th scope="row">{{start_count|add:forloop.counter}}</th>
+                                <td><a href="/interview_questions/{{question.pk}}/try/">{{question.name}}</a></td>
+                                <td>{{ question.description}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="pages">
+                        {% if questions.has_other_pages %}
+                        <nav>
+                            <ul class="pagination">
+                                {% if questions.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ questions.previous_page_number }}">&laquo;</a></li>
+                                {% else %}
+                                    <li class="page-item"><span  class="page-link" >&laquo;</span></li>
+                                {% endif %}
+                                {% for i in questions.paginator.page_range %}
+                                {% if questions.number == i %}
+                                    <li class="page-item active"><span  class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li class="page-item"> <a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                                {% endfor %}
+                                {% if questions.has_next %}
+                                    <li class="page-item"><a class="page-link"  href="?page={{ questions.next_page_number }}">&raquo;</a></li>
+                                {% else %}
+                                     <li class="disabled"><span  class="page-link" >&raquo;</span></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                {% include "no_auth.html" %}
+            {% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}

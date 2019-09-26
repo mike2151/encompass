@@ -26,7 +26,7 @@
                                     <div class="card-body question-card">
                                         <center>
                                         <p class="card-text question-card-title">{{ question.base_question.name }}</p>
-                                        <p>Start Time: {{ question.start_time }}</p>
+                                        <p>Start Time: {{ question.start_time_date_str }}</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <a href="/questions/answer/{{question.id}}" class="btn btn-outline-primary answer-btn">Answer</a>
                                         </div>
@@ -50,7 +50,7 @@
                                         <div class="card-body question-card">
                                             <center>
                                             <p class="card-text question-card-title">{{ question.base_question.name }}</p>
-                                            <p>Start Time: {{ question.start_time }}</p>
+                                            <p>Start Time: {{ question.start_time_date_str }}</p>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <a href="/questions/answer/{{question.id}}" class="btn btn-outline-primary answer-btn">Answer</a>
                                             </div>

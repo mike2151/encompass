@@ -19,6 +19,7 @@ from starter_code.models import StarterCode
 from solution_code.models import SolutionCode
 from interview_q_instance.util import create_and_run_submission
 from django.core.paginator import Paginator
+from dateutil import parser
 import pytz
 
 
@@ -447,22 +448,24 @@ class CreateQuestionInstanceView(View):
         base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
         if len(user_email) == 0:
             return render(request, self.template_name, {"error_message": "email field not filled out"})
-        
-        curr_time_zone = 'US/Eastern'
-        num_hours = 4
 
         start_date_field_str = self.request.POST.get('start_date', '')
-        start_date_field = datetime.strptime(start_date_field_str, "%Y-%m-%dT%H:%M") + timedelta(hours=num_hours)
+
+        start_time_zone_str = self.request.POST.get('start_time_tz', "-05:00")
+
+        start_date_field = parser.parse(start_date_field_str + " " + start_time_zone_str)
+
+        start_time_date_str = start_date_field.strftime("%b %d %Y %H:%M %p")
 
         is_minutes_option = request.POST.get('minutes_option', '') == 'on'
         if is_minutes_option:
             num_minutes = self.request.POST.get('how_many_minutes', '')
-            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, is_minutes_expiration=True, how_many_minutes=num_minutes)
+            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, is_minutes_expiration=True, how_many_minutes=num_minutes, start_time_date_str=start_time_date_str)
             question_instance.save()
         else:
             expire_date_field_str = self.request.POST.get('expiration_date', '')
-            expire_date_field = datetime.strptime(expire_date_field_str, "%Y-%m-%dT%H:%M").astimezone(pytz.utc) + timedelta(hours=num_hours)
-            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field)
+            expire_date_field = parser.parse(expire_date_field_str + " " + start_time_zone_str)
+            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field, start_time_date_str=start_time_date_str)
             question_instance.save()
         return HttpResponseRedirect("/interview_questions/")
 
@@ -499,8 +502,12 @@ class OpenQuestionView(View):
     template_name = "interview_q/open.html"
     def get(self, request,  *args, **kwargs):
         if request.user.is_authenticated:
-            page = request.GET.get('page', 1)
-            paginator = Paginator(InterviewQuestion.objects.filter(is_open=True), 30)
+
+            num_results_per_page = 1
+
+            page = int(request.GET.get('page', 1))
+            paginator = Paginator(InterviewQuestion.objects.filter(is_open=True), num_results_per_page)
+            start_count = (page- 1) * num_results_per_page
 
             try:
                 questions = paginator.page(page)
@@ -509,4 +516,7 @@ class OpenQuestionView(View):
             except EmptyPage:
                 questions = paginator.page(paginator.num_pages)
 
-            return render(request, self.template_name, { 'questions': questions })
+            return render(request, self.template_name, { 
+                'questions': questions,
+                'start_count': start_count 
+                })

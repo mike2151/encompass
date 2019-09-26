@@ -13,6 +13,7 @@ from datetime import datetime
 from django.http import JsonResponse
 import pytz
 from django.utils.timezone import utc
+from django.utils import timezone
 
 
 class AllQuestionsToAnswerView(View):
@@ -80,7 +81,8 @@ class QuestionAnswerView(View):
                 question.has_started = True
                 question.save()
             else:
-              now = datetime.now().replace(tzinfo=utc)
+              utc = pytz.utc
+              now = datetime.now(tz=utc)
               expire_time = question.expire_time
               expiration_time_in_seconds = (expire_time - now).total_seconds()
               question.has_started = True
