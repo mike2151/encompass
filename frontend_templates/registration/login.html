@@ -14,6 +14,13 @@
       {% if invalid_login %}
         <h4 style="color: red">Invalid email/password combination</h4>
       {% endif %}
+      {% if message|length > 0 %}
+        {% if message_color == 'red' %}
+          <h4 style="color: red">{{ message }}</h4>
+        {% else %}
+          <h4 style="color: green">{{ message }}</h4>
+        {% endif %}
+      {% endif %}
       <label for="email" class="sr-only">Email address</label>
       <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus><br />
       <label for="password" class="sr-only">Password</label>

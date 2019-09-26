@@ -8,4 +8,6 @@ urlpatterns = [
     path('signup/', views.SignUpView.as_view()),
     path('login/', views.LoginView.as_view()),
     re_path(r'^logout/$', LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.activate, name='activate'),
 ]

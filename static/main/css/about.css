@@ -69,3 +69,10 @@ hr {
     text-align: center;
     color: #7373fd;
 }
+
+.contact-body {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    content: block;
+}

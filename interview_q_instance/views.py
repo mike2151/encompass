@@ -103,7 +103,8 @@ class QuestionAnswerView(View):
         question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
 
         # check if maliciously manipulated
-        now = datetime.now().replace(tzinfo=utc)
+        utc = pytz.utc
+        now = datetime.now(tz=utc)
         expire_time = question_instance.expire_time
         expiration_time_in_seconds = (now - expire_time).total_seconds()
 
