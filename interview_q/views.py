@@ -31,9 +31,12 @@ class CreateInterviewView(View):
 
     template_name = 'interview_q/create.html'
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
+        if request.user.subscription.plan_type != 'FREE':
+            return render(request, self.template_name, {})
+        else:
+            return render(request, "no_auth.html", {})
     def post(self, request,  *args, **kwargs):
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
             is_open = self.request.POST.get('is_open', '') == 'on'
@@ -181,7 +184,12 @@ class HomeInterviewView(View):
         questions = []
         if request.user.is_authenticated:
             questions = InterviewQuestion.objects.filter(creator=request.user)
-        return render(request, self.template_name, {'interview_questions': questions})
+            can_user_make_questions = request.user.subscription.plan_type != 'FREE'
+            return render(request, self.template_name, {
+                'interview_questions': questions,
+                'can_user_make_questions': can_user_make_questions})
+        else:
+            return render(request, "no_auth.html", {})
 
 class DeleteQuestionView(View):
     template_name = 'interview_q/delete.html'
@@ -205,6 +213,8 @@ class EditQuestionView(View):
 
     template_name = "interview_q/question.html"
     def get(self, request, *args, **kwargs):
+        if (not request.user.subscription) or request.user.subscription.plan_type == 'FREE':
+            return render(request, "no_auth.html", {})            
         question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
 
         supporting_code = SupportCode.objects.filter(interview_question=question)
@@ -279,7 +289,7 @@ class EditQuestionView(View):
             'api_methods': api_methods
         })
     def post(self, request,  *args, **kwargs):
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
             is_open = self.request.POST.get('is_open', '') == 'on'

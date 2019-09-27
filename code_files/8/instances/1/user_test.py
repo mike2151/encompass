@@ -2,17 +2,12 @@ def visible(ob):
 	return ob
 def not_visible(ob):
 	return ob
-# this unittest import is needed
+# this import is needed
 import unittest
-import os
-
+# these import the required files
 import sol
-# indicate the visibility of your test 
-
-# all test cases should be written in this class
+# this class contains your test cases
 class TestCases(unittest.TestCase):
-    def test_user_submitted_file(self):
-        assert [] == os.listdir()
-
-    def test_user_submitted_file_two(self):
-        assert sol.hi() != 5
+	# this method has assert statements
+	def example_test(self):
+		assert True

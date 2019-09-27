@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .models import SiteUser
+from .models import SiteUser, Subscription, SubscriptionCouponCode
 from django.contrib.auth import authenticate, login
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -11,6 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
+from datetime import datetime
 
 class SignUpView(View):
     template_name = 'registration/signup.html'
@@ -52,14 +53,15 @@ class SignUpView(View):
             return render(request, self.template_name, {"error_messages": error_messages})
 
         is_from_company = request.POST.get('is_from_company', '') == 'on'
+        subscription = Subscription()
+        subscription.save()
         if is_from_company:
             company_org = request.POST.get('comp_org', '')
-            user = SiteUser.objects.create_user(username=email, email=email, password=password, company_org=company_org, is_from_company=True, first_name=first_name, last_name=last_name, is_active=False)
+            user = SiteUser.objects.create_user(username=email, email=email, password=password, company_org=company_org, is_from_company=True, first_name=first_name, last_name=last_name, is_active=False, subscription=subscription)
         else:
             user_role = request.POST.get('user_role', '')
-            user = SiteUser.objects.create_user(username=email, email=email, password=password, user_role=user_role, first_name=first_name, last_name=last_name, is_active=False)
+            user = SiteUser.objects.create_user(username=email, email=email, password=password, user_role=user_role, first_name=first_name, last_name=last_name, is_active=False, subscription=subscription)
        
-
         current_site = get_current_site(request)
         mail_subject = 'Please Confirm Your Email For Encompass Interviews'
         message = render_to_string('registration/acc_active_email.html', {
@@ -114,3 +116,26 @@ def activate(request, uidb64, token):
         return HttpResponseRedirect("/users/login/?status=activated")
     else:
         return HttpResponseRedirect("/users/login/?status=invalid_activation")
+
+class EnrollView(View):
+    template_name = 'registration/enroll.html'   
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return render(request, self.template_name, {})
+        else:
+            return render(request, "no_auth.html", {})
+
+    def post(self, request,  *args, **kwargs):
+        if request.user.is_authenticated:
+            coupon_code = request.POST.get("coupon_code", '')
+            if len(coupon_code) > 0:
+                coupon = SubscriptionCouponCode.objects.filter(code=coupon_code).first()
+                if coupon is not None:
+                    user = request.user
+                    subscription = user.subscription
+                    subscription.plan_type = 'MONTHLY_CREATOR'
+                    subscription.initiated_on = datetime.now()
+                    subscription.terminated_on = coupon.expiration_date
+                    subscription.save()
+
+        return HttpResponseRedirect("/interview_questions/")
