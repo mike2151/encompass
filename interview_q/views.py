@@ -449,11 +449,14 @@ class EditQuestionView(View):
 class CreateQuestionInstanceView(View):
     template_name = "interview_q/send.html"
     def get(self, request, *args, **kwargs):
-        question = None
         if request.user.is_authenticated:
-            question = InterviewQuestion.objects.get(pk=kwargs['pk'])
-        return render(request, self.template_name, {'question': question})
+            if request.user.subscription.plan_type != 'FREE':
+                question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+                return render(request, self.template_name, {'question': question})
+        return render(request, "no_auth.html", {})
     def post(self, request,  *args, **kwargs):
+        if (not request.user.is_authenticated) or (not request.user.subscription.plan_type != 'FREE'):
+            return HttpResponseRedirect("/interview_questions/")
         user_email = self.request.POST.get('email', '')
         base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
         if len(user_email) == 0:
