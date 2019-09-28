@@ -97,12 +97,12 @@ class LoginView(View):
     def post(self, request,  *args, **kwargs):
         email = self.request.POST.get('email', '')
         password = self.request.POST.get('password', '')
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request=request, username=email, password=password)
         if user:
             if user.is_active:
                 login(request, user)
                 return HttpResponseRedirect("/")
-        return render(request, self.template_name, {"invalid_login": True})
+        return render(request, self.template_name, {"message": "Invalid email/password combination", "message_color": "red"})
 
 def activate(request, uidb64, token):
     try:

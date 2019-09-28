@@ -12,9 +12,6 @@
       {% csrf_token %}
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">SIGN IN</h1>
-      {% if invalid_login %}
-        <h4 style="color: red">Invalid email/password combination</h4>
-      {% endif %}
       {% if message|length > 0 %}
         {% if message_color == 'red' %}
           <h4 style="color: red">{{ message }}</h4>

@@ -59,7 +59,14 @@ INSTALLED_APPS = [
     'starter_code',
     'solution_code',
     'django_cleanup',
-    "django_static_fontawesome"
+    "django_static_fontawesome",
+    'ratelimit',
+    'axes'
+]
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +77,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'encompassinterviews.urls'
@@ -151,6 +159,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
+AXES_COOLOFF_TIME = 5
+RATELIMIT_ENABLE = True
+
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    pass
