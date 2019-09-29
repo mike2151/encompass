@@ -56,7 +56,7 @@ class QuestionAnswerView(View):
             f.close()
             files_to_work_on_bodies.append(content)
 
-        is_preview = question.start_time.date() > datetime.now().date()
+        is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
         opt_groups = ["Question", "Stub Files", "API", "Example Code"]
 

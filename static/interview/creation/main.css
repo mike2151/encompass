@@ -62,9 +62,11 @@ label {
     padding-right: 1em;
 }
 
-.create-button:hover {
+.page-description {
+  margin-top: 2vh;
+  color: #7373fd;
+  font-size: 1.2em;
 }
-
 input[type=checkbox]
 {
   /* Double-sized Checkboxes */

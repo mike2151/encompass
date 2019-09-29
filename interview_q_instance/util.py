@@ -219,6 +219,14 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
                     new_output_str = "Output: \n" + test_output[key]
                 return_test_output["Test Case " + str(curr_test_case_num)] = new_output_str
                 curr_test_case_num = curr_test_case_num + 1
+            else:
+                if creator_run:
+                    return_test_passed["(Hidden To User) Test Case " + str(curr_test_case_num)] = value
+                    new_output_str = ""
+                    if value == False:
+                        new_output_str = "Output: \n" + test_output[key]
+                    return_test_output["(Hidden To User) Test Case " + str(curr_test_case_num)] = new_output_str
+                    curr_test_case_num = curr_test_case_num + 1
     return return_test_passed.copy(), return_test_output.copy()
 
 

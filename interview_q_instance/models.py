@@ -14,6 +14,8 @@ class InterviewQuestionInstance(models.Model):
     expire_time = models.DateTimeField(null=True)
     creation_time = models.DateTimeField(auto_now_add=True)
     start_time_date_str = models.CharField(null=True, blank=True, max_length=256)
+    can_preview = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.interviewee_email + ":" + self.base_question.name

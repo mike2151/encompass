@@ -36,12 +36,23 @@
       <div id="expiration_date_div">
        <label for="start_date">Interview Expiration Date (Same timezone as above)</label>
        <input class="form-control" type="datetime-local" name="expiration_date" id="expiration_date">
-     <div id="how_many_minutes_div">
+      </div>
+      <div id="how_many_minutes_div">
        <label for="how_many_minutes">How Many Minutes Does the User Have?</label>
        <input class="form-control" type="number" name="how_many_minutes" id="how_many_minutes"><br />
-    </div>
+      </div>
 
-
+      <br>
+        Allow the API and example files to be previewed before the question start to 
+        allow users to familiarize themselves with the code base?
+        <div class="preview_switch">
+            <input type="checkbox" name="preview_option" class="preview_switch-checkbox" id="preview_option">
+            <label class="preview_switch-label" for="preview_option">
+                <span class="preview_switch-inner"></span>
+                <span class="preview_switch-switch"></span>
+            </label>
+        </div>
+      <br>
       <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Send Interview Question</button>
     </form>
 </div>

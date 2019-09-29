@@ -29,8 +29,13 @@
                         {% endfor %}
                     </div>
                     <div class="row">
-                            <a href="/interview_questions" class="go-back-button">Go Back To Questions</a>
+                        <div class="col-md-12" style="margin-bottom: 5vh;">
+                            <center><a href="/interview_questions/question/{{question.pk}}/edit/" class="go-back-button ">&#8592; Edit Question</a></center>
                         </div>
+                        <div class="col-md-12">
+                            <center><a href="/interview_questions" class="go-back-button">Go Back To Questions</a></center>
+                        </div>
+                    </div>
                     </div>
                 </div>
             {% else %}

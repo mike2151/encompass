@@ -477,15 +477,17 @@ class CreateQuestionInstanceView(View):
 
         start_time_date_str = start_date_field.strftime("%b %d %Y %H:%M %p")
 
+        can_preview = request.POST.get('preview_option', '') == 'on'
+
         is_minutes_option = request.POST.get('minutes_option', '') == 'on'
         if is_minutes_option:
             num_minutes = self.request.POST.get('how_many_minutes', '')
-            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, is_minutes_expiration=True, how_many_minutes=num_minutes, start_time_date_str=start_time_date_str)
+            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, is_minutes_expiration=True, how_many_minutes=num_minutes, start_time_date_str=start_time_date_str, can_preview=can_preview)
             question_instance.save()
         else:
             expire_date_field_str = self.request.POST.get('expiration_date', '')
             expire_date_field = parser.parse(expire_date_field_str + " " + start_time_zone_str)
-            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field, start_time_date_str=start_time_date_str)
+            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field, start_time_date_str=start_time_date_str, can_preview=can_preview)
             question_instance.save()
         return HttpResponseRedirect("/interview_questions/")
 

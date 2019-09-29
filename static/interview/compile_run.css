@@ -51,10 +51,6 @@ body {
     font-size: 1.5em;
 }
 
-.output {
-
-}
-
 .go-back-button {
     border: 2px solid white;
     background-color: white;
@@ -68,7 +64,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     content: block;
-    
+    text-align: center;
 }
 
 .go-back-button:hover {
