@@ -15,7 +15,11 @@
         <p class="landing-description">Encompass Interviews allows people to leverage existing code and make new code to offer unique programming challenges to users 
           similar to challenges they would encounter in the real world. 
         </p>
-        <center><a class="image-button" href="/users/signup">Sign Up</a></center>
+        {% if user.is_authenticated %}
+          <center><a class="image-button" href="/questions/answer">Answer Questions &#8594;</a></center>
+        {% else %}
+          <center><a class="image-button" href="/users/signup">Sign Up</a></center>
+        {% endif %}
       </div>
     </div>
     <div class="row" style="margin-bottom: 3vh">

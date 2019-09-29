@@ -424,6 +424,7 @@ class EditQuestionView(View):
                 number = number + 1
 
             # handle solution
+            submitted_solution = False
             name = "solution"
             number = 1
             while self.check_condition(request, name, number):
@@ -432,6 +433,7 @@ class EditQuestionView(View):
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = SolutionCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
                         new_file.save()
+                        submitted_solution = True
                 else:
                     # code
                     # write to file
@@ -441,7 +443,12 @@ class EditQuestionView(View):
                         new_file = SolutionCode(interview_question=question)
                         new_file.code_file.save(file_name, ContentFile(file_contents))
                         new_file.save()    
+                        submitted_solution = True
                 number = number + 1
+
+            if submitted_solution:
+                return HttpResponseRedirect("/interview_questions/question/" + str(question_id) + "/validate/")
+            
             return HttpResponseRedirect("/interview_questions/")
         else:
             return HttpResponseRedirect("/")

@@ -21,7 +21,7 @@
                                         <p class="passed">Passed</p>
                                     {% else %}
                                         <p class="failed">Failed</p>
-                                        <p class="output">Output: <br /> {{ test_results|get_item:test_name }}</p>
+                                        <p class="output"> <br /> {{ test_results|get_item:test_name }}</p>
                                     {% endif %}
                                 </div>
                                 </div>
@@ -29,7 +29,7 @@
                         {% endfor %}
                     </div>
                     <div class="row">
-                            <a href="/questions/answer" class="go-back-button">Go Back To Questions</a>
+                            <a href="/interview_questions" class="go-back-button">Go Back To Questions</a>
                         </div>
                     </div>
                 </div>

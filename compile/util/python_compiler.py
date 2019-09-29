@@ -31,4 +31,4 @@ def python_runner(client, file_name, container_name, command, return_dict, run_f
         except:
             return_dict['result'] = e.stderr
     except Exception as e:
-        return_dict['result'] = e.stderr
+        return_dict['result'] = str(e)

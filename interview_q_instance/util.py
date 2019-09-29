@@ -161,8 +161,11 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         # create the runner file
         create_runner_file(user_submission_dir, test_case_file_name, language)
 
-        all_unit_tests_results = run_submission_file(runner_file_name, user_submission_dir, language, version)['result']
-        all_unit_tests_results_str = all_unit_tests_results.decode("utf-8") 
+        run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version)
+        all_unit_tests_results = run_submission_result['result']
+        all_unit_tests_results_str = all_unit_tests_results
+        if not isinstance(all_unit_tests_results_str, str):
+            all_unit_tests_results_str = all_unit_tests_results.decode("utf-8") 
 
         test_file_path = os.path.join(user_submission_dir, test_case_file_name)
 
@@ -173,35 +176,39 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         is_tracking_failure = False
         curr_failure_name = ''
 
-        # parse results
-        for line in all_unit_tests_results_str.split("\n"):
-            if is_tracking_failure:
-                if ("---" not in line) and ("====" not in line):
-                    curr_failure_output = curr_failure_output + line
-            if "..." in line:
-                line_split = line.split(" ")
-                test_case_name = line_split[0]
-                test_case_result = line_split[-1]
-                did_test_passed = "ok" in test_case_result
-                test_passed[test_case_name] = did_test_passed
-                if did_test_passed:
-                    test_output[test_case_name] = ''
-            elif ("FAIL:" in line) or ("ERROR:" in line):
-                is_tracking_failure = True
-                curr_failure_name = line.split(" ")[1]
-            elif "---" in line or "====" in line:
-                if is_tracking_failure and len(curr_failure_output) > 0:
-                    is_tracking_failure = False
-
-                    output_msg_to_show = curr_failure_output
-                    parts_of_output = curr_failure_output.split('",')
-                    if len(parts_of_output) > 1:
-                        output_msg_to_show = parts_of_output[1]
-                    
-                    test_output[curr_failure_name] = output_msg_to_show
-                    curr_failure_output = ""
-                    curr_failure_name = ""
-
+        # see if compilation error
+        split_test_res = all_unit_tests_results_str.split("\n")
+        if len(split_test_res) < 2:
+            test_passed["compilation"] = False
+            test_output["compilation"] = "Compilation Error: " + all_unit_tests_results_str
+        else:
+            # parse results
+            for line in split_test_res:
+                if is_tracking_failure:
+                    if ("---" not in line) and ("====" not in line):
+                        curr_failure_output = curr_failure_output + line
+                if "..." in line:
+                    line_split = line.split(" ")
+                    test_case_name = line_split[0]
+                    test_case_result = line_split[-1]
+                    did_test_passed = "ok" in test_case_result
+                    test_passed[test_case_name] = did_test_passed
+                    if did_test_passed:
+                        test_output[test_case_name] = ''
+                elif ("FAIL:" in line) or ("ERROR:" in line):
+                    is_tracking_failure = True
+                    curr_failure_name = line.split(" ")[1]
+                elif "---" in line or "====" in line:
+                    if is_tracking_failure and len(curr_failure_output) > 0:
+                        is_tracking_failure = False
+                        output_msg_to_show = curr_failure_output
+                        parts_of_output = curr_failure_output.split('",')
+                        if 'AssertionError' in curr_failure_output and len(parts_of_output) > 1:
+                            output_msg_to_show = parts_of_output[1]
+                        
+                        test_output[curr_failure_name] = output_msg_to_show
+                        curr_failure_output = ""
+                        curr_failure_name = ""
         # anonymize test cases
         curr_test_case_num = 1
         for key, value in test_passed.items():

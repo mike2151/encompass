@@ -32,7 +32,7 @@
                             <input class="form-control" id="name" maxlength="128" name="name" type="text" /><br />
 
                             <label htmlFor="description">Description of Question (Visible to users)</label>
-                            <textarea class="form-control" id="description" name="description" rows=5></textarea><br/>
+                            <textarea class="form-control" id="description" name="description" rows=5 placeholder="Write your description here. Markdown is supported."></textarea><br/>
 
                             <label for="question_language">Question Language (Visible to users) </label>
                             <select class="form-control" id="question_language" name="question_language">
@@ -66,7 +66,7 @@
                         <div>
                             <div class="centered">Code<label class="switch"><input type="checkbox" name="supporting_switch_1" id="supporting_switch_1"><span class="slider round"></span></label> File</div>
                             <div class="centered"><input class="inputfile" type="file" id="supporting_file_1" name="supporting_file_1"></div>
-                            <div><input class="form-control name-of-file" id="supporting_body_name_1" maxlength="128" name="supporting_body_name_1" placeholder="Name of file"></input></div>
+                            <div><input class="form-control name-of-file" id="supporting_body_name_1" maxlength="128" name="supporting_body_name_1" placeholder="name of file (include extension)"></input></div>
                             <div id="supporting_body_1" class="code-editor"></div>
                             <textarea name="supporting_body_1"></textarea>
                         </div>
@@ -92,7 +92,7 @@
                     <div class="col-md-6">
                         <div class="form-group, step">
                             <label htmlFor="api_description">Description of API (Visible to users)</label> <br />
-                            <textarea class="form-control" id="api_description" name="api_description" rows=5></textarea><br/>
+                            <textarea class="form-control" id="api_description" name="api_description" rows=5 placeholder="Write your API description here. Markdown is supported."></textarea><br/>
         
                             <center><label>Methods Shown To The User (Visible to users)</label><hr /></center>
                             <div id="api_fields">
@@ -124,7 +124,7 @@
                                 <div>
                                     <div class="centered">Code<label class="switch"><input type="checkbox" name="starter_switch_1" id="starter_switch_1"><span class="slider round"></span></label> File</div>
                                     <div class="centered"><input class="inputfile" type="file" id="starter_file_1" name="starter_file_1"></div>
-                                    <div><input class="form-control name-of-file" id="starter_body_name_1" maxlength="128" name="starter_body_name_1" placeholder="Name of file"></input></div>
+                                    <div><input class="form-control name-of-file" id="starter_body_name_1" maxlength="128" name="starter_body_name_1" placeholder="name of file (include extension)"></input></div>
                                     <div id="starter_body_1" class="code-editor"></div>
                                     <textarea name="starter_body_1"></textarea>
                                 </div>
@@ -155,7 +155,7 @@
                                 <div>
                                     <div class="centered">Code<label class="switch"><input type="checkbox" name="example_switch_1" id="example_switch_1"><span class="slider round"></span></label> File</div>
                                     <div class="centered"><input class="inputfile" type="file" id="example_file_1" name="example_file_1"></div>
-                                    <div><input class="form-control name-of-file" id="example_body_name_1" maxlength="128" name="example_body_name_1" placeholder="Name of file"></input></div>
+                                    <div><input class="form-control name-of-file" id="example_body_name_1" maxlength="128" name="example_body_name_1" placeholder="name of file (include extension)"></input></div>
                                     <div id="example_body_1" class="code-editor"></div>
                                     <textarea name="example_body_1"></textarea>
                                 </div>
@@ -183,7 +183,7 @@
                             <label class="centered code-label">Test Case Code (Not visible to users)</label> <br />
                             <div class="centered">Code<label class="switch"><input type="checkbox" name="test_switch_1" id="test_switch_1"><span class="slider round"></span></label> File</div>
                             <div class="centered"><input class="inputfile" type="file" id="test_file_1" name="test_file_1"></div>
-                            <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="Name of file"></input></div>
+                            <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="name of file (include extension)"></input></div>
                             <div id="test_body_1" class="code-editor"></div>
                             <textarea name="test_body_1"></textarea>
                         </div>
@@ -225,7 +225,7 @@ to the user with a @visible @not_visible annotation</span>
                                 <div>
                                     <div class="centered">Code<label class="switch"><input type="checkbox" name="solution_switch_1" id="solution_switch_1"><span class="slider round"></span></label> File</div>
                                     <div class="centered"><input class="inputfile" type="file" id="solution_file_1" name="solution_file_1"></div>
-                                    <div><input class="form-control name-of-file" id="solution_body_name_1" maxlength="128" name="solution_body_name_1" placeholder="Name of file"></input></div>
+                                    <div><input class="form-control name-of-file" id="solution_body_name_1" maxlength="128" name="solution_body_name_1" placeholder="name of file (include extension)"></input></div>
                                     <div id="solution_body_1" class="code-editor"></div>
                                     <textarea name="solution_body_1"></textarea>
                                 </div>
