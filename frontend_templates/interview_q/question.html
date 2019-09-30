@@ -12,6 +12,14 @@
                     <div class="py-5 text-center">
                         <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
                         <h2 class="page-title">Edit Interview Question: {{ question.name }}</h2>
+                        <p class="page-description">
+                            <b>How it works:</b><br /> During the process of creating a question, you will upload various files. When a user submits their code,
+                            the user's code, your support (code base) files and test files will all be moved in the same directory and the test files
+                            will be ran. You should keep this in mind when writing your code. 
+                            The user will be brought to the results screen with a display of the visible tests they passed. After the user submits, you
+                            will be able to see the user's test results and code submission. NOTE: we disable network access to best protect your supporting code. Note that the user will not have
+                            access to the network when during the problem. 
+                        </p>
                     </div>
             </div>
                 <form method="post" enctype="multipart/form-data">

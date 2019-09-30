@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'interview/open.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container main-section">
+    <div class="row">
+        <div class="col-sm-12">
+             {% if user.is_authenticated %}
+                <div class="row">
+                    <h1 class="page-title">Submissions For {{ question.name }}:</h1>
+                </div>
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">User Name</th>
+                            <th scope="col">Time Submitted</th>
+                            <th scope="col">Submission Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for submission in submissions %}
+                                <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <th scope="row">{{submission.user.first_name}} {{submission.user.last_name}}</th>
+                                <td>{{ submission.submission_time }}</td>
+                                <td><a href="/results/submissions/{{submission.pk}}">Submission</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                {% include "no_auth.html" %}
+            {% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}

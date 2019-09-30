@@ -19,6 +19,7 @@ from starter_code.models import StarterCode
 from solution_code.models import SolutionCode
 from interview_q_instance.util import create_and_run_submission
 from django.core.paginator import Paginator
+from submission_result.models import SubmissionResult
 from dateutil import parser
 import pytz
 
@@ -517,6 +518,8 @@ class ValidateQuestionView(View):
                 question_instance = InterviewQuestionInstance(interviewee_email=request.user.email, base_question=question, start_time=datetime.now())
                 question_instance.save()
                 test_passed, test_results = create_and_run_submission(request, question, question_instance, True, '')
+                question_instance.delete_folder()
+                question_instance.delete()
                 return render(request, self.template_name, {'question': question, 'test_passed': test_passed, 'test_results': test_results})
         return render(request, "no_auth.html", {})
 
@@ -525,7 +528,7 @@ class OpenQuestionView(View):
     def get(self, request,  *args, **kwargs):
         if request.user.is_authenticated:
 
-            num_results_per_page = 1
+            num_results_per_page = 30
 
             page = int(request.GET.get('page', 1))
             paginator = Paginator(InterviewQuestion.objects.filter(is_open=True), num_results_per_page)
@@ -542,3 +545,10 @@ class OpenQuestionView(View):
                 'questions': questions,
                 'start_count': start_count 
                 })
+
+class SubmissionsQuestionView(View):
+    template_name = "interview_q/submissions.html"
+    def get(self, request,  *args, **kwargs):
+        question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+        submissions = SubmissionResult.objects.filter(interview_question=question)
+        return render(request, self.template_name, {'submissions': submissions, "question": question})

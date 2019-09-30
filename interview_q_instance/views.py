@@ -115,11 +115,18 @@ class QuestionAnswerView(View):
             test_passed_json = json.dumps(test_passed)
 
             # pass results to results page
-            submission_result = SubmissionResult(tests_passed_body=test_passed_json, results_body=test_results_json, interview_question=question_instance.base_question)
+            submission_result = SubmissionResult(
+                tests_passed_body=test_passed_json, 
+                results_body=test_results_json, 
+                interview_question=question_instance.base_question, 
+                question_instance_pk=question_instance.pk,
+                user = request.user
+                )
             submission_result.save()
             question_instance.submission_result = submission_result
             question_instance.has_completed = True
             question_instance.save()
+            question_instance.delete_all_but_submission_files()
             return HttpResponseRedirect("/results/" + str(submission_result.id))
         else:
             return HttpResponseRedirect("/questions/answer")
