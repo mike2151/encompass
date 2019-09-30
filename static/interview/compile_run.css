@@ -72,3 +72,22 @@ body {
     background-color: white;
     color: rgb(141, 141, 255);
 }
+
+.file_snippet {
+    height: 20vh;
+    width: 70vw;
+}
+
+.file_snippet_label {
+    margin-left: auto;
+    margin-right: auto;
+    content: block;
+    color: #FFF;
+    text-align: center;
+    font-size: 1.4em;
+}
+
+.user_files {
+    margin-bottom: 2vh;
+}
+

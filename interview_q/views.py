@@ -517,7 +517,7 @@ class ValidateQuestionView(View):
                 # create question instance
                 question_instance = InterviewQuestionInstance(interviewee_email=request.user.email, base_question=question, start_time=datetime.now())
                 question_instance.save()
-                test_passed, test_results = create_and_run_submission(request, question, question_instance, True, '')
+                test_passed, test_results, test_visability = create_and_run_submission(request, question, question_instance, True, '')
                 question_instance.delete_folder()
                 question_instance.delete()
                 return render(request, self.template_name, {'question': question, 'test_passed': test_passed, 'test_results': test_results})

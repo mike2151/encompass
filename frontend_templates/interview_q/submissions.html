@@ -18,7 +18,7 @@
                             <tr>
                             <th scope="col">#</th>
                             <th scope="col">User Name</th>
-                            <th scope="col">Time Submitted</th>
+                            <th scope="col">Time Submitted (UTC)</th>
                             <th scope="col">Submission Link</th>
                             </tr>
                         </thead>
@@ -27,7 +27,7 @@
                                 <tr>
                                 <th scope="row">{{forloop.counter}}</th>
                                 <th scope="row">{{submission.user.first_name}} {{submission.user.last_name}}</th>
-                                <td>{{ submission.submission_time }}</td>
+                                <td>{{ submission.submission_time }} (utc)</td>
                                 <td><a href="/results/submissions/{{submission.pk}}">Submission</a></td>
                                 </tr>
                             {% endfor %}

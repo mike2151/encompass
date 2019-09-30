@@ -155,6 +155,7 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
 
     return_test_passed = {}
     return_test_output = {}
+    return_test_visibility = {}
     if len(test_case_file_name) > 0:    
         # prepend decorators to test file
         prepend_to_test_file(user_submission_dir, test_case_file_name, language)
@@ -212,22 +213,16 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         # anonymize test cases
         curr_test_case_num = 1
         for key, value in test_passed.items():
-            if key not in not_visible_test_cases:
-                return_test_passed["Test Case " + str(curr_test_case_num)] = value
-                new_output_str = ""
-                if value == False:
-                    new_output_str = "Output: \n" + test_output[key]
-                return_test_output["Test Case " + str(curr_test_case_num)] = new_output_str
-                curr_test_case_num = curr_test_case_num + 1
-            else:
-                if creator_run:
-                    return_test_passed["(Hidden To User) Test Case " + str(curr_test_case_num)] = value
-                    new_output_str = ""
-                    if value == False:
-                        new_output_str = "Output: \n" + test_output[key]
-                    return_test_output["(Hidden To User) Test Case " + str(curr_test_case_num)] = new_output_str
-                    curr_test_case_num = curr_test_case_num + 1
-    return return_test_passed.copy(), return_test_output.copy()
+            is_test_visable = key not in not_visible_test_cases 
+            test_name = "Test Case " + str(curr_test_case_num) if is_test_visable else "(Not Visible To User) Test Case " + str(curr_test_case_num)
+            return_test_passed[test_name] = value
+            new_output_str = ""
+            if value == False:
+                new_output_str = "Output: \n" + test_output[key]
+            return_test_output[test_name] = new_output_str
+            return_test_visibility[test_name] = is_test_visable
+            curr_test_case_num = curr_test_case_num + 1
+    return return_test_passed.copy(), return_test_output.copy(), return_test_visibility.copy()
 
 
     

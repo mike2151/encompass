@@ -109,15 +109,13 @@ class QuestionAnswerView(View):
         expiration_time_in_seconds = (now - expire_time).total_seconds()
 
         if expiration_time_in_seconds < 35:
-            test_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance, False, '')
-            
-            test_results_json = json.dumps(test_results)
-            test_passed_json = json.dumps(test_passed)
+            test_passed, test_results, test_visability = create_and_run_submission(request, question_instance.base_question, question_instance, False, '')
 
             # pass results to results page
             submission_result = SubmissionResult(
-                tests_passed_body=test_passed_json, 
-                results_body=test_results_json, 
+                tests_passed_body=json.dumps(test_passed), 
+                results_body=json.dumps(test_results), 
+                visability_body=json.dumps(test_visability),
                 interview_question=question_instance.base_question, 
                 question_instance_pk=question_instance.pk,
                 user = request.user
@@ -134,12 +132,17 @@ class QuestionAnswerView(View):
 class UserTestCaseView(View):
     def post(self, request, *args, **kwargs):
         test_case_body = request.POST.get("test_case_editor", '')
-        test_passed = {}
-        test_results = {}
+        public_test_passed = {}
+        public_test_results = {}
         if len(test_case_body) > 0:
             question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
-            test_passed, test_results = create_and_run_submission(request, question_instance.base_question, question_instance, False, test_case_body)
+            test_passed, test_results, test_visability = create_and_run_submission(request, question_instance.base_question, question_instance, False, test_case_body)
+
+            for k,v in test_passed.items():
+                if test_visability[k]:
+                    public_test_passed[k] = v
+                    public_test_results[k] = test_results[k]
         return JsonResponse({
-            'test_passed': test_passed,
-            'test_results': test_results
+            'test_passed': public_test_passed,
+            'test_results': public_test_results
         })

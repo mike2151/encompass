@@ -2,6 +2,7 @@
 {% load static %}
 {% block css_imports %}
 <link href="{% static 'interview/compile_run.css' %}" rel="stylesheet">
+<script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
 {% endblock %}
 
 {% block content %}
@@ -32,10 +33,43 @@
                        
                     </div>
                     <div class="row">
-                        <a href="/questions/answer" class="go-back-button">Go Back To Questions</a>
+                        <div id="files" class="user_files">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <a href="/interview_questions" class="go-back-button">Go Back To Questions</a>
                     </div>
                     </div>
                 </div>
+                <script>
+                    var file_content_dict = {{ file_contents | safe}};
+                    for (var key in file_content_dict){
+
+                        var code_div = document.createElement("div");
+                        var file_name = "file_" + key;
+                        code_div.setAttribute("id", file_name);
+                        code_div.setAttribute("name", file_name);
+                        code_div.setAttribute("class", "file_snippet");
+
+                        var code_label = document.createElement("p");
+                        code_label.setAttribute("class", "file_snippet_label");
+                        code_label.innerHTML = "File: " + key;
+
+                        var all_div = document.createElement("div");
+                        all_div.append(code_label);
+                        all_div.append(code_div);
+                        
+                        document.getElementById("files").appendChild(all_div);
+
+
+                        var editor = ace.edit(file_name);
+                        editor.setTheme("ace/theme/chrome");
+                        editor.session.setMode("ace/mode/python");
+                        editor.setValue(file_content_dict[key], 1);
+                        editor.setReadOnly(true);
+                    }
+                </script>
             {% else %}
                 {% include "no_auth.html" %}
             {% endif %} 
