@@ -198,7 +198,9 @@ class DeleteQuestionView(View):
         question = None
         if request.user.is_authenticated:
             question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
-        return render(request, self.template_name, {'question': question})
+            if question.creator == request.user:
+                return render(request, self.template_name, {'question': question})
+        return render(request, "no_auth.html", {})
     def post(self, request, *args, **kwargs):
         question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
         if request.user.is_authenticated:
@@ -217,6 +219,8 @@ class EditQuestionView(View):
         if (not request.user.subscription) or request.user.subscription.plan_type == 'FREE':
             return render(request, "no_auth.html", {})            
         question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
+        if question.creator != request.user:
+            return render(request, "no_auth.html", {})
 
         supporting_code = SupportCode.objects.filter(interview_question=question)
         supporting_code_names = []
@@ -301,6 +305,8 @@ class EditQuestionView(View):
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
             question_id = kwargs['pk']
             question = InterviewQuestion.objects.get(pk=question_id)
+            if question.creator != request.user:
+                return HttpResponseRedirect("/interview_questions/")
             
             # replace basic fields
             question.name = name
@@ -460,13 +466,16 @@ class CreateQuestionInstanceView(View):
         if request.user.is_authenticated:
             if request.user.subscription.plan_type != 'FREE':
                 question = InterviewQuestion.objects.get(pk=kwargs['pk'])
-                return render(request, self.template_name, {'question': question})
+                if question.creator == request.user:
+                    return render(request, self.template_name, {'question': question})
         return render(request, "no_auth.html", {})
     def post(self, request,  *args, **kwargs):
         if (not request.user.is_authenticated) or (not request.user.subscription.plan_type != 'FREE'):
             return HttpResponseRedirect("/interview_questions/")
         user_email = self.request.POST.get('email', '')
         base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+        if base_question.creator != request.user:
+            return HttpResponseRedirect("/interview_questions/")
         if len(user_email) == 0:
             return render(request, self.template_name, {"error_message": "email field not filled out"})
 
@@ -545,10 +554,14 @@ class OpenQuestionView(View):
                 'questions': questions,
                 'start_count': start_count 
                 })
+        return HttpResponseRedirect("/users/signup")
 
 class SubmissionsQuestionView(View):
     template_name = "interview_q/submissions.html"
     def get(self, request,  *args, **kwargs):
-        question = InterviewQuestion.objects.get(pk=kwargs['pk'])
-        submissions = SubmissionResult.objects.filter(interview_question=question)
-        return render(request, self.template_name, {'submissions': submissions, "question": question})
+        if request.user.is_authenticated:
+            question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+            if question.creator == request.user:
+                submissions = SubmissionResult.objects.filter(interview_question=question)
+                return render(request, self.template_name, {'submissions': submissions, "question": question})
+        return render(request, "no_auth.html", {})
