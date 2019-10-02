@@ -90,6 +90,9 @@ var now = new Date($.now())
 
 year = now.getFullYear();
 month = now.getMonth().toString().length === 1 ? '0' + (now.getMonth() + 1).toString() : now.getMonth() + 1;
+if (month.length === 3) {
+  month = month.substr(1);
+}
 date = now.getDate().toString().length === 1 ? '0' + (now.getDate()).toString() : now.getDate();
 hours = now.getHours().toString().length === 1 ? '0' + now.getHours().toString() : now.getHours();
 minutes = now.getMinutes().toString().length === 1 ? '0' + now.getMinutes().toString() : now.getMinutes();

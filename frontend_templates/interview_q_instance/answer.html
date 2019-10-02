@@ -83,6 +83,8 @@
       <div class="col-md-12">
         <center>
           <button type="submit" name="action" value="submit_code" class="btn btn-success btn-lg centered-button">Submit Code</button>
+          <button type="button" name="save_code" id="save_code" class="btn btn-info btn-lg">Save Code</button><br />
+          <p id="code_saved_status"></p>
         </center>  
       </div>
   </form>
@@ -255,9 +257,12 @@
       textarea.val(curr_val);
       name_to_body[currently_selected_file_one] = curr_val;
 
-      if ($('#file_' + currently_selected_file_one).length > 0) {
-        document.getElementById('file_' + currently_selected_file_one).value = curr_val;
+      var element = document.getElementById('file_' + currently_selected_file_one);
+      var element_exists = (typeof(element) != 'undefined' && element != null);
+      if (element_exists) {
+        element.value = curr_val;
       }
+
       if (currently_selected_file_one == currently_selected_file_two) {
         if (code_editor_two.getSession().getValue() != curr_val) {
           var currentPosition = code_editor_one.selection.getCursor();
@@ -275,8 +280,11 @@
         var textarea = $("#editor_two");
         textarea.val(curr_val);
         name_to_body[currently_selected_file_two] = curr_val;
-        if ($('#file_' + currently_selected_file_two).length > 0) {
-          document.getElementById('file_' + currently_selected_file_two).value = curr_val;
+        
+        var element = document.getElementById('file_' + currently_selected_file_two);
+        var element_exists = (typeof(element) != 'undefined' && element != null);
+        if (element_exists) {
+          element.value = curr_val;
         }
         if (currently_selected_file_one == currently_selected_file_two) {
           if (code_editor_one.getSession().getValue() != curr_val) {
@@ -371,7 +379,7 @@
 
     var editor_data = $('#test_case_editor_textarea').val();
 
-    data_to_send = get_all_code_fields();
+    var data_to_send = get_all_code_fields();
     data_to_send['test_case_editor'] = editor_data;
     data_to_send['csrfmiddlewaretoken'] = CSRFtoken;
 
@@ -392,6 +400,35 @@
             $("#test_case_results").append(row);
           }
         }
+      }, 
+      error: function (data) {
+        alert("There was a problem running the test case.");
+      }
+    });
+  });
+
+  $('#save_code').click(function () {
+    $("#code_saved_status").html("Saving your code...");
+    $("#test_case_results").html("");
+    var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
+
+    var data_to_send = {};
+    data_to_send["json_file_contents"] = JSON.stringify(get_all_code_fields());
+    data_to_send['csrfmiddlewaretoken'] = CSRFtoken;
+
+    $.ajax({
+      type: "POST",
+      url: "/questions/answer/save_code/{{request.resolver_match.kwargs.pk}}/",
+      data: data_to_send,
+      success: function (data) {
+        if (data["success"] == true) {
+          $("#code_saved_status").html("Code successfully saved!");
+        } else {
+          $("#code_saved_status").html("There was a problem saving your code");
+        }
+      },
+      error: function (data) {
+        $("#code_saved_status").html("There was a problem saving your code");
       }
     });
   });

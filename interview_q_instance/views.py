@@ -14,6 +14,8 @@ from django.http import JsonResponse
 import pytz
 from django.utils.timezone import utc
 from django.utils import timezone
+from django.core.mail import EmailMessage
+from django.contrib.sites.shortcuts import get_current_site
 
 
 class AllQuestionsToAnswerView(View):
@@ -40,6 +42,8 @@ class QuestionAnswerView(View):
     def get(self, request, *args, **kwargs):
         question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
         if question.interviewee_email == request.user.email:
+            if question.has_completed and (not question.base_question.is_open):
+                return HttpResponseRedirect("/questions/answer")
             files_to_work_on = StarterCode.objects.filter(interview_question=question.base_question)
 
             api_methods = []
@@ -49,14 +53,25 @@ class QuestionAnswerView(View):
 
             files_to_work_on_names = []
             files_to_work_on_bodies = []
+
+            previous_work = {}
+            try:
+                previous_work = json.loads(question.current_working_body)
+            except:
+                previous_work = {}
+
             for file_obj in files_to_work_on:
                 filename = file_obj.code_file.name.split("/")[-1]
-                files_to_work_on_names.append(filename)
-                f = file_obj.code_file
-                f.open(mode='r') 
-                content = f.read()
-                f.close()
-                files_to_work_on_bodies.append(content)
+                if "file_" + filename in previous_work:
+                    files_to_work_on_names.append(filename)
+                    files_to_work_on_bodies.append(previous_work["file_" + filename])
+                else:
+                    files_to_work_on_names.append(filename)
+                    f = file_obj.code_file
+                    f.open(mode='r') 
+                    content = f.read()
+                    f.close()
+                    files_to_work_on_bodies.append(content)
 
             is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
@@ -139,10 +154,21 @@ class QuestionAnswerView(View):
                     question_instance.has_completed = True
                     question_instance.save()
                     question_instance.delete_all_but_submission_files()
-                return HttpResponseRedirect("/results/" + str(submission_result.id))
+
+                    # email the creator
+                    name_of_question = question_instance.base_question.name
+                    name_of_user = request.user.first_name + request.user.last_name
+                    results_url = get_current_site(request) + "/results/submissions/" + str(submission_result.pk)
+                    mail_subject = "An Interview Question Has Been Submitted"
+                    message = "Hello ,\n {0} has submitted {1}. You can view the submission here: {2}. \n Best, \n The Encompass Team".format(name_of_user, name_of_question, results_url)
+                    email_obj = EmailMessage(
+                        mail_subject, message, to=[user_email]
+                    )
+                    email_obj.send()
+
+                    return HttpResponseRedirect("/results/" + str(submission_result.id))
             else:
                 test_passed, test_results, test_visability = create_and_run_submission(request, question_instance.base_question, question_instance, False, '')
-
                 # pass results to results page
                 submission_result = SubmissionResult(
                     tests_passed_body=json.dumps(test_passed), 
@@ -177,4 +203,18 @@ class UserTestCaseView(View):
         return JsonResponse({
             'test_passed': public_test_passed,
             'test_results': public_test_results
+        })
+
+class SaveCodeView(View):
+    def post(self, request, *args, **kwargs):
+        file_contents_json = request.POST.get("json_file_contents", '')
+        successful_save = False
+        if len(file_contents_json) > 0:
+            question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
+            if question_instance.interviewee_email == request.user.email:
+                question_instance.current_working_body = file_contents_json
+                question_instance.save()
+                successful_save = True
+        return JsonResponse({
+            'success': successful_save,
         })

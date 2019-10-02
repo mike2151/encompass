@@ -22,6 +22,8 @@ from django.core.paginator import Paginator
 from submission_result.models import SubmissionResult
 from dateutil import parser
 import pytz
+from django.core.mail import EmailMessage
+from django.contrib.sites.shortcuts import get_current_site
 
 
 class CreateInterviewView(View):
@@ -40,13 +42,12 @@ class CreateInterviewView(View):
         if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
-            is_open = self.request.POST.get('is_open', '') == 'on'
             question_language = self.request.POST.get('question_language', '')
             if len(name) == 0:
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
-            question = InterviewQuestion(name=name, description=description, creator=self.request.user, is_open=is_open, language=question_language)
+            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language)
             question.save()
 
             question_id = question.id
@@ -297,7 +298,6 @@ class EditQuestionView(View):
         if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
-            is_open = self.request.POST.get('is_open', '') == 'on'
             question_language = self.request.POST.get('question_language', '')
             if len(name) == 0:
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
@@ -312,7 +312,6 @@ class EditQuestionView(View):
             question.name = name
             question.description = description
             question.language = question_language
-            question.is_open = is_open
 
             question.save()
             question_id = question.id
@@ -495,6 +494,15 @@ class CreateQuestionInstanceView(View):
             num_minutes = max(num_minutes, 1)
             question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, is_minutes_expiration=True, how_many_minutes=num_minutes, start_time_date_str=start_time_date_str, can_preview=can_preview)
             question_instance.save()
+
+            name_of_question = question_instance.base_question.name
+            question_url = get_current_site(request) + "/questions/answer/" + str(question_instance.pk)
+            mail_subject = "An Interview Question Has Been Sent To You"
+            message = "Hello ,\n You have been asked to complete the following interview question: {0}. You can complete it by navigating here: {1}. \n Best of luck! \n The Encompass Team.".format(name_of_question, question_url)
+            email_obj = EmailMessage(
+                mail_subject, message, to=[user_email]
+            )
+            email_obj.send()
         else:
             expire_date_field_str = self.request.POST.get('expiration_date', '')
             expire_date_field = parser.parse(expire_date_field_str + " " + start_time_zone_str)
@@ -512,7 +520,13 @@ class CreateOpenQuestionInstanceView(View):
             question_instance = None
             if len(user_question_instance) > 0:
                 # already exists
-                question_instance = user_question_instance[0]
+                if user_question_instance[0].has_completed:
+                    user_question_instance[0].delete_folder()
+                    user_question_instance[0].delete()
+                    question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=datetime.now())
+                    question_instance.save()
+                else:    
+                    question_instance = user_question_instance[0]
             else:
                 question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=datetime.now())
                 question_instance.save()
