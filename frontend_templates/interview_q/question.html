@@ -47,12 +47,6 @@
                                 <select class="form-control" id="question_language" name="question_language">
                                     <option {% if question.language == 'Python3' %}selected{% endif %}>Python3</option>
                                 </select> <br/>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="is_open" name="is_open" {% if question.is_open %}checked{% endif %}>
-                                    <label class="form-check-label checkbox-label" for="is_open" >
-                                            Make your question open to the public for all users to try?
-                                    </label>
-                                </div>
                             </div>
                         </div>
                         <div class="col-md-6">

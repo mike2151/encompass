@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load markdown_extras %}
 {% block css_imports %}
 <link href="{% static 'main/css/homepage.css' %}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{% static "fontawesome/css/all.min.css" %}" />
@@ -72,7 +73,7 @@
                   <div class="card open-question-card" >
                     <div class="card-body">
                       <h5 class="card-title">{{ question.name }}</h5>
-                      <p class="card-text question-card-text">{{ question.description|truncatechars:200 }}</p>
+                      <p class="card-text question-card-text">{{ question.description | markdown | truncatechars:200 | safe}}</p>
                       <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary btn-block question-btn">Answer</a>
                     </div>
                   </div>

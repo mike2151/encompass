@@ -12,7 +12,9 @@
         <h3 class="question-title">{{ question.base_question.name }}</h3>
         {% if is_preview %}
         {% else %}
-          <span id="remaining_time">Remaining Time:</span> 
+          {% if has_expiration %}
+            <span id="remaining_time">Remaining Time:</span> 
+          {% endif %}
         {% endif %}
       </div>
       <div class="col-md-6 answer-section-one" id="content-one">
@@ -437,10 +439,13 @@
     $("#test_case_loading").hide();
     setUpScreen();
     var is_preview = "{{ is_preview|safe }}";
+    var has_expiration = "{{ has_expiration|safe }}";
     if (is_preview === "False") {
-      var time = {{ expiration_time|safe }};
-      var display = document.querySelector('#remaining_time');
-      startTimer(time, display);
+      if (has_expiration !== "False") {
+        var time = {{ expiration_time|safe }};
+        var display = document.querySelector('#remaining_time');
+        startTimer(time, display);
+      }
     }
   };
 

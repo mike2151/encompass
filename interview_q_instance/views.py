@@ -9,7 +9,7 @@ from submission_result.models import SubmissionResult
 from starter_code.models import StarterCode
 import json
 from api_q.models import InterviewAPI
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.http import JsonResponse
 import pytz
 from django.utils.timezone import utc
@@ -62,6 +62,9 @@ class QuestionAnswerView(View):
 
             opt_groups = ["Question", "Stub Files", "API", "Example Code"]
 
+            expiration_time_in_seconds = 0
+            has_expiration = True
+
             if is_preview:
                 return render(request, self.template_name, {
                     'question': question,
@@ -75,13 +78,18 @@ class QuestionAnswerView(View):
                     })
             else:
                 if not question.expire_time:
-                    expiration_time_in_seconds = question.how_many_minutes * 60.0
+                    if question.how_many_minutes == 0:
+                        has_expiration = False
+                        if not question.has_started:
+                            question.has_started = True
+                            question.save()
+                    else:
+                        expiration_time_in_seconds = question.how_many_minutes * 60.0
 
-                    num_hours = 4
-                    question.expire_time = datetime.now() + timedelta(hours=num_hours)
-                    
-                    question.has_started = True
-                    question.save()
+                        question.expire_time = datetime.now() + timedelta(minutes=question.how_many_minutes)
+                        
+                        question.has_started = True
+                        question.save()
                 else:
                     utc = pytz.utc
                     now = datetime.now(tz=utc)
@@ -89,29 +97,50 @@ class QuestionAnswerView(View):
                     expiration_time_in_seconds = (expire_time - now).total_seconds()
                     question.has_started = True
                     question.save()
-                    return render(request, self.template_name, {
-                        'question': question,
-                        'question_description': json.dumps(question.base_question.description),
-                        'api_methods': api_methods,
-                        'example_code_snippets': [],
-                        'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
-                        'files_to_work_on_names': files_to_work_on_names,
-                        'is_preview': is_preview,
-                        "opt_groups": opt_groups,
-                        "expiration_time": expiration_time_in_seconds
-                        })
+                return render(request, self.template_name, {
+                    'question': question,
+                    'question_description': json.dumps(question.base_question.description),
+                    'api_methods': api_methods,
+                    'example_code_snippets': [],
+                    'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
+                    'files_to_work_on_names': files_to_work_on_names,
+                    'is_preview': is_preview,
+                    "opt_groups": opt_groups,
+                    "expiration_time": expiration_time_in_seconds,
+                    'has_expiration': has_expiration
+                    })
         return render(request, "no_auth.html", {})
 
     def post(self, request, *args, **kwargs):
         question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
         if question_instance.interviewee_email == request.user.email:
-            # check if maliciously manipulated
-            utc = pytz.utc
-            now = datetime.now(tz=utc)
-            expire_time = question_instance.expire_time
-            expiration_time_in_seconds = (now - expire_time).total_seconds()
+            has_expiration = (not question_instance.expire_time) and (question_instance.how_many_minutes != 0)
+            if has_expiration:
+                # check if maliciously manipulated
+                utc = pytz.utc
+                now = datetime.now(tz=utc)
+                expire_time = question_instance.expire_time
+                expiration_time_in_seconds = (now - expire_time).total_seconds()  
 
-            if expiration_time_in_seconds < 35:
+                if expiration_time_in_seconds < 35:
+                    test_passed, test_results, test_visability = create_and_run_submission(request, question_instance.base_question, question_instance, False, '')
+
+                    # pass results to results page
+                    submission_result = SubmissionResult(
+                        tests_passed_body=json.dumps(test_passed), 
+                        results_body=json.dumps(test_results), 
+                        visability_body=json.dumps(test_visability),
+                        interview_question=question_instance.base_question, 
+                        question_instance_pk=question_instance.pk,
+                        user = request.user
+                        )
+                    submission_result.save()
+                    question_instance.submission_result = submission_result
+                    question_instance.has_completed = True
+                    question_instance.save()
+                    question_instance.delete_all_but_submission_files()
+                return HttpResponseRedirect("/results/" + str(submission_result.id))
+            else:
                 test_passed, test_results, test_visability = create_and_run_submission(request, question_instance.base_question, question_instance, False, '')
 
                 # pass results to results page

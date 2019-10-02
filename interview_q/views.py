@@ -491,7 +491,8 @@ class CreateQuestionInstanceView(View):
 
         is_minutes_option = request.POST.get('minutes_option', '') == 'on'
         if is_minutes_option:
-            num_minutes = self.request.POST.get('how_many_minutes', '')
+            num_minutes = int(self.request.POST.get('how_many_minutes', '60'))
+            num_minutes = max(num_minutes, 1)
             question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=start_date_field, is_minutes_expiration=True, how_many_minutes=num_minutes, start_time_date_str=start_time_date_str, can_preview=can_preview)
             question_instance.save()
         else:
@@ -503,18 +504,22 @@ class CreateQuestionInstanceView(View):
 
 class CreateOpenQuestionInstanceView(View):
     def get(self, request,  *args, **kwargs):
-        user_email = self.request.user.email
-        base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
-        # see if the user already attempted the question
-        user_question_instance = InterviewQuestionInstance.objects.filter(base_question=base_question, interviewee_email=user_email)
-        question_instance = None
-        if len(user_question_instance) > 0:
-            # already exists
-            question_instance = user_question_instance[0]
+        if request.user.is_authenticated:
+            user_email = self.request.user.email
+            base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+            # see if the user already attempted the question
+            user_question_instance = InterviewQuestionInstance.objects.filter(base_question=base_question, interviewee_email=user_email)
+            question_instance = None
+            if len(user_question_instance) > 0:
+                # already exists
+                question_instance = user_question_instance[0]
+            else:
+                question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=datetime.now())
+                question_instance.save()
+            return HttpResponseRedirect("/questions/answer/" + str(question_instance.id) + "/")
         else:
-            question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, start_time=datetime.now())
-            question_instance.save()
-        return HttpResponseRedirect("/questions/answer/" + str(question_instance.id) + "/")
+             return HttpResponseRedirect("/users/signup/")
+
 
 class ValidateQuestionView(View):
     template_name = "interview_q/validate.html"
