@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load markdown_extras %}
 {% block css_imports %}
 <link href="{% static 'main/css/answer.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
@@ -28,10 +29,15 @@
                         <option value="Question Description">Question Description</option>
                       {% elif opt_group == 'Stub Files' %}
                         {% for filename in files_to_work_on_names %}
-                        <option value="{{ filename }}">{{ filename }}</option>
+                          <option value="{{ filename }}">{{ filename }}</option>
                         {% endfor %}
                       {% elif opt_group == 'API' %}
+                        <option value="API Description">API Description</option>
+                        <option value="API Methods">API Methods</option>
                       {% elif opt_group == 'Example Code' %}
+                        {% for filename in example_files_names %}
+                          <option value="{{ filename }}">{{ filename }}</option>
+                        {% endfor %}
                       {% endif %}
                     </optgroup>
                   {% endfor %}
@@ -108,10 +114,7 @@
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM="
   crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script type='text/javascript'>
-
-
     // themes for the drop down
     var themeData = [
       "textmate"                ,
@@ -175,9 +178,14 @@
 
 
   // init select
+  var name_to_body = {};
   var starter_code_bodies = {{ files_to_work_on_bodies| safe}};
   var starter_code_names = {{ files_to_work_on_names| safe}};
-  var name_to_body = {};
+  
+  var example_name_to_body = {};
+  var example_code_bodies = {{ example_files_bodies| safe}};
+  var example_code_names = {{ example_files_names| safe}};
+
   var currently_selected_file_one = $("#file-drop-down-one option:selected").text();
   var currently_selected_file_two = $("#file-drop-down-two option:selected").text();
 
@@ -197,16 +205,30 @@
     });
   }
 
+  function initSetUpExampleFiles() {
+    var example_index = 0;
+    $("#file-drop-down-one option").each(function () {
+      if (example_code_names.includes(this.text)) {
+        example_name_to_body[this.text] = example_code_bodies[example_index];
+        example_index = example_index + 1;
+      }
+    });
+  }
+
   // set up all of the code in the dropdown
   function initQuestionSetup() {
-    name_to_body["Question Description"] = {{ question_description | safe}};
+    name_to_body["Question Description"] = `{{ question_description | markdown | safe}}`;
   }
 
   function initAPISetup() {
-    
+    name_to_body["API Description"] = `{{ api_description | markdown  | safe}}`;
+    name_to_body["API Methods"] = `{{ api_methods | safe}}`;
   }
+
   initSetUpStarterFiles();
+  initSetUpExampleFiles();
   initQuestionSetup();
+  initAPISetup();
 
   // ace editor functions
   function textarea_edit(name) {
@@ -217,6 +239,14 @@
 
     var textarea = $('textarea[name="' + name + '"]').hide();
     textarea.val(editor.getSession().getValue());
+    return editor;
+  }
+
+  function textarea_edit_example_code(name) {
+    var editor = ace.edit(name);
+    editor.setTheme("ace/theme/textmate");
+    editor.session.setMode("ace/mode/python");
+    editor.setOptions({"showPrintMargin": false, fontSize: "12pt"});
     return editor;
   }
 
@@ -246,7 +276,6 @@
   }
 
 
-  
   var code_editor_two = textarea_edit("editor_two");
   var code_editor_one = textarea_edit("editor_one");
 
@@ -329,7 +358,6 @@
   }
 
 
-
   code_editor_two.setValue(name_to_body[currently_selected_file_two].toString(), -1);
 
 
@@ -344,11 +372,35 @@
       }
       $("#editor_one").html(name_to_body["Question Description"]);
     } else if (opt_group === "Stub Files") {
+      if (code_editor_one !== null) {
+        code_editor_one.destroy();
+      }
       $("#editor_one").html('')
       code_editor_one = textarea_edit("editor_one");
       setUpOnChangeForEditorOne();
+      code_editor_one.setReadOnly(false);
       currently_selected_file_one = $("#file-drop-down-one option:selected").text();
       code_editor_one.setValue(name_to_body[currently_selected_file_one].toString(), -1);
+    } else if (opt_group === "API") {
+      if (selected.val() === "API Description") {
+        if (code_editor_one !== null) {
+          code_editor_one.destroy();
+        }
+        $("#editor_one").html(name_to_body["API Description"]);
+      } else if (selected.val() === "API Methods") {
+        if (code_editor_one !== null) {
+          code_editor_one.destroy();
+        }
+        $("#editor_one").html(name_to_body["API Methods"]);
+      }
+    } else if (opt_group === "Example Code") {
+      if (code_editor_one !== null) {
+        code_editor_one.destroy();
+      }
+      $("#editor_one").html('')
+      code_editor_one = textarea_edit_example_code("editor_one");
+      code_editor_one.setValue(example_name_to_body[selected.val()], -1);
+      code_editor_one.setReadOnly(true);
     }
   });
 

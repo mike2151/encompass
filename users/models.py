@@ -45,5 +45,7 @@ class SubscriptionCouponCode(models.Model):
     code = models.CharField(max_length=64)
     expiration_date = models.DateTimeField()
     description = models.CharField(max_length=512, null=True, blank=True)
+    max_redeems = models.IntegerField(default=1)
+    curr_redeems = models.IntegerField(default=0)
     def __str__(self):
         return self.code

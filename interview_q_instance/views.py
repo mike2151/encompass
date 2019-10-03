@@ -46,10 +46,13 @@ class QuestionAnswerView(View):
                 return HttpResponseRedirect("/questions/answer")
             files_to_work_on = StarterCode.objects.filter(interview_question=question.base_question)
 
-            api_methods = []
+            api_methods = ""
             api = InterviewAPI.objects.filter(interview_question=question.base_question).first()
             if api is not None:
-                api_methods = MethodSignature.objects.filter(interview_question_api=api)
+                api_description = api.description
+                api_methods_objs = MethodSignature.objects.filter(interview_question_api=api)
+                for api_method_obj in api_methods_objs:
+                    api_methods = api_methods + str(api_method_obj.api_signature) + "<br><br>"
 
             files_to_work_on_names = []
             files_to_work_on_bodies = []
@@ -73,6 +76,19 @@ class QuestionAnswerView(View):
                     f.close()
                     files_to_work_on_bodies.append(content)
 
+
+            example_file_objs = ExampleCode.objects.filter(interview_question=question.base_question)
+            example_files_names = []
+            example_files_bodies = []
+            for example_file_obj in example_file_objs:
+                filename = example_file_obj.code_file.name.split("/")[-1]
+                example_files_names.append(filename)
+                f = example_file_obj.code_file
+                f.open(mode='r') 
+                content = f.read()
+                f.close()
+                example_files_bodies.append(content)
+
             is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
             opt_groups = ["Question", "Stub Files", "API", "Example Code"]
@@ -81,16 +97,9 @@ class QuestionAnswerView(View):
             has_expiration = True
 
             if is_preview:
-                return render(request, self.template_name, {
-                    'question': question,
-                    'question_description': json.dumps(question.base_question.description),
-                    'api_methods': api_methods,
-                    'example_code_snippets': [],
-                    'files_to_work_on_bodies': [],
-                    'files_to_work_on_names': [],
-                    'is_preview': is_preview,
-                    "opt_groups": opt_groups,
-                    })
+                has_expiration = False
+                files_to_work_on_names = []
+                files_to_work_on_bodies = []
             else:
                 if not question.expire_time:
                     if question.how_many_minutes == 0:
@@ -112,18 +121,20 @@ class QuestionAnswerView(View):
                     expiration_time_in_seconds = (expire_time - now).total_seconds()
                     question.has_started = True
                     question.save()
-                return render(request, self.template_name, {
-                    'question': question,
-                    'question_description': json.dumps(question.base_question.description),
-                    'api_methods': api_methods,
-                    'example_code_snippets': [],
-                    'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
-                    'files_to_work_on_names': files_to_work_on_names,
-                    'is_preview': is_preview,
-                    "opt_groups": opt_groups,
-                    "expiration_time": expiration_time_in_seconds,
-                    'has_expiration': has_expiration
-                    })
+            return render(request, self.template_name, {
+                'question': question,
+                'question_description': question.base_question.description,
+                'api_methods': api_methods,
+                'api_description': api_description,
+                'example_files_bodies': json.dumps(example_files_bodies),
+                'example_files_names': example_files_names,
+                'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
+                'files_to_work_on_names': files_to_work_on_names,
+                'is_preview': is_preview,
+                "opt_groups": opt_groups,
+                "expiration_time": expiration_time_in_seconds,
+                'has_expiration': has_expiration
+                })
         return render(request, "no_auth.html", {})
 
     def post(self, request, *args, **kwargs):

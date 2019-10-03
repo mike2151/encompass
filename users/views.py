@@ -130,12 +130,16 @@ class EnrollView(View):
             coupon_code = request.POST.get("coupon_code", '')
             if len(coupon_code) > 0:
                 coupon = SubscriptionCouponCode.objects.filter(code=coupon_code).first()
-                if coupon is not None:
+                if coupon is not None and coupon.curr_redeems < coupon.max_redeems:
                     user = request.user
                     subscription = user.subscription
                     subscription.plan_type = 'MONTHLY_CREATOR'
                     subscription.initiated_on = datetime.now()
                     subscription.terminated_on = coupon.expiration_date
                     subscription.save()
+                    coupon.curr_redeems = coupon.curr_redeems + 1
+                    coupon.save()
+                else:
+                    return render(request, self.template_name, {"message": "Coupon code expired or invalid"})
 
         return HttpResponseRedirect("/interview_questions/")
