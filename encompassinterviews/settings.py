@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'starter_code',
     'solution_code',
     'django_cleanup',
-    "django_static_fontawesome",
     'ratelimit',
     'axes'
 ]
@@ -106,13 +105,24 @@ AUTH_USER_MODEL = 'users.SiteUser'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -154,6 +164,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
