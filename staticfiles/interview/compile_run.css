@@ -1,0 +1,93 @@
+body {
+    background: rgb(141, 141, 255);
+}
+
+.question-card-title {
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    content: block;
+}
+
+.answer-btn {
+    width: 100%;
+}
+
+.main-section {
+    padding-top: 70px; 
+    max-width: 90vw;
+}
+
+.page-title {
+    color: #FFF;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid white;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    padding-left: 4vw;
+    padding-right: 4vw;
+}
+
+.passed {
+    color: green;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    content: block;
+    font-size: 1.5em;
+}
+
+.failed {
+    color: red;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    content: block;
+    font-size: 1.5em;
+}
+
+.go-back-button {
+    border: 2px solid white;
+    background-color: white;
+    color: white;
+    padding: 1vw 1.5vh;
+    font-size: 1.3em;
+    cursor: pointer;
+    color: white;
+    outline-color: white;
+    background: rgb(141, 141, 255);
+    margin-left: auto;
+    margin-right: auto;
+    content: block;
+    text-align: center;
+}
+
+.go-back-button:hover {
+    text-decoration: none;
+    background-color: white;
+    color: rgb(141, 141, 255);
+}
+
+.file_snippet {
+    height: 20vh;
+    width: 70vw;
+}
+
+.file_snippet_label {
+    margin-left: auto;
+    margin-right: auto;
+    content: block;
+    color: #FFF;
+    text-align: center;
+    font-size: 1.4em;
+}
+
+.user_files {
+    margin-bottom: 2vh;
+}
+

@@ -1,0 +1,75 @@
+body {
+    background: #FFF;
+}
+
+hr { 
+    background-color: white; 
+    height: 1px; 
+    border: 0; 
+}
+
+.main-body {
+    padding-top: 10vh;
+}
+
+.section-header {
+    color: #7373fd;
+    font-size: 3em;
+    letter-spacing: .1em;
+}
+
+.mission-header {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    color: #7373fd;
+    font-size: 4em;
+    letter-spacing: .1em;
+}
+
+.mission-body {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    color: #7373fd;
+    font-size: 2em;
+    letter-spacing: .1em;
+    margin-top: 5vh;
+    text-transform: uppercase;
+}
+
+.section-body {
+    color: #7373fd;
+    font-size: 1.3rem;
+    line-height: 1.8em;
+}
+
+.about-icon {
+    margin-top: 2vh;
+    margin-left: 2vw;
+}
+
+.person-image {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.person-title {
+    text-align: center;
+    margin-top: 2vh;
+    color: #7373fd;
+}
+
+.person-text {
+    text-align: center;
+    color: #7373fd;
+}
+
+.contact-body {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    content: block;
+}
