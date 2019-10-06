@@ -91,13 +91,15 @@ a:hover {
 .homepage-container {
   max-width: 100vw;
   padding-left: 0;
-  padding-right: 0
+  padding-right: 0;
 }
 
 .offer-section {
   padding-bottom: 3vh;
   padding-top: 3vh
 }
+
+.appeal-section {}
 
 .offer-title {
   font-size: 1.9em;
