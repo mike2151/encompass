@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load compress %}
 {% block css_imports %}
 <link href="{% static 'main/css/basic-form.css' %}" rel="stylesheet">
 {% endblock %}
@@ -59,6 +60,7 @@
 </center>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.3/moment-timezone-with-data.min.js"></script>
+{% compress js inline%}
 <script>
 function loadTimeZoneList(){   
     let select = document.getElementById("start_time_tz");
@@ -157,6 +159,7 @@ $(function () {
     });
 });
 </script>
+{% endcompress %}
 {% else %}
     {% include "no_auth.html" %}
 {% endif %} 

@@ -25,6 +25,8 @@ SECRET_KEY = 'ndp4v(lyrbs2r+k&x41#)d%goxqi6w9ejqw4)l$uxdlto)x(3v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+COMPRESS_ENABLED = True
+
 ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = 'home'
@@ -35,6 +37,11 @@ SILENCED_SYSTEM_CHECKS = ['urls.W002', 'security.W019']
 MEDIA_URL = '/code_files/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'code_files')
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 # Application definition
 
@@ -60,7 +67,8 @@ INSTALLED_APPS = [
     'solution_code',
     'django_cleanup',
     'ratelimit',
-    'axes'
+    'axes',
+    'compressor'
 ]
 
 AUTHENTICATION_BACKENDS = [

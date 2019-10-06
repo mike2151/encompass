@@ -1,4 +1,5 @@
 {% load static %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,11 +11,13 @@
   <title>Encompass Interviews</title>
 
   <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-  <link href="{% static 'main/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'main/css/base.css' %}" rel="stylesheet">
+  {% compress css %}
+    <link href="{% static 'main/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'main/css/base.css' %}" rel="stylesheet">
+    {% block css_imports %}
+    {% endblock %}
+  {% endcompress %}
   <script src="{% static 'main/vendor/jquery/jquery.min.js' %}"></script>
-  {% block css_imports %}
-  {% endblock %}
 </head>
 <body>
   <!-- Navigation -->
