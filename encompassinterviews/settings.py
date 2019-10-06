@@ -23,11 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ndp4v(lyrbs2r+k&x41#)d%goxqi6w9ejqw4)l$uxdlto)x(3v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 COMPRESS_ENABLED = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['encompassinterviews.com', 'www.encompassinterviews.com' ,'localhost', '127.0.0.1']
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
@@ -124,9 +124,9 @@ else:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
+        'NAME': 'encompass',
+        'USER': 'encompass_user',
+        'PASSWORD': 'mikey215!',
         'HOST': 'localhost',
         'PORT': '',
     }
