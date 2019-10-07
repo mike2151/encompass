@@ -25,7 +25,9 @@ SECRET_KEY = 'ndp4v(lyrbs2r+k&x41#)d%goxqi6w9ejqw4)l$uxdlto)x(3v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-COMPRESS_ENABLED = True
+COMPRESS_ENABLED = not DEBUG
+if not DEBUG:
+    COMPRESS_OFFLINE = True
 
 ALLOWED_HOSTS = ['encompassinterviews.com', 'www.encompassinterviews.com' ,'localhost', '127.0.0.1']
 
@@ -172,7 +174,10 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+else:
+    STATIC_ROOT = '/home/django/encompass/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
