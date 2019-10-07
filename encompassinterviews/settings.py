@@ -179,10 +179,6 @@ if DEBUG:
 else:
     STATIC_ROOT = '/home/django/encompass/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
-
 AXES_COOLOFF_TIME = 5
 RATELIMIT_ENABLE = True
 
@@ -190,4 +186,9 @@ RATELIMIT_ENABLE = True
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    pass
+    EMAIL_USE_TLS = True
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = 'apikey'
+    EMAIL_HOST_PASSWORD = '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'
+    EMAIL_PORT = 587
+    DEFAULT_FROM_EMAIL = 'support@encompassinterviews.com'

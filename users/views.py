@@ -42,7 +42,11 @@ class SignUpView(View):
 
         email_taken = True
         try:
-            _ = SiteUser.objects.get(email=email)
+            curr_user = SiteUser.objects.get(email=email)
+            if curr_user is not None:
+                if not curr_user.is_active:
+                    email_taken = False
+                    curr_user.delete()
         except SiteUser.DoesNotExist:
             email_taken = False
 
@@ -91,7 +95,7 @@ class LoginView(View):
                 message_to_render = "The account activation link does not exist or has expired. Please try signing up again."
                 message_color = "green"
             elif message == "confirm":
-                message_to_render = "Please check and confirm your email to proceed."
+                message_to_render = "Please check and confirm your email to proceed. You may need to check spam."
 
             return render(request, self.template_name, {"message": message_to_render, "message_color": message_color})
     def post(self, request,  *args, **kwargs):
