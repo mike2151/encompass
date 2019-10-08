@@ -175,7 +175,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
 if DEBUG:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 else:
     STATIC_ROOT = '/home/django/encompass/static/'
 
