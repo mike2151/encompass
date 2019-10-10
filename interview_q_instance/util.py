@@ -162,7 +162,7 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         # create the runner file
         create_runner_file(user_submission_dir, test_case_file_name, language)
 
-        run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version)
+        run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version, question.network_enabled)
         all_unit_tests_results = run_submission_result['result']
         all_unit_tests_results_str = all_unit_tests_results
         if not isinstance(all_unit_tests_results_str, str):

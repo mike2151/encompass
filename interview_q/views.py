@@ -42,12 +42,13 @@ class CreateInterviewView(View):
         if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
+            network_enabled = self.request.POST.get('network_enabled', '') == 'on'
             question_language = self.request.POST.get('question_language', '')
             if len(name) == 0:
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
-            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language)
+            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled)
             question.save()
 
             question_id = question.id
@@ -299,6 +300,7 @@ class EditQuestionView(View):
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
             question_language = self.request.POST.get('question_language', '')
+            network_enabled = self.request.POST.get('network_enabled', '') == 'on'
             if len(name) == 0:
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
@@ -312,6 +314,7 @@ class EditQuestionView(View):
             question.name = name
             question.description = description
             question.language = question_language
+            question.network_enabled = network_enabled
 
             question.save()
             question_id = question.id

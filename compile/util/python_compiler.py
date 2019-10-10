@@ -1,9 +1,9 @@
 import docker
 import os
-from config import DOCKER_IMAGE, MEMORY_LIMIT, AUTO_REMOVE, FILE_OPEN_MODE, LOCAL_DIR, CONTAINER_DIR, NETWORK_DISABLED
+from config import DOCKER_IMAGE, MEMORY_LIMIT, AUTO_REMOVE, FILE_OPEN_MODE, LOCAL_DIR, CONTAINER_DIR
 
 
-def python_runner(client, file_name, container_name, command, return_dict, run_folder):
+def python_runner(client, file_name, container_name, command, return_dict, run_folder, network_enabled):
     try:
         local_directory = LOCAL_DIR + '/' + str(run_folder) + '/' + str(file_name)
         container_directory = CONTAINER_DIR + '/' + str(run_folder) + '/' + str(file_name)
@@ -18,7 +18,7 @@ def python_runner(client, file_name, container_name, command, return_dict, run_f
         result = client.containers.run(DOCKER_IMAGE, python_run_command,
                                        remove=AUTO_REMOVE, mem_limit=MEMORY_LIMIT,
                                        name=container_name,
-                                       network_disabled=NETWORK_DISABLED,
+                                       network_disabled=(not network_enabled),
                                        volumes={docker_local_dir : {
                                                 'bind': docker_container_dir,
                                                 'mode': FILE_OPEN_MODE}

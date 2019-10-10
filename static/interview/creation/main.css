@@ -18,6 +18,10 @@ textarea:focus {
   box-shadow: 0 0 5px #7373fd;
 }
 
+.checkbox-style {
+  box-shadow: none;
+}
+
 .page-title {
   color: #7373fd;
   font-size: 3em;

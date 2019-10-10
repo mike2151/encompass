@@ -17,8 +17,7 @@
                         the user's code, your support (code base) files and test files will all be moved in the same directory and the test files
                         will be ran. You should keep this in mind when writing your code. 
                         The user will be brought to the results screen with a display of the visible tests they passed. After the user submits, you
-                        will be able to see the user's test results and code submission. NOTE: we disable network access to best protect your supporting code. Note that the user will not have
-                        access to the network when during the problem. 
+                        will be able to see the user's test results and code submission. 
                     </p>
                 </div>
         </div>
@@ -47,6 +46,13 @@
                             <select class="form-control" id="question_language" name="question_language">
                                 <option>Python3</option>
                             </select> <br/>
+
+                            <div class="form-check">
+                                <input class="form-check-input checkbox-style" type="checkbox" id="network_enabled" name="network_enabled">
+                                <label class="form-check-label checkbox-label" for="network_enabled">
+                                        Enable Network For This Question? <br /> We normally disable network access to best protect your supporting code.                               </label>
+                            </div>
+                            <br/>
                         </div>
                     </div>
                     <div class="col-md-6">
