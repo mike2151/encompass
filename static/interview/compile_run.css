@@ -73,6 +73,13 @@ body {
     color: rgb(141, 141, 255);
 }
 
+.go-back-button:active:focus {
+    text-decoration: none !important;
+    background-color: white !important;
+    color: rgb(141, 141, 255) !important;
+}
+
+
 .file_snippet {
     height: 20vh;
     width: 70vw;

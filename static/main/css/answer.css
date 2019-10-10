@@ -95,6 +95,13 @@ body {
     border: 1px solid #7373fd;
 }
 
+.test-case-button:active:focus {
+    margin-top: 1vh !important;
+    background-color: #7373fd !important;
+    color: #FFF !important;
+    border: 1px solid #7373fd !important;
+}
+
 .top-row-right {
     white-space: nowrap;
     float: right;
@@ -215,6 +222,12 @@ body {
     background: #FFF;
     color: rgb(141, 141, 255);
 }
+
+.toggle-button:active:focus {
+    background: #FFF !important;
+    color: rgb(141, 141, 255) !important;
+}
+
 
 .theme-name {
     color: #7373fd;

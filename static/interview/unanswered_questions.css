@@ -18,6 +18,11 @@ body {
     color: #FFF;
     background-color: #7373fd;
   }
+  
+.answer-btn:active:focus {
+   color: #FFF !important;
+   background-color: #7373fd !important;
+}
 
 .main-section {
     padding-top: 70px; 
@@ -67,4 +72,15 @@ hr {
     background-color: #FFF;
     border: 1px solid #7373fd;
 }
-  
+
+.open-q-btn:active:focus {
+    color: #7373fd !important;
+    background-color: #FFF !important;
+    border: 1px solid #7373fd !important;
+}
+
+.open-q-btn:active:focus {
+    color: #7373fd !important;
+    background-color: #FFF !important;
+    border: 1px solid #7373fd !important;
+}

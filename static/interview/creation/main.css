@@ -201,3 +201,8 @@ hr {
   background-color: #7373fd;
   color: #FFF;
 }
+
+.btn-light:active:focus {
+  background-color: #7373fd !important;
+  color: #FFF !important;
+}

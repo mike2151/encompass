@@ -22,6 +22,11 @@ body {
     background-color: #7373fd;
 }
 
+.question-card-button:active:focus {
+    color: #FFF !important;
+    background-color: #7373fd !important;
+}
+
 .question-box {
     border: 2px solid #7373fd;
 }
@@ -41,6 +46,16 @@ body {
 }
 
 .create-section-button:hover {
+    text-align: center;
+    max-width: 35%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background: #7373fd;
+    border: 1px solid #7373fd;
+}
+
+.create-section-button:active:focus {
     text-align: center;
     max-width: 35%;
     display: block;
