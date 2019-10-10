@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import logging.config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -165,6 +166,50 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'standard': {
+                'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+                'datefmt' : "%d/%b/%Y %H:%M:%S"
+            },
+        },
+        'handlers': {
+            'null': {
+                'level':'DEBUG',
+                'class':'logging.NullHandler',
+            },
+            'logfile': {
+                'level':'DEBUG',
+                'class':'logging.handlers.RotatingFileHandler',
+                'filename': "/home/django/encompass/logfile",
+                'maxBytes': 50000,
+                'backupCount': 2,
+                'formatter': 'standard',
+            },
+            'console':{
+                'level':'INFO',
+                'class':'logging.StreamHandler',
+                'formatter': 'standard'
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers':['console', 'logfile'],
+                'propagate': True,
+                'level':'WARN',
+            },
+            'django.db.backends': {
+                'handlers': ['console'],
+                'level': 'WARN',
+                'propagate': False,
+            },
+        }
+    }
 
 
 # Static files (CSS, JavaScript, Images)

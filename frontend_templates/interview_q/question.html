@@ -259,59 +259,14 @@ to the user with a @visible @not_visible annotation</span>
             </div>
     </div>
     <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
-    {% compress js inline%}
     <script>
-        function textarea_edit(name) {
-            var editor = ace.edit(name);
-            editor.setTheme("ace/theme/chrome");
-            editor.session.setMode("ace/mode/python");
-    
-            var textarea = $('textarea[name="' + name + '"]').hide();
-            textarea.val(editor.getSession().getValue());
-            editor.getSession().on('change', function(){
-                textarea.val(editor.getSession().getValue());
-            });
-        }
-        function switch_code(number, name) {
-            $("#" + name + "_file_" + number).hide();
-            $("#" + name + "_switch_" + number).change(function() {
-                if(this.checked) {
-                    $("#" + name + "_body_name_" + number).hide();
-                    $("#" + name + "_body_" + number).hide();
-                    $("#" + name + "_file_" + number).show();
-                } else {
-                    $("#" + name + "_body_" + number).show();
-                    $("#" + name + "_body_name_" + number).show();
-                    $("#" + name + "_file_" + number).hide();
-                }
-            });
-        }
-
-        function populate_array(array, string_name) {
-            for (var i = 1; i < array.length+1; i++) {
-                textarea_edit(string_name + "_body_" + i.toString());
-                switch_code(i.toString(), string_name);
-            }
-        }
-
-        // other variables
-        var code_names = {{ supporting_code_names|safe }};
-        populate_array(code_names, "supporting");
-        
-        code_names = {{ starter_code_names|safe }};
-        populate_array(code_names, "starter");
-
-        code_names = {{ example_code_names|safe }};
-        populate_array(code_names, "example");
-
-        code_names = {{ solution_code_names|safe }};
-        populate_array(code_names, "solution");
-
-        textarea_edit("test_body_1");
-        switch_code("1", "test");
-
-        
+	function textarea_edit(name){var editor=ace.edit(name);editor.setTheme("ace/theme/chrome");editor.session.setMode("ace/mode/python");var textarea=$('textarea[name="'+name+'"]').hide();textarea.val(editor.getSession().getValue());editor.getSession().on('change',function(){textarea.val(editor.getSession().getValue())})}
+function switch_code(number,name){$("#"+name+"_file_"+number).hide();$("#"+name+"_switch_"+number).change(function(){if(this.checked){$("#"+name+"_body_name_"+number).hide();$("#"+name+"_body_"+number).hide();$("#"+name+"_file_"+number).show()}else{$("#"+name+"_body_"+number).show();$("#"+name+"_body_name_"+number).show();$("#"+name+"_file_"+number).hide()}})}
+function populate_array(array,string_name){for(var i=1;i<array.length+1;i++){textarea_edit(string_name+"_body_"+i.toString());switch_code(i.toString(),string_name)}}
+var code_names={{supporting_code_names|safe}};populate_array(code_names,"supporting");code_names={{starter_code_names|safe}};populate_array(code_names,"starter");code_names={{example_code_names|safe}};populate_array(code_names,"example");code_names={{solution_code_names|safe}};populate_array(code_names,"solution");textarea_edit("test_body_1");switch_code("1","test");
     </script>
+        
+    {% compress js %}
     <script src="{% static 'main/js/create.js' %}"></script>
     {% endcompress %}
 
