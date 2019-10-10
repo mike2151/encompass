@@ -596,9 +596,14 @@
   $('#zip_file').on('change', function() {
       $('#file_name_field').val($(this).get(0).files.item(0).name);
     });
-    $('#file_span').on('click', function() {
-      $('#file_name_field').val($('#zip_file').val());
-    });
+
+  $('#file_span').on('click', function() {
+    $('#file_name_field').val($('#zip_file').val());
+  });
+
+  $(document).on("keydown", ":input:not(textarea)", function(event) {
+      return event.key != "Enter";
+  });  
 
 
 </script>
