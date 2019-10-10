@@ -170,12 +170,13 @@ class QuestionAnswerView(View):
                     name_of_question = question_instance.base_question.name
                     name_of_user = request.user.first_name + request.user.last_name
                     results_url = get_current_site(request) + "/results/submissions/" + str(submission_result.pk)
-                    mail_subject = "An Interview Question Has Been Submitted"
-                    message = "Hello ,\n {0} has submitted {1}. You can view the submission here: {2}. \n Best, \n The Encompass Team".format(name_of_user, name_of_question, results_url)
-                    email_obj = EmailMessage(
-                        mail_subject, message, to=[user_email]
-                    )
-                    email_obj.send()
+                    if not question_instance.base_question.is_open:
+                        mail_subject = "An Interview Question Has Been Submitted"
+                        message = "Hello ,\n {0} has submitted {1}. You can view the submission here: {2}. \n Best, \n The Encompass Team".format(name_of_user, name_of_question, results_url)
+                        email_obj = EmailMessage(
+                            mail_subject, message, to=[user_email]
+                        )
+                        email_obj.send()
 
                     return HttpResponseRedirect("/results/" + str(submission_result.id))
             else:
