@@ -25,7 +25,7 @@
                 {% csrf_token %}
                 <div id="form_errors">
                     {% if error_message %}
-                        {{ error_message }}
+                        Creation Error: {{ error_message }}
                     {% endif %}
                 </div>
                 <!-- step -->
@@ -295,6 +295,10 @@ to the user with a @visible @not_visible annotation</span>
     switch_code("1", "starter");
     switch_code("1", "test");
     switch_code("1", "solution");
+    
+    $(document).on("keydown", ":input:not(textarea)", function(event) {
+        return event.key != "Enter";
+    });
 </script>
 <script src="{% static 'main/js/create.js' %}"></script>
 {% endcompress %}

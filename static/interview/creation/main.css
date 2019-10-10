@@ -169,6 +169,14 @@ input[type=checkbox]
   margin-left: 1vw;
 }
 
+#form_errors {
+  margin-left: auto;
+  margin-right: auto;
+  color:red;
+  font-size: 1.4em;
+  content: block;
+}
+
 hr {
   display: block; height: 1px;
   border: 0; border-top: 1px solid #7373fd;
