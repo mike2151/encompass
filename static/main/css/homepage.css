@@ -186,6 +186,11 @@ a:hover {
   background-color: #fff
 }
 
+.question-btn:active:focus {
+  color: #7373fd !important;
+  background-color: #fff !important;
+}
+
 .landing-section {
   height: 100vh;
   background-image: url(/static/images/background_tile.png);
