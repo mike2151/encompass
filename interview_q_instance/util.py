@@ -24,7 +24,23 @@ def prepend_to_test_file(user_submission_dir, test_case_file_name, language):
         with open(actual_file, 'w') as write_file:
             write_file.write("def visible(ob):\n\treturn ob\ndef not_visible(ob):\n\treturn ob\n" + data)
             write_file.close()
- 
+
+def prepend_to_user_submitted_files(user_submission_dir, support_code_dir, language):
+    if language == "python":
+        prepend_string = ""
+        for support_file in os.listdir(support_code_dir):
+            file_str_split = str(support_file).split(".")
+            if file_str_split[1] == "py":
+                prepend_string = prepend_string + "import " + file_str_split[0] + "\n"
+        for user_submitted_file_str in os.listdir(user_submission_dir):
+            actual_file = os.path.join(user_submission_dir, user_submitted_file_str)
+            data = ''
+            with open(actual_file, 'r') as read_file:
+                data = read_file.read()
+            with open(actual_file, 'w') as write_file:
+                write_file.write(prepend_string + data)
+                write_file.close()
+
 def create_runner_file(user_submission_dir, test_case_file_name, language):
     if language == "python":
         # copy the original file
@@ -99,9 +115,22 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
                     f.write(file_contents)
                     f.close()
 
+    # parse language info
+    language_option = question.language.lower()
+    language = ''
+    version = 0
+    match = re.match(r"([a-z]+)([0-9]+)", language_option, re.I)
+    if match:
+        items = match.groups()
+        language = items[0]
+        version = int(items[1])
+
     # copy over all files from other dirs in submission
     supporting_code_dir = os.path.join(base_question_dir, 'supporting_code_files')
     test_code_dir = os.path.join(base_question_dir, 'test_code_files')
+
+    # automatically add the imports
+    prepend_to_user_submitted_files(user_submission_dir, supporting_code_dir, language)
 
     copy_folder_contents(supporting_code_dir, user_submission_dir)
     
@@ -120,17 +149,6 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         test_code_dir = user_test_case_dir
     
     copy_folder_contents(test_code_dir, user_submission_dir)
-
-    
-    # parse language info
-    language_option = question.language.lower()
-    language = ''
-    version = 0
-    match = re.match(r"([a-z]+)([0-9]+)", language_option, re.I)
-    if match:
-        items = match.groups()
-        language = items[0]
-        version = int(items[1])
 
     runner_file_name = ""
 
