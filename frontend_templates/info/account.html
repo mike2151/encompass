@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'main/css/signup.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block content %}
+<center>
+<div style="padding-top: 10vh; max-width: 30vw;">
+    <form class="form-signin" method="post">
+      {% csrf_token %}
+      <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">YOUR ACCOUNT</h1>
+      <div class="form-group">
+        <label for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name" class="form-control" value="{{ user.first_name }}"><br />
+      </div>
+      <div class="form-group">
+         <label for="last_name">Last Name</label>
+         <input type="text" id="last_name" name="last_name" class="form-control" value="{{ user.last_name }}"><br />
+      </div>
+      <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" class="form-control" value="{{ user.email }}" readonly><br />
+      </div>
+
+      {% if user.is_from_company %}
+      <div class="form-group">
+            <label for="account_status">Membership Status</label>
+            <input type="text" id="account_status" name="account_status" class="form-control" value="{{ user.subscription.plan_type }}" readonly><br />
+      </div>
+      <p class="action-link"><a href="/users/enroll">Change Membership Status</a></p>
+      {% else %}
+      {% endif %}
+      <p class="action-link"><a href="/users/password_reset">Forgot password?</a></p>
+      <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Update Account</button>
+    </form>
+</div>
+</center>
+{% endblock %}

@@ -61,3 +61,8 @@
     background-color: #7373fd !important;
     border: 1px solid #7373fd !important;
 }
+
+.action-link {
+    font-size: 1.4em;
+    text-decoration: none;
+}

@@ -147,3 +147,23 @@ class EnrollView(View):
                     return render(request, self.template_name, {"message": "Coupon code expired or invalid"})
 
         return HttpResponseRedirect("/interview_questions/")
+
+
+class AccountView(View):
+    template_name = 'info/account.html'   
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return render(request, self.template_name, {"user": request.user})
+        return HttpResponseRedirect("/")
+
+    def post(self, request,  *args, **kwargs):
+        if request.user.is_authenticated:
+            first_name = request.POST.get("first_name", '')
+            last_name = request.POST.get("last_name", '')
+            if len(first_name) > 0 and len(last_name) > 0:
+                user = SiteUser.objects.filter(email=request.user.email).first()
+                if user is not None:
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.save()
+        return HttpResponseRedirect("/")

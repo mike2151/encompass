@@ -29,11 +29,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto" style="margin-left: 20vw">
-            <li class="nav-item">
-              <a class="nav-link" href="/about" style="color: #7373fd; font-weight: bold;">About Us</a>
-            </li>
+      
             {% if user.is_authenticated %}
-
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" style="color: #7373fd; font-weight: bold;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{ user.first_name }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/users/account">Manage Account</a>
+                </div>
+              </li>
               {% if user.is_from_company %}
               <li class="nav-item">
                   <a class="nav-link" href="/interview_questions" style="color: #7373fd; font-weight: bold;">Manage Questions</a>
@@ -48,6 +53,9 @@
                   <a class="nav-link" href="/users/logout" style="color: #7373fd; font-weight: bold;">Logout</a>
               </li>
             {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="/about" style="color: #7373fd; font-weight: bold;">About Us</a>
+              </li>
               <li class="nav-item">
                   <a class="nav-link" href="/users/login" style="color: #7373fd; font-weight: bold;">Login</a>
               </li>
