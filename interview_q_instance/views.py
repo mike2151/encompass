@@ -91,7 +91,7 @@ class QuestionAnswerView(View):
 
             is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
-            opt_groups = ["Question", "Stub Files", "API", "Example Code"]
+            opt_groups = ["Question (Not Modifiable)", "Stub Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)"]
 
             expiration_time_in_seconds = 0
             has_expiration = True

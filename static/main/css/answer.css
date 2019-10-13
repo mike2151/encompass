@@ -9,7 +9,7 @@ body {
 }
 
 .main_container {
-    margin-top: 5vh;
+    margin-top: 6vh;
 }
 
 .action-bar-text {
@@ -254,6 +254,10 @@ body {
 }
 
 .question-title {
+    color: #7373fd;
+}
+
+.instructions {
     color: #7373fd;
 }
 
