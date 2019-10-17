@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from .plans import get_plan_names
 
 class SiteUser(AbstractUser):
     email = models.EmailField(
@@ -25,15 +25,10 @@ class SiteUser(AbstractUser):
 
 # SUBSCRIPTIONS:
 class Subscription(models.Model):
-
-    plans = (
-        ('FREE', 'Free Plan'),
-        ('MONTHLY_CREATOR', 'Monthly Pro ($30/Mo)'),
-    )
-
+    plans = get_plan_names()
     # stripe_subscription_id = models.CharField(max_length=100, primary_key=True)
     # stripe_customer_id = models.ForeignKey('Customer', db_column='stripe_customer_id', on_delete=models.CASCADE)
-    plan_type = models.CharField(max_length=25, choices=plans, default='FREE')
+    plan_type = models.CharField(max_length=35, choices=plans, default='SHY')
     initiated_on = models.DateTimeField(null=True, blank=True)
     terminated_on = models.DateTimeField(null=True, blank=True)
     coupon = models.ForeignKey('SubscriptionCouponCode', on_delete=models.SET_NULL, null=True)

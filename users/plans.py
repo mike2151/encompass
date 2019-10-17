@@ -1,0 +1,15 @@
+# (NAME, DESCRIPTION, PRICE PER MONTH, NUM QUESTIONS)
+plans = [
+    ('SHY', 'Free Plan', 0, 0),
+    ('ASKER', 'Basic Plan', 35, 1),
+    ('INQUISITOR', 'Pro Plan', 100, 10),
+    ('INTERROGATOR', 'Premium Plan', 300, 50),
+]
+# name and description
+plans_names =  [(p[0], p[1]) for p in plans]
+
+def get_plan_names():
+    return plans_names
+
+def get_paid_plans():
+    return plans[1:]

@@ -12,6 +12,9 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
 from datetime import datetime
+from .plans import get_paid_plans
+import math
+
 
 class SignUpView(View):
     template_name = 'registration/signup.html'
@@ -125,7 +128,9 @@ class EnrollView(View):
     template_name = 'registration/enroll.html'   
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return render(request, self.template_name, {})
+            plans = get_paid_plans()
+            col_length = math.floor(12.0 / len(plans))
+            return render(request, self.template_name, {"plans": plans, "col_length": col_length})
         else:
             return render(request, "no_auth.html", {})
 

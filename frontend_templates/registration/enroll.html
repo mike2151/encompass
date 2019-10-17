@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css_imports %}
-<link href="{% static 'main/css/signup.css' %}" rel="stylesheet">
+<link href="{% static 'main/css/enroll.css' %}" rel="stylesheet">
 {% endblock %}
 
 
 {% block content %}
 <center>
-<div style="padding-top: 10vh; max-width: 30vw;">
+<div class="main-body">
     <form class="form-signin" method="post">
       {% csrf_token %}
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
@@ -16,10 +16,57 @@
         <p style="color: red">{{ message }}</p>
       {% endif %}
       <h3>Option 1: Payment:</h3>
+      <div id="price_table">   
+        <section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="price-heading clearfix">
+                                <h1>Available Plans</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                      {% for plan in plans %}
+                        <div class="col-md-{{col_length}}">
+                            <div class="generic_content clearfix">
+                                <div class="generic_head_price clearfix">
+                                    <div class="generic_head_content clearfix">
+                                        <div class="head_bg"></div>
+                                        <div class="head">
+                                            <span>{{plan.0}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="generic_price_tag clearfix">	
+                                        <span class="price">
+                                            <span class="sign">$</span>
+                                            <span class="currency">{{plan.2}}</span>
+                                            <span class="cent">.00</span>
+                                            <span class="month">/MON</span>
+                                        </span>
+                                    </div>              
+                                </div>                            
+                                <div class="generic_feature_list">
+                                  <ul>
+                                      <li><span>{{plan.3}}</span> Questions</li>
+                                    </ul>
+                                </div>
+                                <div class="generic_price_btn clearfix">
+                                  <a class="" href="">Sign up</a>
+                                </div>
+                            </div>
+                        </div>
+                      {% endfor %}
+                    </div>	
+                </div>
+            </section>             
+        </div>
       <h3>Option 2: Coupon/Promo Code:</h3>
       <input type="text" id="coupon_code" name="coupon_code" class="form-control" placeholder="Coupon Code"><br />
       <br />
-      <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Become a Creator</button>
+      <button class="btn btn-lg btn-primary btn-block form-block submit-btn" type="submit">Become a Creator</button>
     </form>
 </div>
 </center>
