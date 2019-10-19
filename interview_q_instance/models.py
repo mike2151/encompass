@@ -3,6 +3,10 @@ from submission_result.models import SubmissionResult
 import os
 from django.conf import settings
 import shutil
+import uuid
+
+def make_uuid():
+   return str(uuid.uuid4()).replace("-", "_")
 
 class InterviewQuestionInstance(models.Model):
     base_question = models.ForeignKey('interview_q.InterviewQuestion', on_delete=models.CASCADE)
@@ -18,6 +22,9 @@ class InterviewQuestionInstance(models.Model):
     start_time_date_str = models.CharField(null=True, blank=True, max_length=256)
     can_preview = models.BooleanField(default=False)
     current_working_body = models.TextField(null=True, blank=True)
+    live_interview_id = models.CharField(
+      editable=False, max_length=36, default=make_uuid
+    )
 
 
     def __str__(self):

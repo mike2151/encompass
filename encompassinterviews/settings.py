@@ -71,7 +71,8 @@ INSTALLED_APPS = [
     'django_cleanup',
     'ratelimit',
     'axes',
-    'compressor'
+    'compressor',
+    'channels'
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -107,6 +108,27 @@ TEMPLATES = [
         },
     },
 ]
+
+ASGI_APPLICATION = 'encompassinterviews.routing.application'
+
+if DEBUG:
+    CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
+else:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            },
+        }
+    }
 
 WSGI_APPLICATION = 'encompassinterviews.wsgi.application'
 

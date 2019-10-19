@@ -1,4 +1,6 @@
 certifi==2019.6.16
+channels==2.3.0
+channels-redis==2.4.0
 chardet==3.0.4
 Django==2.2.4
 django-appconf==1.0.3

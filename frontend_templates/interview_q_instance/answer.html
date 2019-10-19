@@ -11,6 +11,9 @@
   <form method="post" action="{{ request.path }}" class="row" enctype="multipart/form-data" id="question_answer">
     {% csrf_token %}
       <div class="col-md-12 time-section">
+          {% if is_observer %}
+            <h3 style="color: red">Observing</h3>
+          {% endif %}
         <h3 class="question-title">{{ question.base_question.name }}</h3>
         <p class="instructions">Please modify the stub files below and press the Submit Code button when finished.</p>
         {% if is_preview %}
@@ -91,18 +94,20 @@
         </div>
         <div id="file_contents" type="hidden"></div>
       </div> 
-      <div class="col-md-12 submit-section">
-          <center>
-        <div class="submit-content">
-            <h4 class="or-upload">Or, upload the filled out stub files in a zip file:</h4><br />
+      {% if not is_observer %}
+        <div class="col-md-12 submit-section">
+            <center>
+            <div class="submit-content">
+                <h4 class="or-upload">Or, upload the filled out stub files in a zip file:</h4><br />
 
-            <input type="text" id="file_name_field">
-            <span id="file_span">Select Zip File</span>
-            <input type="file" id="zip_file" name="zip_file" accept=".zip,.rar,.7zip"></input><br /><br />
+                <input type="text" id="file_name_field">
+                <span id="file_span">Select Zip File</span>
+                <input type="file" id="zip_file" name="zip_file" accept=".zip,.rar,.7zip"></input><br /><br />
 
+            </div>
+        </center>
         </div>
-      </center>
-      </div>
+      
       <div class="col-md-12">
         <center>
           <button type="submit" name="action" value="submit_code" class="btn btn-success btn-lg centered-button">Submit Code</button>
@@ -110,6 +115,7 @@
           <p id="code_saved_status"></p>
         </center>  
       </div>
+      {% endif %}
   </form>
   <div class="col-md-12 test-case-section">
     <hr />
@@ -119,8 +125,10 @@
       
     </div>
     <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
+    {% if not is_observer %}
     <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test
         Case</button></center>
+    {% endif %}
     <div class="spinner-border" role="status" id="test_case_loading">
       <span class="sr-only">Loading...</span>
     </div>
@@ -152,6 +160,7 @@ $('#toggle_sidebar').click(function() {
     $("#toggle_sidebar").toggleText('<', '+')
 });
 var name_to_body = {};
+var live_interview_id = "{{ live_interview_id | safe }}";
 var starter_code_bodies = {{files_to_work_on_bodies | safe}};
 var starter_code_names = {{files_to_work_on_names | safe}};
 var example_name_to_body = {};
@@ -160,6 +169,14 @@ var example_code_names = {{example_files_names | safe}};
 $("#file-drop-down-two").val(starter_code_names[0]);
 var currently_selected_file_one = $("#file-drop-down-one option:selected").text();
 var currently_selected_file_two = $("#file-drop-down-two option:selected").text();
+var start_millis = new Date().getTime();
+
+var interviewSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/live_interview/' + live_interview_id + '/');
+
+var last_sent = "";
+var last_received = "";
 
 function initSetUpStarterFiles() {
     var starter_index = 0;
@@ -246,10 +263,25 @@ function textarea_edit_test_case(name) {
     }
     test_case_body += "# Write all of your tests in this class\n# Read about unit testing here: docs.python.org/3/library/unittest.html \n# All test methods must have the test_ prefix\nclass TestCases(unittest.TestCase):\n\t# this method represents one test \n\tdef test_example_one(self):\n\t\tself.assertTrue(True)\n\t# this method represents another test \n\tdef test_example_two(self):\n\t\tself.assertFalse(False)";
     editor.setValue(test_case_body, 1);
-    return editor
-}
+    return editor;
+};
+
 var code_editor_two = textarea_edit("editor_two");
 var code_editor_one = textarea_edit("editor_one");
+
+function send_socket_file_content_update(filename, content) {
+  if (interviewSocket.readyState !== WebSocket.CONNECTING) {
+      if (content !== last_sent && content !== last_received) {
+          if (new Date().getTime() - start_millis > 3000) {
+            interviewSocket.send(JSON.stringify({
+                    'file': filename,
+                    'content': content
+            }));
+            last_sent = content;
+        }
+      }
+  }
+};
 
 function setUpOnChangeForEditorOne() {
     code_editor_one.getSession().on('change', function() {
@@ -260,14 +292,15 @@ function setUpOnChangeForEditorOne() {
         var element = document.getElementById('file_' + currently_selected_file_one);
         var element_exists = (typeof(element) != 'undefined' && element != null);
         if (element_exists) {
-            element.value = curr_val
+            element.value = curr_val;
+            send_socket_file_content_update(currently_selected_file_one, curr_val);
         }
         if (currently_selected_file_one == currently_selected_file_two) {
             if (code_editor_two.getSession().getValue() != curr_val) {
                 var currentPosition = code_editor_one.selection.getCursor();
                 code_editor_two.setValue(curr_val);
                 code_editor_two.clearSelection();
-                code_editor_one.selection.moveTo(currentPosition.row, currentPosition.column)
+                code_editor_one.selection.moveTo(currentPosition.row, currentPosition.column);
             }
         }
     })
@@ -282,14 +315,15 @@ function setUpOnChangeForEditorTwo() {
         var element = document.getElementById('file_' + currently_selected_file_two);
         var element_exists = (typeof(element) != 'undefined' && element != null);
         if (element_exists) {
-            element.value = curr_val
+            element.value = curr_val;
+            send_socket_file_content_update(currently_selected_file_two, curr_val);
         }
         if (currently_selected_file_one == currently_selected_file_two) {
             if (code_editor_one.getSession().getValue() != curr_val) {
                 var currentPosition = code_editor_two.selection.getCursor();
                 code_editor_one.setValue(curr_val);
                 code_editor_one.clearSelection();
-                code_editor_two.selection.moveTo(currentPosition.row, currentPosition.column)
+                code_editor_two.selection.moveTo(currentPosition.row, currentPosition.column);
             }
         }
     })
@@ -507,6 +541,55 @@ function startTimer(duration, display) {
     timer();
     setInterval(timer, 1000)
 }
+
+$('#zip_file').on('change', function() {
+    $('#file_name_field').val($(this).get(0).files.item(0).name)
+});
+$('#file_span').on('click', function() {
+    $('#file_name_field').val($('#zip_file').val())
+});
+$(document).on("keydown", ":input:not(textarea)", function(event) {
+    return event.key != "Enter"
+});
+
+interviewSocket.onmessage = function(e) {
+  var data = JSON.parse(e.data);
+  var new_content = data['content'];
+  var file = data['file'];
+  var sending_user = data['sending_user'];
+
+  last_received = new_content;
+
+  if (sending_user !== "{{ user.email | safe}}") {
+    if (currently_selected_file_one === file) {
+        if (code_editor_one.getSession().getValue() != new_content) {
+            var currentPosition = code_editor_one.selection.getCursor();
+            code_editor_one.setValue(new_content);
+            code_editor_one.clearSelection();
+            code_editor_one.selection.moveTo(currentPosition.row, currentPosition.column);
+        }
+    } 
+
+    if (currently_selected_file_two === file) {
+        if (code_editor_two.getSession().getValue() != new_content) {
+            var currentPosition = code_editor_two.selection.getCursor();
+            code_editor_two.setValue(new_content);
+            code_editor_two.clearSelection();
+            code_editor_two.selection.moveTo(currentPosition.row, currentPosition.column);
+        }
+    } 
+
+    if (file in name_to_body) {
+      name_to_body[file] = new_content;
+    }
+  }
+};
+
+interviewSocket.onclose = function(e) {
+  alert("Live Interview Session Stopped Working Unexpectedly");
+};
+
+
 window.onload = function() {
     $("#test_case_loading").hide();
     setUpScreen();
@@ -518,16 +601,9 @@ window.onload = function() {
             var display = document.querySelector('#remaining_time');
             startTimer(time, display)
         }
-    }};
-$('#zip_file').on('change', function() {
-    $('#file_name_field').val($(this).get(0).files.item(0).name)
-});
-$('#file_span').on('click', function() {
-    $('#file_name_field').val($('#zip_file').val())
-});
-$(document).on("keydown", ":input:not(textarea)", function(event) {
-    return event.key != "Enter"
-})</script>
+    }
+  };
+</script>
 </body>
 
 </html>
