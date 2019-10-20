@@ -14,7 +14,7 @@ def id_generator(size=15, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def run_submission_file(file_name, host_folder_path, language, version, network_enabled):
+def run_submission_file(file_name, host_folder_path, language, version, given_dependency_file):
     client = docker.from_env()
     manager = multiprocessing.Manager()
     return_dict = manager.dict()
@@ -33,7 +33,7 @@ def run_submission_file(file_name, host_folder_path, language, version, network_
 
     target_method = get_target_method(language)
     process = multiprocessing.Process(target=target_method,
-                                      args=(client, file_name, container_name, command_string, return_dict, run_folder, network_enabled))
+                                      args=(client, file_name, container_name, command_string, return_dict, run_folder))
 
     process.start()
 

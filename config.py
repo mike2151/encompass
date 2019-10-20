@@ -8,7 +8,7 @@ else:
     LOCAL_DIR = '/home/django/encompass/temp'
     CONTAINER_DIR = '/home/django/data'
 # ----------------------  ADDITIONAL PARAMETERS ---------------------- #
-MEMORY_LIMIT = '8000k'  
+MEMORY_LIMIT = '16000k'  
 AUTO_REMOVE = True 
 FILE_OPEN_MODE = 'ro' 
 CONTAINER_TIMEOUT = 10 

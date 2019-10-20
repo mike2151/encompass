@@ -41,13 +41,39 @@ def prepend_to_user_submitted_files(user_submission_dir, support_code_dir, langu
                 write_file.write(prepend_string + data)
                 write_file.close()
 
-def create_runner_file(user_submission_dir, test_case_file_name, language):
+def generate_imports_prepend(user_submission_dir):
+    base_code = "import subprocess\nimport sys\ndef import_or_install(package, version):\n\ttry:\n\t\t__import__(package)\n\texcept ImportError:\n\t\tsubprocess.call([sys.executable, '-m', 'pip', 'install', '{}=={}'.format(package, version)])\n"
+    import_statements = ""
+    with open(os.path.join(user_submission_dir, "runner.py"), 'r') as imports_file:
+        import_file_contents = imports_file.readlines()
+
+    for line in import_file_contents:
+        line_split = line.replace('==','=').replace('>=','=').replace('<=','=').replace('<','=').replace('>','=').split("=")
+        new_import_line = 'import_or_install("{0}", "{1}")\n'.format(line_split[0], line_split[1])
+        import_statements = import_statements + new_import_line
+    
+    return base_code + import_statements
+
+def generate_network_prepend():
+    return "import socket\ndef guard(*args, **kwargs):\n\traise Exception('Network is disabled')\nsocket.socket = guard\n"
+
+def create_runner_file(user_submission_dir, test_case_file_name, language, is_dep_in_folder, is_network_enabled):
     if language == "python":
         # copy the original file
         runner_dir = os.path.join(settings.MEDIA_ROOT, 'core/runner.py')
         shutil.copy(runner_dir, user_submission_dir)
-        # prepend the import 
-        prepend_str = "from " + test_case_file_name.split(".")[0] + " import TestCases\n"
+        # prepend the external imports
+        external_imports_prepend_str = ""
+        if is_dep_in_folder:
+            external_imports_prepend_str = generate_imports_prepend(user_submission_dir)
+        # prepend the network disabling code
+        network_prepend_str = ""
+        if not is_network_enabled:
+            network_prepend_str = generate_network_prepend()
+        # prepend the single test case import import 
+        single_import_prepend_str = "from " + test_case_file_name.split(".")[0] + " import TestCases\n"
+
+        prepend_contents = external_imports_prepend_str + network_prepend_str + single_import_prepend_str
 
         new_file = os.path.join(user_submission_dir, "runner.py")
 
@@ -55,7 +81,7 @@ def create_runner_file(user_submission_dir, test_case_file_name, language):
         with open(new_file, 'r') as read_file:
             data = read_file.read()
         with open(new_file, 'w') as write_file:
-            write_file.write(prepend_str + data)
+            write_file.write(prepend_contents + data)
             write_file.close()
 
 def get_not_visible_test_cases(test_file_path):
@@ -133,7 +159,12 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
     prepend_to_user_submitted_files(user_submission_dir, supporting_code_dir, language)
 
     copy_folder_contents(supporting_code_dir, user_submission_dir)
-    
+
+    # copy dependencies
+    dependency_dir = os.path.join(base_question_dir, 'dependency')
+    is_dep_file_in_dir = not (len(os.listdir(dependency_dir)) == 0)
+    if is_dep_file_in_dir:
+        copy_folder_contents(dependency_dir, user_submission_dir)
 
     # if user test case
     if len(user_test_case) > 0:
@@ -178,9 +209,9 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         # prepend decorators to test file
         prepend_to_test_file(user_submission_dir, test_case_file_name, language)
         # create the runner file
-        create_runner_file(user_submission_dir, test_case_file_name, language)
+        create_runner_file(user_submission_dir, test_case_file_name, language, is_dep_file_in_dir, question.network_enabled)
 
-        run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version, question.network_enabled)
+        run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version, is_dep_file_in_dir)
         all_unit_tests_results = run_submission_result['result']
         all_unit_tests_results_str = all_unit_tests_results
         if not isinstance(all_unit_tests_results_str, str):
