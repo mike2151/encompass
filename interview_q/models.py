@@ -10,6 +10,7 @@ class InterviewQuestion(models.Model):
     time_limit_minutes = models.IntegerField(default=60)
     language = models.CharField(max_length=128, default="Python3")
     network_enabled = models.BooleanField(default=False)
+    allow_stdout = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     dependency_file = models.FileField(upload_to=upload_path_handler, null=True)

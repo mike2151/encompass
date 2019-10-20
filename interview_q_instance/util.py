@@ -44,12 +44,12 @@ def prepend_to_user_submitted_files(user_submission_dir, support_code_dir, langu
 def generate_imports_prepend(user_submission_dir):
     base_code = "import subprocess\nimport sys\ndef import_or_install(package, version):\n\ttry:\n\t\t__import__(package)\n\texcept ImportError:\n\t\tsubprocess.call([sys.executable, '-m', 'pip', 'install', '{}=={}'.format(package, version)])\n"
     import_statements = ""
-    with open(os.path.join(user_submission_dir, "runner.py"), 'r') as imports_file:
+    with open(os.path.join(user_submission_dir, "requirements.txt"), 'r') as imports_file:
         import_file_contents = imports_file.readlines()
 
     for line in import_file_contents:
-        line_split = line.replace('==','=').replace('>=','=').replace('<=','=').replace('<','=').replace('>','=').split("=")
-        new_import_line = 'import_or_install("{0}", "{1}")\n'.format(line_split[0], line_split[1])
+        line_split = line.replace('==','=').replace('>=','=').replace('<=','=').replace('<','=').replace('>','=').replace("\n", "").split("=")
+        new_import_line = 'import_or_install("{0}", "{1}") \n'.format(line_split[0], line_split[1])
         import_statements = import_statements + new_import_line
     
     return base_code + import_statements
@@ -57,7 +57,7 @@ def generate_imports_prepend(user_submission_dir):
 def generate_network_prepend():
     return "import socket\ndef guard(*args, **kwargs):\n\traise Exception('Network is disabled')\nsocket.socket = guard\n"
 
-def create_runner_file(user_submission_dir, test_case_file_name, language, is_dep_in_folder, is_network_enabled):
+def create_runner_file(user_submission_dir, test_case_file_name, language, question, is_dep_in_folder, is_network_enabled):
     if language == "python":
         # copy the original file
         runner_dir = os.path.join(settings.MEDIA_ROOT, 'core/runner.py')
@@ -80,6 +80,8 @@ def create_runner_file(user_submission_dir, test_case_file_name, language, is_de
         data = ''
         with open(new_file, 'r') as read_file:
             data = read_file.read()
+            if question.allow_stdout:
+                data.replace("runner = unittest.TextTestRunner(stream=sys.stdout, verbosity=2, buffer=True)", "runner = unittest.TextTestRunner(stream=sys.stdout, verbosity=2)")
         with open(new_file, 'w') as write_file:
             write_file.write(prepend_contents + data)
             write_file.close()
@@ -209,7 +211,7 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         # prepend decorators to test file
         prepend_to_test_file(user_submission_dir, test_case_file_name, language)
         # create the runner file
-        create_runner_file(user_submission_dir, test_case_file_name, language, is_dep_file_in_dir, question.network_enabled)
+        create_runner_file(user_submission_dir, test_case_file_name, language, question, is_dep_file_in_dir, question.network_enabled)
 
         run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version, is_dep_file_in_dir)
         all_unit_tests_results = run_submission_result['result']
@@ -253,9 +255,12 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
                         is_tracking_failure = False
                         output_msg_to_show = curr_failure_output
                         parts_of_output = curr_failure_output.split('",')
-                        if 'AssertionError' in curr_failure_output and len(parts_of_output) > 1:
+                        if ('AssertionError' in curr_failure_output) and len(parts_of_output) > 1:
                             output_msg_to_show = parts_of_output[1]
-                        
+                            if not question.allow_stdout:
+                                output_msg_to_show = output_msg_to_show.split("Stdout:")[0]
+                                
+                        output_msg_to_show = output_msg_to_show.replace("Stdout:", "<br>Stdout:<br>")
                         test_output[curr_failure_name] = output_msg_to_show
                         curr_failure_output = ""
                         curr_failure_name = ""

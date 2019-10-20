@@ -38,7 +38,7 @@ class AllQuestionsToAnswerView(View):
 
 class UserTestCaseView(View):
     def post(self, request, *args, **kwargs):
-        test_case_body = request.POST.get("test_case_editor", '')
+        test_case_body = request.POST.get("test_case_editor", '').replace("\t", "    ")
         public_test_passed = {}
         public_test_results = {}
         if len(test_case_body) > 0:

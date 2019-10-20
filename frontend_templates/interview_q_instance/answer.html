@@ -120,6 +120,11 @@
   <div class="col-md-12 test-case-section">
     <hr />
     <h3 class="test-case-header">Write Test Cases</h3>
+    {% if question.base_question.allow_stdout %}
+    <p class="test-case-description">You can debug a failing test cases by using the print() method</p>
+    {% else %}
+    <p class="test-case-description">The question creator has disabled printing and standard output for tests</p>
+    {% endif %}
     <div id="test_case_editor" class="test-case-editor">
       
     </div>

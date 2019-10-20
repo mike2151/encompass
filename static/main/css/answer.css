@@ -81,6 +81,11 @@ body {
     color: #7373fd;
 }
 
+.test-case-description {
+    text-align: center;
+    color: #7373fd;
+}
+
 .test-case-button {
     margin-top: 1vh;
     background-color: #FFF;

@@ -43,12 +43,13 @@ class CreateInterviewView(View):
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
             network_enabled = self.request.POST.get('network_enabled', '') == 'on'
+            allow_stdout = self.request.POST.get('allow_stdout', '') == 'on'
             question_language = self.request.POST.get('question_language', '')
             if len(name) == 0:
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
-            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled)
+            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled, allow_stdout=allow_stdout)
             if request.FILES.get("requirements_file", False):
                 question.dependency_file = request.FILES["requirements_file"]
             question.save()
@@ -303,6 +304,7 @@ class EditQuestionView(View):
             description = self.request.POST.get('description', '')
             question_language = self.request.POST.get('question_language', '')
             network_enabled = self.request.POST.get('network_enabled', '') == 'on'
+            allow_stdout = self.request.POST.get('allow_stdout', '') == 'on'
             if len(name) == 0:
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
@@ -317,6 +319,7 @@ class EditQuestionView(View):
             question.description = description
             question.language = question_language
             question.network_enabled = network_enabled
+            question.allow_stdout = allow_stdout
 
             if request.FILES.get("requirements_file", False):
                 question.dependency_file = request.FILES["requirements_file"]

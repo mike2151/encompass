@@ -53,6 +53,12 @@
                                     <label class="form-check-label checkbox-label" for="network_enabled">
                                             Enable Network For This Question? <br /> We normally disable network access to best protect your supporting code.                               </label>
                                 </div><br />
+                                <div class="form-check">
+                                    <input class="form-check-input checkbox-style" type="checkbox" id="allow_stdout" name="allow_stdout" {% if question.allow_stdout %}checked{% endif %}> 
+                                    <label class="form-check-label checkbox-label" for="allow_stdout">
+                                            Enable The User To Print During User Tests<br /> We normally disable this so they cannot try and inspect your library and supporting code.                              </label>
+                                </div>
+                                <br/>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -71,6 +77,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="centered code-label">Upload a requirements.txt file (Visible to users)</label> <br />
+                            <p class="centered code-label">NOTE: This must be re-uploaded if editing the question</p>
                             <input class="centered" type="file" id="requirements_file" name="requirements_file" accept=".txt">
                             <div class="form-group, step">
                             <label class="centered code-label">Supporting Code (Not visible to users)</label> <br />
