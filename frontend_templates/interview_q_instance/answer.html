@@ -165,6 +165,7 @@ $('#toggle_sidebar').click(function() {
 });
 var name_to_body = {};
 var live_interview_id = "{{ live_interview_id | safe }}";
+var instance_id = "{{ question.pk | safe}}"
 var starter_code_bodies = {{files_to_work_on_bodies | safe}};
 var starter_code_names = {{files_to_work_on_names | safe}};
 var example_name_to_body = {};
@@ -177,7 +178,8 @@ var start_millis = new Date().getTime();
 
 var interviewSocket = new WebSocket(
         'ws://' + window.location.host +
-        '/ws/live_interview/' + live_interview_id + '/');
+        '/ws/live_interview/' + instance_id + '/'
+        + live_interview_id + '/');
 
 var last_sent = "";
 var last_received = "";
@@ -221,6 +223,22 @@ initSetUpExampleFiles();
 initQuestionSetup();
 initAPISetup();
 
+function send_socket_file_content_update(filename, content, is_test_body, is_test_results) {
+  if (interviewSocket.readyState !== WebSocket.CONNECTING) {
+      if (content !== last_sent && content !== last_received) {
+          if (new Date().getTime() - start_millis > 3000) {
+            interviewSocket.send(JSON.stringify({
+                    'file': filename,
+                    'content': content,
+                    'is_test_body': is_test_body,
+                    'is_test_results': is_test_results
+            }));
+            last_sent = content;
+        }
+      }
+  }
+};
+
 function textarea_edit(name) {
     var editor = ace.edit(name);
     editor.setTheme("ace/theme/textmate");
@@ -258,6 +276,7 @@ function textarea_edit_test_case(name) {
     editor.getSession().on('change', function() {
         textarea.val(editor.getSession().getValue());
         document.getElementById('test_case_editor_textarea').value = editor.getSession().getValue()
+        send_socket_file_content_update('', editor.getSession().getValue(), true, false);
     });
     var test_case_body = "# this import is needed\nimport unittest\n# these import the required files\n";
     var starter_code_names = {{ files_to_work_on_names | safe }};
@@ -273,20 +292,6 @@ function textarea_edit_test_case(name) {
 var code_editor_two = textarea_edit("editor_two");
 var code_editor_one = textarea_edit("editor_one");
 
-function send_socket_file_content_update(filename, content) {
-  if (interviewSocket.readyState !== WebSocket.CONNECTING) {
-      if (content !== last_sent && content !== last_received) {
-          if (new Date().getTime() - start_millis > 3000) {
-            interviewSocket.send(JSON.stringify({
-                    'file': filename,
-                    'content': content
-            }));
-            last_sent = content;
-        }
-      }
-  }
-};
-
 function setUpOnChangeForEditorOne() {
     code_editor_one.getSession().on('change', function() {
         var curr_val = code_editor_one.getSession().getValue();
@@ -297,7 +302,7 @@ function setUpOnChangeForEditorOne() {
         var element_exists = (typeof(element) != 'undefined' && element != null);
         if (element_exists) {
             element.value = curr_val;
-            send_socket_file_content_update(currently_selected_file_one, curr_val);
+            send_socket_file_content_update(currently_selected_file_one, curr_val, false, false);
         }
         if (currently_selected_file_one == currently_selected_file_two) {
             if (code_editor_two.getSession().getValue() != curr_val) {
@@ -479,6 +484,8 @@ $('#run_test_case_button').click(function() {
                     $("#test_case_results").append(row)
                 }
             }
+            results_json = {"test_case_results": data.test_passed, "test_case_output": data.test_results};
+            send_socket_file_content_update('', JSON.stringify(results_json), false, true);
         },
         error: function(data) {
             alert("There was a problem running the test case.")
@@ -560,31 +567,55 @@ interviewSocket.onmessage = function(e) {
   var data = JSON.parse(e.data);
   var new_content = data['content'];
   var file = data['file'];
+  var is_test_body = data['is_test_body'];
+  var is_test_results = data['is_test_results'];
   var sending_user = data['sending_user'];
 
-  last_received = new_content;
-
   if (sending_user !== "{{ user.email | safe}}") {
-    if (currently_selected_file_one === file) {
-        if (code_editor_one.getSession().getValue() != new_content) {
-            var currentPosition = code_editor_one.selection.getCursor();
-            code_editor_one.setValue(new_content);
-            code_editor_one.clearSelection();
-            code_editor_one.selection.moveTo(currentPosition.row, currentPosition.column);
+    last_received = new_content;
+    if (is_test_body) {
+        if (test_case_editor.getSession().getValue() != new_content) {
+            var currentPosition = test_case_editor.selection.getCursor();
+            test_case_editor.setValue(new_content);
+            test_case_editor.clearSelection();
+            test_case_editor.selection.moveTo(currentPosition.row, currentPosition.column);
         }
-    } 
-
-    if (currently_selected_file_two === file) {
-        if (code_editor_two.getSession().getValue() != new_content) {
-            var currentPosition = code_editor_two.selection.getCursor();
-            code_editor_two.setValue(new_content);
-            code_editor_two.clearSelection();
-            code_editor_two.selection.moveTo(currentPosition.row, currentPosition.column);
+    } else if (is_test_results) {
+        $("#test_case_results").html("");
+        var new_content_json  = JSON.parse(new_content);
+        var test_case_results = new_content_json.test_passed;
+        var test_case_output = new_content_json.test_results;
+        for (key in test_case_results) {
+            if (test_case_results[key]) {
+                var row = $('<li class="list-group-item list-group-item-success">' + key + ': Passed</li>');
+                $("#test_case_results").append(row)
+            } else {
+                var row = $('<li class="list-group-item list-group-item-danger">' + key + ': Failed<br /> ' + test_case_output[key] + '</li>');
+                $("#test_case_results").append(row)
+            }
         }
-    } 
+    } else {
+        if (currently_selected_file_one === file) {
+            if (code_editor_one.getSession().getValue() != new_content) {
+                var currentPosition = code_editor_one.selection.getCursor();
+                code_editor_one.setValue(new_content);
+                code_editor_one.clearSelection();
+                code_editor_one.selection.moveTo(currentPosition.row, currentPosition.column);
+            }
+        } 
 
-    if (file in name_to_body) {
-      name_to_body[file] = new_content;
+        if (currently_selected_file_two === file) {
+            if (code_editor_two.getSession().getValue() != new_content) {
+                var currentPosition = code_editor_two.selection.getCursor();
+                code_editor_two.setValue(new_content);
+                code_editor_two.clearSelection();
+                code_editor_two.selection.moveTo(currentPosition.row, currentPosition.column);
+            }
+        } 
+
+        if (file in name_to_body) {
+        name_to_body[file] = new_content;
+        }
     }
   }
 };

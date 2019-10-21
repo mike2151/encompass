@@ -12,6 +12,7 @@ class InterviewQuestionInstance(models.Model):
     base_question = models.ForeignKey('interview_q.InterviewQuestion', on_delete=models.CASCADE)
     submission_result = models.ForeignKey(SubmissionResult, on_delete=models.CASCADE, null=True)
     interviewee_email = models.CharField(max_length=128)
+    creator_email = models.CharField(max_length=128)
     has_completed = models.BooleanField(default=False)
     has_started = models.BooleanField(default=False)
     start_time = models.DateTimeField(null=True)
