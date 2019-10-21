@@ -11,7 +11,7 @@
              {% if user.is_authenticated %}
                  <form method="post">
                         {% csrf_token %}
-                        <div style="color: #7373fd; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <div style="color: #6c5ce7; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                         <h1>Are you sure you want to delete: {{ question.name }} ?</h1><br />
                         <center><button class="btn btn-danger btn-lg">Yes, Delete</button></center>
                     </div>

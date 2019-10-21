@@ -9,8 +9,8 @@ body {
 }
 
 .question-card-button {
-    color: #7373fd;
-    border: 1px solid #7373fd;
+    color: #6c5ce7;
+    border: 1px solid #6c5ce7;
     margin-bottom: 1vh;
     margin-left: auto;
     margin-right: auto;
@@ -19,16 +19,16 @@ body {
 
 .question-card-button:hover {
     color: #FFF;
-    background-color: #7373fd;
+    background-color: #6c5ce7;
 }
 
 .question-card-button:active:focus {
     color: #FFF !important;
-    background-color: #7373fd !important;
+    background-color: #6c5ce7 !important;
 }
 
 .question-box {
-    border: 2px solid #7373fd;
+    border: 2px solid #6c5ce7;
 }
 
 .create-section-title {
@@ -41,8 +41,8 @@ body {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    color: #7373fd;
-    border: 1px solid #7373fd;
+    color: #6c5ce7;
+    border: 1px solid #6c5ce7;
 }
 
 .create-section-button:hover {
@@ -51,8 +51,8 @@ body {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    background: #7373fd;
-    border: 1px solid #7373fd;
+    background: #6c5ce7;
+    border: 1px solid #6c5ce7;
 }
 
 .create-section-button:active:focus {
@@ -61,8 +61,8 @@ body {
     display: block !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    background: #7373fd !important;
-    border: 1px solid #7373fd !important;
+    background: #6c5ce7 !important;
+    border: 1px solid #6c5ce7 !important;
 }
 
 .create-section {
@@ -71,7 +71,7 @@ body {
 }
 
 .page-title {
-    color: #7373fd;
+    color: #6c5ce7;
     text-align: center;
     margin-left: auto;
     margin-right: auto;

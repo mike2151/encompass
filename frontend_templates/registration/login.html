@@ -11,7 +11,7 @@
     <form class="form-signin" method="post">
       {% csrf_token %}
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">SIGN IN</h1>
+      <h1 class="h3 mb-3 font-weight-normal page-title">SIGN IN</h1>
       {% if message|length > 0 %}
         {% if message_color == 'red' %}
           <h4 style="color: red">{{ message }}</h4>
@@ -24,7 +24,7 @@
       <label for="password" class="sr-only">Password</label>
       <input type="password" id="password" name="password" class="form-control" placeholder="Password" required><br />
       <br />
-      <p><a href="/users/password_reset">Forgot password?</a></p>
+      <a class="forgot-password" href="/users/password_reset">Forgot password?</a>
       <br /><br />
       <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Sign In</button>
     </form>

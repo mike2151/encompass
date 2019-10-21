@@ -32,25 +32,25 @@ body {
 }
 
 label {
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 1.4em;
 }
 
 .page-title {
     font-size: 2em;
-    color: #7373fd;
+    color: #6c5ce7;
 }
 
 .form-block {
-    color: #7373fd;
-    border: 1px solid #7373fd;
+    color: #6c5ce7;
+    border: 1px solid #6c5ce7;
     background: #FFF;
 }
 
 .form-block:hover {
     color: #FFF;
-    background-color: #7373fd;
-    border: 1px solid #7373fd;
+    background-color: #6c5ce7;
+    border: 1px solid #6c5ce7;
 }
 
 
@@ -78,7 +78,7 @@ label {
 .onoffswitch-inner:before {
     content: "TIME LIMIT";
     padding-left: 10px;
-    background-color: #7373fd; color: #FFFFFF;
+    background-color: #6c5ce7; color: #FFFFFF;
 }
 .onoffswitch-inner:after {
     content: "EXPIRATION DATE";
@@ -124,7 +124,7 @@ label {
 .preview_switch-inner:before {
     content: "CAN PREVIEW";
     padding-left: 10px;
-    background-color: #7373fd; color: #FFFFFF;
+    background-color: #6c5ce7; color: #FFFFFF;
 }
 .preview_switch-inner:after {
     content: "CANNOT PREVIEW";
@@ -151,19 +151,19 @@ label {
 
 
 .btn-primary {
-    color: #7373fd;
+    color: #6c5ce7;
     background-color: #FFF;
-    border: 1px solid #7373fd;
+    border: 1px solid #6c5ce7;
 }
 
 .btn-primary:hover {
     color: #FFF;
-    background-color: #7373fd;
-    border: 1px solid #7373fd;
+    background-color: #6c5ce7;
+    border: 1px solid #6c5ce7;
 }
 
 .btn-primary:active:focus {
     color: #FFF !important;
-    background-color: #7373fd !important;
-    border: 1px solid #7373fd !important;
+    background-color: #6c5ce7 !important;
+    border: 1px solid #6c5ce7 !important;
 }

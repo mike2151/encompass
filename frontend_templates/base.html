@@ -21,9 +21,9 @@
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark fixed-top" style="background: #d4d4ff; max-height: 5vh;">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark fixed-top" style="background: #c4c0ff; max-height: 5vh;">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/" style="color: #7373fd; font-weight: bold;"><img src="{% static 'images/icon.png' %}" width="24" height="24" style="margin-right: .3vw; margin-bottom: .5vh;">Encompass Interviews</a>
+        <a class="navbar-brand" href="/" style="color: #6c5ce7; font-weight: bold;"><img src="{% static 'images/icon.png' %}" width="24" height="24" style="margin-right: .3vw; margin-bottom: .5vh;">Encompass Interviews</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -32,7 +32,7 @@
       
             {% if user.is_authenticated %}
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" style="color: #7373fd; font-weight: bold;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" style="color: #6c5ce7; font-weight: bold;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {{ user.first_name }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -41,26 +41,26 @@
               </li>
               {% if user.is_from_company %}
               <li class="nav-item">
-                  <a class="nav-link" href="/interview_questions" style="color: #7373fd; font-weight: bold;">Manage Questions</a>
+                  <a class="nav-link" href="/interview_questions" style="color: #6c5ce7; font-weight: bold;">Manage Questions</a>
               </li>
               {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/questions/answer" style="color: #7373fd; font-weight: bold;">Answer Questions</a>
+                    <a class="nav-link" href="/questions/answer" style="color: #6c5ce7; font-weight: bold;">Answer Questions</a>
                 </li>
               {% endif %}
 
               <li class="nav-item">
-                  <a class="nav-link" href="/users/logout" style="color: #7373fd; font-weight: bold;">Logout</a>
+                  <a class="nav-link" href="/users/logout" style="color: #6c5ce7; font-weight: bold;">Logout</a>
               </li>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="/about" style="color: #7373fd; font-weight: bold;">About Us</a>
+                <a class="nav-link" href="/about" style="color: #6c5ce7; font-weight: bold;">About Us</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="/users/login" style="color: #7373fd; font-weight: bold;">Login</a>
+                  <a class="nav-link" href="/users/login" style="color: #6c5ce7; font-weight: bold;">Login</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="/users/signup" style="color: #7373fd; font-weight: bold;">Sign Up</a>
+                  <a class="nav-link" href="/users/signup" style="color: #6c5ce7; font-weight: bold;">Sign Up</a>
               </li>
             {% endif %}
             
@@ -76,7 +76,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12 mb-12">
-            <p class="text-white footer-copyright"> Encompass Interviews &copy; 2019 <span class="footer-items"><a href="/about" class="footer-item">About</a> </span> </p>
+            <p class="text-white footer-copyright"> Encompass Interviews &copy; 2019 <br /><div class="footer-items"><a href="/about" class="footer-item">About</a> </div> </p>
           </div>
         </div>
       </div>

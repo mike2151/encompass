@@ -12,8 +12,7 @@
     <div class="col-lg-12 mb-12 landing-section">
       <div class="landing-text">
         <h1 class="landing-title">Join the Interview Question Revolution</h1>
-        <p class="landing-description">Encompass Interviews allows people to leverage existing code and make new code to offer unique programming challenges to users 
-          similar to challenges they would encounter in the real world. 
+        <p class="landing-description">Encompass Interviews allows people to leverage existing code and make new code to offer users unique programming challenges similar to challenges they would encounter in the real world.
         </p>
         {% if user.is_authenticated %}
           {% if user.is_from_company %}
@@ -26,18 +25,38 @@
         {% endif %}
       </div>
     </div>
+    <div class="open-questions">
+      <h1 class="open-questions-title">Explore Example Questions</h1>
+      <!-- Marketing Icons Section -->
+        <div class="row">
+            {% for question in questions %}
+          <div class="col-lg-3 mb-3">
+              <div class="open-question-box">
+                  <div class="card open-question-card" >
+                    <div class="card-body">
+                      <h5 class="card-title">{{ question.name }}</h5>
+                      <p class="card-text question-card-text">{{ question.description | markdown | truncatechars:200 | safe}}</p>
+                      <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary btn-block question-btn">Answer</a>
+                    </div>
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
+        </div>
+      <!-- /.row -->
+    </div>
     <div class="row appeal-section" style="margin-bottom: 3vh">
+      <h3 class="col-md-12 about-section-header-title">Let's Offer Another Way</h3>
       <div class="col-lg-6 mb-6 left-section">
         <div class="about-section">
           <h3 class="about-section-header">Candidates,<br><br> Do Interviews That Matter</h3>
-          <p class="about-section-text">You have spent your career creating impressive personal projects, tackling difficult challenges, and having invaluable industry experience. Your next programming opportunity will allow you to grow and develop even more. There’s only one problem that is stopping you from this dream job. Your college algorithms class. Do problems that you will encounter in the real world.</p>
+          <p class="about-section-text">You have spent your career creating impressive personal projects, tackling difficult challenges, and having invaluable industry experience. Your next programming opportunity will allow you to grow and develop even more. There’s only one problem that is stopping you from this dream job: your college algorithms class. Do problems that you will encounter in the real world.</p>
         </div>
       </div>
       <div class="col-lg-6 mb-6 right-section">
           <div class="about-section">
             <h3 class="about-section-header">Interviewers,<br><br> Offer Candidates High Signal Interview Questions</h3>
-            <p class="about-section-text">Want to know how a potential candidate would perform in the job? Why not give them a challenge similar to what they would experience? 
-            Get the most signal now.</p>
+            <p class="about-section-text">Want to know how a potential candidate would perform in the job? Why not give them a challenge similar to what they would experience? Get the best signal now.</p>
           </div>
       </div>
     </div>
@@ -61,26 +80,6 @@
               <p class="about-section-text">We will make sure your code that supports the user submission is kept safe and away from any prying eyes.</p>
              </div>
           </div>
-    </div>
-    <div class="open-questions">
-      <h1 class="open-questions-title">Explore Example Questions</h1>
-      <!-- Marketing Icons Section -->
-        <div class="row">
-            {% for question in questions %}
-          <div class="col-lg-3 mb-3">
-              <div class="open-question-box">
-                  <div class="card open-question-card" >
-                    <div class="card-body">
-                      <h5 class="card-title">{{ question.name }}</h5>
-                      <p class="card-text question-card-text">{{ question.description | markdown | truncatechars:200 | safe}}</p>
-                      <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary btn-block question-btn">Answer</a>
-                    </div>
-                  </div>
-              </div>
-          </div>
-          {% endfor %}
-        </div>
-      <!-- /.row -->
     </div>
     </div>
   <!-- /.container -->

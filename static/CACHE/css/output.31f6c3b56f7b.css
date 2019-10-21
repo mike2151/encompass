@@ -42,7 +42,7 @@ hr {
 }
 
 .section-header {
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 3em;
     letter-spacing: .1em;
 }
@@ -51,7 +51,7 @@ hr {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 4em;
     letter-spacing: .1em;
 }
@@ -60,7 +60,7 @@ hr {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 2em;
     letter-spacing: .1em;
     margin-top: 5vh;
@@ -68,7 +68,7 @@ hr {
 }
 
 .section-body {
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 1.3rem;
     line-height: 1.8em;
 }
@@ -88,12 +88,12 @@ hr {
 .person-title {
     text-align: center;
     margin-top: 2vh;
-    color: #7373fd;
+    color: #6c5ce7;
 }
 
 .person-text {
     text-align: center;
-    color: #7373fd;
+    color: #6c5ce7;
 }
 
 .contact-body {

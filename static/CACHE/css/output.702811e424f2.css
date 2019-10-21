@@ -45,17 +45,17 @@ body {
 .image-title,
 h1 {
   font-size: 2em;
-  color: #7373fd
+  color: #6c5ce7
 }
 
 .image-title,
 p {
-  color: #7373fd;
+  color: #6c5ce7;
   font-size: 1.3em
 }
 
 .image-button {
-  background-color: #7373fd;
+  background-color: #6c5ce7;
   -moz-border-radius: 42px;
   -webkit-border-radius: 42px;
   border-radius: 42px;
@@ -93,7 +93,7 @@ a:hover {
   max-width: 75%;
   margin-right: 10vw;
   margin-left: 10vw;
-  border: 2px solid #7373fd;
+  border: 2px solid #6c5ce7;
   border-radius: 15px;
   padding: 2vh 2vw
 }
@@ -104,7 +104,7 @@ a:hover {
   max-width: 75%;
   margin-left: auto;
   margin-right: auto;
-  border: 2px solid #7373fd;
+  border: 2px solid #6c5ce7;
   border-radius: 15px;
   padding: 2vh 2vw
 }
@@ -146,7 +146,7 @@ a:hover {
 }
 
 .offer-section-header {
-  color: #7373fd;
+  color: #6c5ce7;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -162,7 +162,7 @@ a:hover {
 
 .offer-item {
   text-align: center;
-  color: #7373fd;
+  color: #6c5ce7;
   margin-bottom: 3vh
 }
 
@@ -187,7 +187,7 @@ a:hover {
   display: block;
   text-align: center;
   padding-top: 2vh;
-  color: #7373fd;
+  color: #6c5ce7;
   font-size: 3em
 }
 
@@ -197,7 +197,7 @@ a:hover {
 
 .open-question-card {
   width: 23vw;
-  border: 2px solid #7373fd;
+  border: 2px solid #6c5ce7;
   border-radius: 15px
 }
 
@@ -207,16 +207,16 @@ a:hover {
 }
 
 .question-btn {
-  background-color: #7373fd
+  background-color: #6c5ce7
 }
 
 .question-btn:hover {
-  color: #7373fd;
+  color: #6c5ce7;
   background-color: #fff
 }
 
 .question-btn:active:focus {
-  color: #7373fd !important;
+  color: #6c5ce7 !important;
   background-color: #fff !important;
 }
 

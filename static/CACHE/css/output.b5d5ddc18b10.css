@@ -50,7 +50,7 @@
 .onoffswitch-inner:before {
     content: "YES";
     padding-left: 10px;
-    background-color: #7373fd; color: #FFFFFF;
+    background-color: #6c5ce7; color: #FFFFFF;
 }
 .onoffswitch-inner:after {
     content: "NO";
@@ -74,13 +74,13 @@
 }
 
 .btn-primary {
-    color: #7373fd;
+    color: #6c5ce7;
     background-color: #FFF;
-    border: 1px solid #7373fd;
+    border: 1px solid #6c5ce7;
 }
 
 .btn-primary:hover {
     color: #FFF;
-    background-color: #7373fd;
-    border: 1px solid #7373fd;
+    background-color: #6c5ce7;
+    border: 1px solid #6c5ce7;
 }

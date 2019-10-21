@@ -16,17 +16,17 @@ body {
 .image-title,
 h1 {
   font-size: 2em;
-  color: #7373fd
+  color: #6c5ce7
 }
 
 .image-title,
 p {
-  color: #7373fd;
+  color: #6c5ce7;
   font-size: 1.3em
 }
 
 .image-button {
-  background-color: #7373fd;
+  background-color: #6c5ce7;
   -moz-border-radius: 42px;
   -webkit-border-radius: 42px;
   border-radius: 42px;
@@ -64,9 +64,19 @@ a:hover {
   max-width: 75%;
   margin-right: 10vw;
   margin-left: 10vw;
-  border: 2px solid #7373fd;
+  border: 2px solid #D4D4FF;
   border-radius: 15px;
-  padding: 2vh 2vw
+  padding: 2vh 2vw;
+  min-height: 45vh;
+  background: #D4D4FF;
+}
+
+.about-section-header-title {
+  color: #4F4FFB;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 3em
 }
 
 .offer-section-item {
@@ -75,9 +85,11 @@ a:hover {
   max-width: 75%;
   margin-left: auto;
   margin-right: auto;
-  border: 2px solid #7373fd;
+  border: 2px solid #D4D4FF;
   border-radius: 15px;
-  padding: 2vh 2vw
+  padding: 2vh 2vw;
+  min-height: 30vh;
+  background: #D4D4FF;
 }
 
 .left-section {
@@ -117,7 +129,7 @@ a:hover {
 }
 
 .offer-section-header {
-  color: #7373fd;
+  color: #4F4FFB;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -133,7 +145,7 @@ a:hover {
 
 .offer-item {
   text-align: center;
-  color: #7373fd;
+  color: #6c5ce7;
   margin-bottom: 3vh
 }
 
@@ -158,18 +170,19 @@ a:hover {
   display: block;
   text-align: center;
   padding-top: 2vh;
-  color: #7373fd;
-  font-size: 3em
+  color: #4F4FFB;
+  font-size: 3em;
 }
 
 .open-question-box {
-  margin-left: 3vw
+  margin-left: 3vw;
+  min-height: 30vh;
 }
 
 .open-question-card {
   width: 23vw;
-  border: 2px solid #7373fd;
-  border-radius: 15px
+  border: 2px solid #6c5ce7;
+  border-radius: 15px;
 }
 
 .question-card-text {
@@ -178,16 +191,16 @@ a:hover {
 }
 
 .question-btn {
-  background-color: #7373fd
+  background-color: #6c5ce7
 }
 
 .question-btn:hover {
-  color: #7373fd;
+  color: #6c5ce7;
   background-color: #fff
 }
 
 .question-btn:active:focus {
-  color: #7373fd !important;
+  color: #6c5ce7 !important;
   background-color: #fff !important;
 }
 
@@ -206,11 +219,14 @@ a:hover {
 }
 
 .landing-title {
+  color: #000;
   font-size: 4.5em;
   text-align: center
 }
 
 .landing-description {
+  margin-top: 3vh;
+  color: #494967; 
   text-align: center;
   font-size: 2em
 }
@@ -218,7 +234,19 @@ a:hover {
 @media only screen and (max-width: 600px) {
   .open-question-card {
     width: 45vw;
-    border: 2px solid #7373fd;
+    border: 2px solid #6c5ce7;
     border-radius: 15px
+  }
+
+  .about-section {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    max-width: 75%;
+    margin-right: 10vw;
+    margin-left: 10vw;
+    border: 2px solid #6c5ce7;
+    border-radius: 15px;
+    padding: 2vh 2vw;
+    min-height: 30vh;
   }
 }

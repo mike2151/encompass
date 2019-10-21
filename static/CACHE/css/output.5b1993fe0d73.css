@@ -93,7 +93,7 @@ body {
 }
 
 .submit-content {
-    border: 2px solid #7373fd;
+    border: 2px solid #6c5ce7;
     max-width: 30vw;
     padding: 1vw 1vh;
     margin-bottom: 1vh;
@@ -107,28 +107,28 @@ body {
 
 .test-case-header { 
     text-align: center;
-    color: #7373fd;
+    color: #6c5ce7;
 }
 
 .test-case-button {
     margin-top: 1vh;
     background-color: #FFF;
-    color: #7373fd;
-    border: 1px solid #7373fd;
+    color: #6c5ce7;
+    border: 1px solid #6c5ce7;
 }
 
 .test-case-button:hover {
     margin-top: 1vh;
-    background-color: #7373fd;
+    background-color: #6c5ce7;
     color: #FFF;
-    border: 1px solid #7373fd;
+    border: 1px solid #6c5ce7;
 }
 
 .test-case-button:active:focus {
     margin-top: 1vh !important;
-    background-color: #7373fd !important;
+    background-color: #6c5ce7 !important;
     color: #FFF !important;
-    border: 1px solid #7373fd !important;
+    border: 1px solid #6c5ce7 !important;
 }
 
 .top-row-right {
@@ -223,7 +223,7 @@ body {
 .actual-editor {
     height: 70vh; 
     width: 100%;
-    border: 2px solid #7373fd;
+    border: 2px solid #6c5ce7;
 }
 
 .test-case-editor {
@@ -231,11 +231,11 @@ body {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-    border: 2px solid #7373fd;
+    border: 2px solid #6c5ce7;
 }
 
 .or-upload {
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 1.3em;
 }
 
@@ -259,12 +259,12 @@ body {
 
 
 .theme-name {
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 1.3em;
 }
 
 .file-name {
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 1.3em;
 }
 
@@ -279,11 +279,11 @@ body {
 }
 
 #remaining_time {
-    color: #7373fd;
+    color: #6c5ce7;
 }
 
 .question-title {
-    color: #7373fd;
+    color: #6c5ce7;
 }
 
 .editor_options-left {
@@ -295,7 +295,7 @@ body {
 }
 
 input[type='file']{
-    color:#7373fd;
+    color:#6c5ce7;
     font-size:1.2em;
 }
 
@@ -309,7 +309,7 @@ margin-right: .5vw;
 }
 
 #file_span {
-background: #7373fd;
+background: #6c5ce7;
 border: 0;
 color: #fff;
 padding: 1.5vh 1.2vw;
@@ -334,7 +334,7 @@ width: 100%;
 
 .test-case-note {
     text-align: center;
-    color: #7373fd;
+    color: #6c5ce7;
 }
 
 .centered-button {
@@ -344,6 +344,6 @@ width: 100%;
 }
 
 #code_saved_status {
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 1.3em;
 }

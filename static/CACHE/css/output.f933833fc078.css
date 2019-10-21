@@ -32,32 +32,32 @@ body {
 }
 
 input {
-  box-shadow: 0 0 5px #7373fd;
+  box-shadow: 0 0 5px #6c5ce7;
 }
 
 input:focus {
-  box-shadow: 0 0 5px #7373fd;
+  box-shadow: 0 0 5px #6c5ce7;
 }
 
 textarea {
-  box-shadow: 0 0 5px #7373fd;
+  box-shadow: 0 0 5px #6c5ce7;
 }
 
 textarea:focus {
-  box-shadow: 0 0 5px #7373fd;
+  box-shadow: 0 0 5px #6c5ce7;
 }
 
 .page-title {
-  color: #7373fd;
+  color: #6c5ce7;
   font-size: 3em;
 }
 
 .page-description {
-  color: #7373fd;
+  color: #6c5ce7;
 }
 
 label {
-  color: #7373fd;
+  color: #6c5ce7;
   text-align: center;
 }
 
@@ -72,7 +72,7 @@ label {
 
 .step-description {
     text-align: center;
-    color: #7373fd;
+    color: #6c5ce7;
     padding: .6em;
     margin-top: 2vh;
     font-size: 1.4em;
@@ -80,7 +80,7 @@ label {
 
 .step-title {
     text-align: center;
-    color: #7373fd;
+    color: #6c5ce7;
     font-size: 2.3em;
 }
 
@@ -93,7 +93,7 @@ label {
 
 .page-description {
   margin-top: 2vh;
-  color: #7373fd;
+  color: #6c5ce7;
   font-size: 1.2em;
 }
 input[type=checkbox]
@@ -196,7 +196,7 @@ input[type=checkbox]
 
 hr {
   display: block; height: 1px;
-  border: 0; border-top: 1px solid #7373fd;
+  border: 0; border-top: 1px solid #6c5ce7;
   margin: 1em 0; padding: 0; 
 }
 
@@ -205,28 +205,28 @@ hr {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  color: #7373fd;
+  color: #6c5ce7;
 }
 
 .code-label {
   font-size: 1.6em;
-  color: #7373fd;
+  color: #6c5ce7;
 }
 
 .code-editor {
   height: 20vh; 
   width: 100%; 
   margin-bottom: 1vh;
-  border: 2px solid #7373fd;
+  border: 2px solid #6c5ce7;
 }
 
 .btn-light {
   background-color: #FFF; 
-  color: #7373fd;
-  border: 1px solid #7373fd;
+  color: #6c5ce7;
+  border: 1px solid #6c5ce7;
 }
 
 .btn-light:hover {
-  background-color: #7373fd;
+  background-color: #6c5ce7;
   color: #FFF;
 }
