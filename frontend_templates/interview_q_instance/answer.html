@@ -16,6 +16,9 @@
           {% endif %}
         <h3 class="question-title">{{ question.base_question.name }}</h3>
         <p class="instructions">Please modify the stub files below and press the Submit Code button when finished.</p>
+        {% if not network_enabled %}
+            <p class="warning">Note that this question has disabled network access so any network related code will fail.</p>
+        {% endif %}
         {% if is_preview %}
         {% else %}
           {% if has_expiration %}
@@ -39,6 +42,8 @@
                       {% elif opt_group == 'API (Not Modifiable)' %}
                         <option value="API Description">API Description</option>
                         <option value="API Methods">API Methods</option>
+                      {% elif opt_group == 'Allowed Imports (Not Modifiable)' %}
+                        <option value="Allowed Imports">Allowed Imports</option>
                       {% elif opt_group == 'Example Code (Not Modifiable)' %}
                         {% for filename in example_files_names %}
                           <option value="{{ filename }}">{{ filename }}</option>
@@ -75,6 +80,8 @@
                       {% elif opt_group == 'API (Not Modifiable)' %}
                         <option value="API Description">API Description</option>
                         <option value="API Methods">API Methods</option>
+                      {% elif opt_group == 'Allowed Imports (Not Modifiable)' %}
+                        <option value="Allowed Imports">Allowed Imports</option>
                       {% elif opt_group == 'Example Code (Not Modifiable)' %}
                         {% for filename in example_files_names %}
                           <option value="{{ filename }}">{{ filename }}</option>
@@ -215,11 +222,16 @@ function initQuestionSetup() {
     name_to_body["Question Description"] = `{{ question_description | markdown | safe}}`
 }
 
+function initAllowedImportsSetup() {
+    name_to_body["Allowed Imports"] = `{{ imports_body | markdown | safe}}`
+}
+
 function initAPISetup() {
     name_to_body["API Description"] = `{{ api_description | markdown  | safe}}`;
     name_to_body["API Methods"] = `{{ api_methods | safe}}`
 }
 initSetUpStarterFiles();
+initAllowedImportsSetup();
 initSetUpExampleFiles();
 initQuestionSetup();
 initAPISetup();
@@ -374,6 +386,11 @@ $('#file-drop-down-one').change(function() {
             code_editor_one.destroy()
         }
         $("#editor_one").html(name_to_body["Question Description"])
+    } else if (opt_group === "Allowed Imports (Not Modifiable)") {
+        if (code_editor_one !== null) {
+            code_editor_one.destroy()
+        }
+        $("#editor_one").html(name_to_body["Allowed Imports"])
     } else if (opt_group === "Stub Files (Modifiable)") {
         if (code_editor_one !== null) {
             code_editor_one.destroy()
@@ -415,6 +432,11 @@ $('#file-drop-down-two').change(function() {
             code_editor_two.destroy()
         }
         $("#editor_two").html(name_to_body["Question Description"])
+    } else if (opt_group === "Allowed Imports (Not Modifiable)") {
+        if (code_editor_two !== null) {
+            code_editor_two.destroy()
+        }
+        $("#editor_two").html(name_to_body["Allowed Imports"])
     } else if (opt_group === "Stub Files (Modifiable)") {
         if (code_editor_two !== null) {
             code_editor_two.destroy()

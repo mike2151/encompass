@@ -14,6 +14,7 @@ class InterviewQuestion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     dependency_file = models.FileField(upload_to=upload_path_handler, null=True)
+    banned_imports = models.TextField()
 
     id = models.AutoField(primary_key=True)
     is_open = models.BooleanField(default=False)

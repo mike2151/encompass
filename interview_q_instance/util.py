@@ -15,6 +15,26 @@ def copy_folder_contents(src, dest):
     if os.path.exists(src) and os.path.exists(dest):
         copy_tree(src, dest)
 
+def exists_bad_import(question, user_submission_dir):
+    bad_imports = question.banned_imports
+    bad_import_list = bad_imports.split(",")
+    for submitted_file in os.listdir(user_submission_dir):
+        actual_file = os.path.join(user_submission_dir, submitted_file)
+        with open(actual_file, 'r') as read_file:
+            lines = read_file.readlines()
+            read_file.close()
+        for line in lines:
+            if line.startswith("import "):
+                import_name = line.split(" ")[1]
+                if import_name in bad_import_list:
+                    return False
+            elif line.startswith("from "):
+                if "import" in line:
+                    import_name = line.split(" ")[2]
+                    if import_name in bad_import_list:
+                        return False
+    return True
+
 def prepend_to_test_file(user_submission_dir, test_case_file_name, language):
     if language == "python":
         actual_file = os.path.join(user_submission_dir, test_case_file_name)
@@ -152,6 +172,11 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         items = match.groups()
         language = items[0]
         version = int(items[1])
+
+    # see if there are any banned imports
+    does_bad_import_exist = exists_bad_import(question, user_submission_dir)
+    if does_bad_import_exist:
+        return {"Compilation_Output": False}, {"Compilation_Output": "You are using a banned import"}, {"Compilation_Output": True}
 
     # copy over all files from other dirs in submission
     supporting_code_dir = os.path.join(base_question_dir, 'supporting_code_files')

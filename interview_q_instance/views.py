@@ -10,12 +10,14 @@ from starter_code.models import StarterCode
 import json
 from api_q.models import InterviewAPI
 from datetime import datetime, timedelta
+from django.conf import settings
 from django.http import JsonResponse
 import pytz
 from django.utils.timezone import utc
 from django.utils import timezone
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
+import os
 
 
 class AllQuestionsToAnswerView(View):
@@ -124,7 +126,7 @@ class QuestionAnswerView(View):
 
             is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
-            opt_groups = ["Question (Not Modifiable)", "Stub Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)"]
+            opt_groups = ["Question (Not Modifiable)", "Stub Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)", "Allowed Imports (Not Modifiable)"]
 
             expiration_time_in_seconds = 0
             has_expiration = True
@@ -154,8 +156,26 @@ class QuestionAnswerView(View):
                     expiration_time_in_seconds = (expire_time - now).total_seconds()
                     question.has_started = True
                     question.save()
+
+                # imports
+                imports_body = ""
+                allowed_imports = ""
+                base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(question.base_question.pk))
+                dependency_dir = os.path.join(base_question_dir, 'dependency')
+                dependency_file = os.path.join(dependency_dir, "requirements.txt")
+                if os.path.exists(dependency_file):
+                    with open(dependency_file, 'r') as read_file:
+                        allowed_imports = read_file.read()
+                        read_file.close()
+
+                not_allowed_imports = str(question.base_question.banned_imports).replace(",", "<br />")
+                allowed_str = "" if len(allowed_imports) == 0 else "Allowed Imports: <br />" + allowed_imports
+                not_allowed_imports = "Imports Not Allowed: <br />" + not_allowed_imports
+                imports_body = allowed_str + "\n" + not_allowed_imports
+
             return render(request, self.template_name, {
                 'question': question,
+                'network_enabled': question.base_question.network_enabled,
                 'question_description': question.base_question.description,
                 'api_methods': api_methods,
                 'api_description': api_description,
@@ -163,6 +183,7 @@ class QuestionAnswerView(View):
                 'example_files_names': example_files_names,
                 'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
                 'files_to_work_on_names': files_to_work_on_names,
+                'imports_body': imports_body,
                 'is_preview': is_preview,
                 "opt_groups": opt_groups,
                 "expiration_time": expiration_time_in_seconds,

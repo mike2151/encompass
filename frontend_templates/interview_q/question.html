@@ -79,6 +79,12 @@
                             <label class="centered code-label">Upload a requirements.txt file (Visible to users)</label> <br />
                             <p class="centered code-label">NOTE: This must be re-uploaded if editing the question</p>
                             <input class="centered" type="file" id="requirements_file" name="requirements_file" accept=".txt">
+
+                            <label class="centered code-label">Specify Which Imports Are Not Allowed (Visible to users) <br />
+                                <p class="field_description">List the names of the modules, separated by commas.
+                                    <br />We suggest banning the library os so the user cannot snoop around and look at your library.</p></label> <br />
+                                <textarea class="form-control" id="banned_imports" name="banned_imports" rows="4" spellcheck="false">{{question.banned_imports}}</textarea><br />
+
                             <div class="form-group, step">
                             <label class="centered code-label">Supporting Code (Not visible to users)</label> <br />
                             <div id="supporting_fields">

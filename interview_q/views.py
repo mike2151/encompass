@@ -42,6 +42,7 @@ class CreateInterviewView(View):
         if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
+            banned_imports = self.request.POST.get('banned_imports', '')
             network_enabled = self.request.POST.get('network_enabled', '') == 'on'
             allow_stdout = self.request.POST.get('allow_stdout', '') == 'on'
             question_language = self.request.POST.get('question_language', '')
@@ -49,7 +50,7 @@ class CreateInterviewView(View):
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
-            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled, allow_stdout=allow_stdout)
+            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled, allow_stdout=allow_stdout, banned_imports=banned_imports)
             if request.FILES.get("requirements_file", False):
                 question.dependency_file = request.FILES["requirements_file"]
             question.save()
@@ -302,6 +303,7 @@ class EditQuestionView(View):
         if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
+            banned_imports = self.request.POST.get('banned_imports', '')
             question_language = self.request.POST.get('question_language', '')
             network_enabled = self.request.POST.get('network_enabled', '') == 'on'
             allow_stdout = self.request.POST.get('allow_stdout', '') == 'on'
@@ -317,6 +319,7 @@ class EditQuestionView(View):
             # replace basic fields
             question.name = name
             question.description = description
+            question.banned_imports = banned_imports
             question.language = question_language
             question.network_enabled = network_enabled
             question.allow_stdout = allow_stdout

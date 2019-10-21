@@ -327,3 +327,8 @@ width: 100%;
     color: #6c5ce7;
     font-size: 1.3em;
 }
+
+.warning {
+    color: red;
+    font-size: .7em;
+}

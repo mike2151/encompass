@@ -76,7 +76,13 @@
                     </div>
                     <div class="col-md-6">
                         <label class="centered code-label">Upload a requirements.txt file (Visible to users)</label> <br />
-                        <input class="centered" type="file" id="requirements_file" name="requirements_file" accept=".txt">
+                        <input class="centered" type="file" id="requirements_file" name="requirements_file" accept=".txt"> <br />
+
+                        <label class="centered code-label">Specify Which Imports Are Not Allowed (Visible to users) <br />
+                        <p class="field_description">List the names of the modules, separated by commas.
+                            <br />We suggest banning the library os so the user cannot snoop around and look at your library.</p></label> <br />
+                        <textarea class="form-control" id="banned_imports" name="banned_imports" rows="4" spellcheck="false">os,some_other_python_module_one,some_other_python_module_two</textarea><br />
+
                         <div class="form-group, step">
                         <label class="centered code-label">Supporting Code (Not visible to users)</label> <br />
                         <div id="supporting_fields">
