@@ -1,5 +1,6 @@
 from django.db import models
 from submission_result.models import SubmissionResult
+from users.models import SiteUser
 import os
 from django.conf import settings
 import shutil
@@ -11,6 +12,7 @@ def make_uuid():
 class InterviewQuestionInstance(models.Model):
     base_question = models.ForeignKey('interview_q.InterviewQuestion', on_delete=models.CASCADE)
     submission_result = models.ForeignKey(SubmissionResult, on_delete=models.CASCADE, null=True)
+    interviewee = models.ForeignKey(SiteUser, on_delete=models.CASCADE, null=True)
     interviewee_email = models.CharField(max_length=128)
     creator_email = models.CharField(max_length=128)
     has_completed = models.BooleanField(default=False)

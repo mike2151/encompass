@@ -20,6 +20,7 @@ from solution_code.models import SolutionCode
 from interview_q_instance.util import create_and_run_submission
 from django.core.paginator import Paginator
 from submission_result.models import SubmissionResult
+from users.models import SiteUser
 from dateutil import parser
 import pytz
 from django.core.mail import EmailMessage
@@ -486,6 +487,12 @@ class CreateQuestionInstanceView(View):
         if (not request.user.is_authenticated) or (not request.user.subscription.plan_type != 'FREE'):
             return HttpResponseRedirect("/interview_questions/")
         user_email = self.request.POST.get('email', '')
+        
+        try:
+            interviewee = SiteUser.objects.get(email=user_email)
+        except SiteUser.DoesNotExist:
+            interviewee = None
+
         base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
         if base_question.creator != request.user:
             return HttpResponseRedirect("/interview_questions/")
@@ -506,7 +513,7 @@ class CreateQuestionInstanceView(View):
         if is_minutes_option:
             num_minutes = int(self.request.POST.get('how_many_minutes', '60'))
             num_minutes = max(num_minutes, 1)
-            question_instance = InterviewQuestionInstance(interviewee_email = user_email, creator_email = base_question.creator.email, base_question=base_question, start_time=start_date_field, is_minutes_expiration=True, how_many_minutes=num_minutes, start_time_date_str=start_time_date_str, can_preview=can_preview)
+            question_instance = InterviewQuestionInstance(interviewee=interviewee,interviewee_email = user_email, creator_email = base_question.creator.email, base_question=base_question, start_time=start_date_field, is_minutes_expiration=True, how_many_minutes=num_minutes, start_time_date_str=start_time_date_str, can_preview=can_preview)
             question_instance.save()
 
             name_of_question = question_instance.base_question.name
@@ -520,7 +527,7 @@ class CreateQuestionInstanceView(View):
         else:
             expire_date_field_str = self.request.POST.get('expiration_date', '')
             expire_date_field = parser.parse(expire_date_field_str + " " + start_time_zone_str)
-            question_instance = InterviewQuestionInstance(interviewee_email=user_email, creator_email = base_question.creator.email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field, start_time_date_str=start_time_date_str, can_preview=can_preview)
+            question_instance = InterviewQuestionInstance(interviewee=interviewee, interviewee_email=user_email, creator_email = base_question.creator.email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field, start_time_date_str=start_time_date_str, can_preview=can_preview)
             question_instance.save()
         return HttpResponseRedirect("/interview_questions/")
 
@@ -528,6 +535,10 @@ class CreateOpenQuestionInstanceView(View):
     def get(self, request,  *args, **kwargs):
         if request.user.is_authenticated:
             user_email = self.request.user.email
+            try:
+                interviewee = SiteUser.objects.get(email=user_email)
+            except SiteUser.DoesNotExist:
+                interviewee = None
             base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
             # see if the user already attempted the question
             user_question_instance = InterviewQuestionInstance.objects.filter(base_question=base_question, interviewee_email=user_email, creator_email = base_question.creator.email,)
@@ -537,12 +548,12 @@ class CreateOpenQuestionInstanceView(View):
                 if user_question_instance[0].has_completed:
                     user_question_instance[0].delete_folder()
                     user_question_instance[0].delete()
-                    question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, creator_email = base_question.creator.email, start_time=datetime.now())
+                    question_instance = InterviewQuestionInstance(interviewee=interviewee, interviewee_email=user_email, base_question=base_question, creator_email = base_question.creator.email, start_time=datetime.now())
                     question_instance.save()
                 else:    
                     question_instance = user_question_instance[0]
             else:
-                question_instance = InterviewQuestionInstance(interviewee_email=user_email, base_question=base_question, creator_email = base_question.creator.email,  start_time=datetime.now())
+                question_instance = InterviewQuestionInstance(interviewee=interviewee, interviewee_email=user_email, base_question=base_question, creator_email = base_question.creator.email,  start_time=datetime.now())
                 question_instance.save()
             return HttpResponseRedirect("/questions/answer/" + str(question_instance.id) + "/")
         else:
@@ -556,8 +567,12 @@ class ValidateQuestionView(View):
         if request.user.is_authenticated:
             question = InterviewQuestion.objects.get(pk=kwargs['pk'])
             if request.user == question.creator:
+                try:
+                    interviewee = SiteUser.objects.get(email=user_email)
+                except SiteUser.DoesNotExist:
+                    interviewee = None
                 # create question instance
-                question_instance = InterviewQuestionInstance(interviewee_email=request.user.email, base_question=question, creator_email = question.creator.email, start_time=datetime.now())
+                question_instance = InterviewQuestionInstance(interviewee=interviewee, interviewee_email=request.user.email, base_question=question, creator_email = question.creator.email, start_time=datetime.now())
                 question_instance.save()
                 test_passed, test_results, test_visability = create_and_run_submission(request, question, question_instance, True, '')
                 question_instance.delete_folder()
@@ -597,4 +612,14 @@ class SubmissionsQuestionView(View):
             if question.creator == request.user:
                 submissions = SubmissionResult.objects.filter(interview_question=question)
                 return render(request, self.template_name, {'submissions': submissions, "question": question})
+        return render(request, "no_auth.html", {})
+
+class ObserveAnswerersView(View):
+    template_name = "interview_q/observe_answerers.html"
+    def get(self, request,  *args, **kwargs):
+        if request.user.is_authenticated:
+            question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+            if question.creator == request.user:
+                interview_instances = InterviewQuestionInstance.objects.filter(base_question=question, has_completed=False)
+                return render(request, self.template_name, {'interview_instances': interview_instances, "question": question})
         return render(request, "no_auth.html", {})

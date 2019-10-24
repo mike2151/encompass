@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'interview/open.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container main-section">
+    <div class="row">
+        <div class="col-sm-12">
+             {% if user.is_authenticated %}
+                <div class="row">
+                    <h1 class="page-title">Submissions For {{ question.name }}:</h1>
+                </div>
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name Of User</th>
+                            <th scope="col">User Email</th>
+                            <th scope="col">Observe Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for interview_question in interview_questions %}
+                                <tr>
+                                <th scope="row">{{forloop.counter}}</th>
+                                <th scope="row">{{interview_question.interviewee.first_name}} {{interview_question.interviewee.last_name}}</th>
+                                <th scope="row">{{interview_question.interviewee.email}}</th>
+                                <td><a href="/questions/observe/{{interview_question.pk}}">Observe</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                {% include "no_auth.html" %}
+            {% endif %} 
+        </div>
+    </div>
+</div>
+{% endblock %}
