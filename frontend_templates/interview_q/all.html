@@ -9,6 +9,7 @@
     <div class="row">
         <div class="col-sm-12">
              {% if user.is_authenticated %}
+                {% if user.is_from_company %}
                 <h1 class="page-title">Your Interview Questions:</h1>
                 </section>
                 <div class="container-questions">
@@ -42,9 +43,10 @@
                             <p class="create-section-text">You must have creator status to create a question. You can become a creator <a href="/users/enroll">here</a></p><br />
                         {% endif %}
                     </div>
-                </div>
-             
-
+                 </div>
+                {% else %}
+                    {% include "is_interviewee_account.html" %}
+                {% endif %}
             {% else %}
                 {% include "no_auth.html" %}
             {% endif %} 
