@@ -35,7 +35,7 @@
                   <div class="card open-question-card" >
                     <div class="card-body">
                       <h5 class="card-title">{{ question.name }}</h5>
-                      <p class="card-text question-card-text">{{ question.description | markdown | truncatechars:200 | safe}}</p>
+                      <p class="card-text question-card-text">{{ question.description | markdown | striptags| truncatechars:200 | safe}}</p>
                       <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary btn-block question-btn">Answer</a>
                     </div>
                   </div>

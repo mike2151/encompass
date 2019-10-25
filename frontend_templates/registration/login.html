@@ -8,17 +8,21 @@
 {% block content %}
 <center>
 <div style="padding-top: 10vh; max-width: 30vw;">
+    {% if message|length > 0 %}
+        {% if message_color == 'red' %}
+          <div class="alert alert-warning" role="alert">
+            {{ message }}
+          </div>
+        {% else %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+        {% endif %}
+      {% endif %}
     <form class="form-signin" method="post">
       {% csrf_token %}
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal page-title">SIGN IN</h1>
-      {% if message|length > 0 %}
-        {% if message_color == 'red' %}
-          <h4 style="color: red">{{ message }}</h4>
-        {% else %}
-          <h4 style="color: green">{{ message }}</h4>
-        {% endif %}
-      {% endif %}
       <label for="email" class="sr-only">Email address</label>
       <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus><br />
       <label for="password" class="sr-only">Password</label>

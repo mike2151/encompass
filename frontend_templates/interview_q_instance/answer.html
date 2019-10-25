@@ -12,12 +12,15 @@
     {% csrf_token %}
       <div class="col-md-12 time-section">
           {% if is_observer %}
-            <h3 style="color: red">Observing</h3>
+          <div class="alert alert-info" role="alert">
+            You are observing this question
+          </div>
           {% endif %}
-        <h3 class="question-title">{{ question.base_question.name }}</h3>
-        <p class="instructions">Please modify the stub files below and press the Submit Code button when finished.</p>
+        <p class="instructions"><span class="question-title">{{ question.base_question.name }}:</span> Please modify the stub files or upload a zip file and press the Submit Code button when finished.</p>
         {% if not network_enabled %}
-            <p class="warning">Note that this question has disabled network access so any network related code will fail.</p>
+              <div class="alert alert-warning" role="alert">
+                    <p class="warning">Note that this question has disabled network access so any network related code will fail.</p>
+              </div><br/>
         {% endif %}
         {% if is_preview %}
         {% else %}

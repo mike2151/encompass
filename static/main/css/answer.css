@@ -83,7 +83,7 @@ body {
 
 .test-case-description {
     text-align: center;
-    color: #6c5ce7;
+    color: #000;
 }
 
 .test-case-button {
@@ -199,7 +199,7 @@ body {
 .actual-editor {
     height: 70vh; 
     width: 100%;
-    border: 2px solid #6c5ce7;
+    border: 3px solid #6c5ce7;
 }
 
 .test-case-editor {
@@ -211,7 +211,7 @@ body {
 }
 
 .or-upload {
-    color: #6c5ce7;
+    color: #000;
     font-size: 1.3em;
 }
 
@@ -235,12 +235,12 @@ body {
 
 
 .theme-name {
-    color: #6c5ce7;
+    color: #000;
     font-size: 1.3em;
 }
 
 .file-name {
-    color: #6c5ce7;
+    color: #000;
     font-size: 1.3em;
 }
 
@@ -263,7 +263,7 @@ body {
 }
 
 .instructions {
-    color: #6c5ce7;
+    color: #000;
 }
 
 .editor_options-left {
@@ -329,6 +329,7 @@ width: 100%;
 }
 
 .warning {
-    color: red;
     font-size: .7em;
 }
+
+.alert {display:inline-block;}

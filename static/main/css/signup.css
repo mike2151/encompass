@@ -65,24 +65,34 @@
 .action-link {
     font-size: 1.4em;
     text-decoration: none;
+    color: #000;
 }
 
+.action-link:hover {
+    color: #6c5ce7;
+}
+
+
 .form-signin {
-    background: #a29bfe;
+    background: #C4BFFF;
     padding: 3em;
 }
 
 .page-title {
-    color: #FFF;
+    color: #000;
     font-size: 2em;
 }
 
 .forgot-password {
-    color: #FFF;
+    color: #000;
     font-size: 1.3em;
 } 
 
 .forgot-password:hover {
-    color: #FFF;
+    color: #6c5ce7;
     text-decoration: none;
+}
+
+.top-padded {
+    margin-top: 2vh;
 }

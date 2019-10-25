@@ -8,20 +8,20 @@
 {% block content %}
 <center>
 <div style="padding-top: 10vh; max-width: 30vw;">
+    {% if error_messages %}
+      <div class="alert alert-danger" role="alert">
+          Error Signing Up: <br /><br />
+          <ul>
+            {% for error_message in error_messages %} 
+              <li>{{ error_message }}</li>
+            {% endfor %}
+          </ul>
+      </div>
+    {% endif %}
     <form class="form-signin" method="post">
       {% csrf_token %}
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">SIGN UP</h1>
-      {% if error_messages %}
-        <h3 style="color: red">Error Signing Up:</h3>
-        <center>
-        <ul style="color: red; list-style: none; padding-inline-start: 0">
-        {% for error_message in error_messages %} 
-          <li> - {{ error_message }}</li>
-        {% endfor %}
-        </ul>
-      </center>
-      {% endif %}
       <label for="email" class="sr-only">Email address</label>
       <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus><br />
       <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name" required maxlength="32"><br />

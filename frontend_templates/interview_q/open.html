@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load markdown_extras %}
 {% load static %}
 {% block css_imports %}
 <link href="{% static 'interview/open.css' %}" rel="stylesheet">
@@ -10,7 +11,7 @@
         <div class="col-sm-12">
              {% if user.is_authenticated %}
                 <div class="row">
-                    <h1 class="page-title">Browse Open Questions:</h1>
+                    <h1 class="page-title">Browse Open Questions</h1>
                 </div>
                 <div class="row">
                     <table class="table table-striped">
@@ -26,7 +27,7 @@
                                 <tr>
                                 <th scope="row">{{start_count|add:forloop.counter}}</th>
                                 <td><a href="/interview_questions/question/{{question.pk}}/try/">{{question.name}}</a></td>
-                                <td>{{ question.description}}</td>
+                                <td>{{ question.description|markdown|striptags|truncatechars:200}}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

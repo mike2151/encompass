@@ -8,11 +8,13 @@
     font-size: 1em;
 }
 
-.footer-items {}
-
 .footer-item {
     color: #FFF;
     margin-left: 2ve;
+}
+
+.footer-item:hover {
+    color: #6c5ce7;
 }
 
 .footer {

@@ -505,7 +505,7 @@ class CreateQuestionInstanceView(View):
 
         start_date_field = parser.parse(start_date_field_str + " " + start_time_zone_str)
 
-        start_time_date_str = start_date_field.strftime("%b %d %Y %H:%M %p")
+        start_time_date_str = start_date_field.strftime("%b %d %Y %I:%M %p")
 
         can_preview = request.POST.get('preview_option', '') == 'on'
 
