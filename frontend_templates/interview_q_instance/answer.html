@@ -4,6 +4,7 @@
 {% load markdown_extras %}
 {% block css_imports %}
 <link href="{% static 'main/css/answer.css' %}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css" integrity="sha256-/oZ7h/Jkj6AfibN/zTWrCoba0L+QhP9Tf/ZSgyZJCnY=" crossorigin="anonymous" />
 {% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
@@ -18,10 +19,19 @@
           {% endif %}
         <p class="instructions"><span class="question-title">{{ question.base_question.name }}:</span> Please modify the stub files or upload a zip file and press the Submit Code button when finished.</p>
         {% if not network_enabled %}
-              <div class="alert alert-warning" role="alert">
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <p class="warning">Note that this question has disabled network access so any network related code will fail.</p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
               </div><br/>
         {% endif %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <p class="warning">Not sure what to do? <p id="walk_through">Walk through the interface.</p></p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
         {% if is_preview %}
         {% else %}
           {% if has_expiration %}
@@ -33,7 +43,7 @@
         <div class="col-md-6 editor-section">
           <div class="top-row-left">
             <div class="editor_options-left">
-              <p class="file-name">File: </p><select class="select-css" id="file-drop-down-one" >
+              <p class="file-name">View: </p><select class="select-css" id="file-drop-down-one" data-intro='This dropdown has everything you need to answer the question. You can view the question description, the API, example code, allowed libraries and stub files you have to fill out.'>
                   {% for opt_group in opt_groups %} 
                     <optgroup label="{{ opt_group }}">
                       {% if opt_group == 'Question (Not Modifiable)' %}
@@ -55,13 +65,13 @@
                     </optgroup>
                   {% endfor %}
               </select>
-              <p class="theme-name">Theme: </p><select id="theme-one" class="select-css" onchange="onSelectNewThemeOne()"></select>
+              <p class="theme-name">Theme: </p><select id="theme-one" class="select-css" onchange="onSelectNewThemeOne()" data-intro="You can edit the theme of the editor below with this widget."></select>
             </div>
           </div>
         </div>
         <br />
         <div class="col-md-6 editor-holder">
-          <div id="editor_one" class="actual-editor">{{question.base_question.starter_code}}</div>
+          <div id="editor_one" class="actual-editor" data-intro="This area displays information and serves as an editor for stub files.">{{question.base_question.starter_code}}</div>
           <textarea name="editor_one"></textarea>
         </div>
         <div id="file_contents" type="hidden"></div>
@@ -69,9 +79,9 @@
       <div class="col-md-6 answer-section-two" id="content-two">
         <div class="col-md-6 editor-section">
           <div class="top-row-left">
-            <button type="button" class="btn btn-secondary toggle-button" id="toggle_sidebar"> < </button>
+            <button type="button" class="btn btn-secondary toggle-button" id="toggle_sidebar" data-intro="Use this button to toggle between one or two editors."> < </button>
             <div class="editor_options-right">
-              <p class="file-name">File: </p><select class="select-css" id="file-drop-down-two">
+              <p class="file-name">View: </p><select class="select-css" id="file-drop-down-two">
                   {% for opt_group in opt_groups %} 
                     <optgroup label="{{ opt_group }}">
                       {% if opt_group == 'Question (Not Modifiable)' %}
@@ -103,11 +113,33 @@
           <textarea name="editor_two"></textarea>
         </div>
         <div id="file_contents" type="hidden"></div>
+      </div>
+      <div class="col-md-12 test-case-section">
+        <hr />
+        <h3 class="test-case-header" data-intro="Use this section to write test cases to validate your code.">Write Test Cases</h3>
+        {% if question.base_question.allow_stdout %}
+        <p class="test-case-description">You can debug a failing test cases by using the print() method</p>
+        {% else %}
+        <p class="test-case-description">The question creator has disabled printing and standard output for tests</p>
+        {% endif %}
+        <div id="test_case_editor" class="test-case-editor">
+          
+        </div>
+        <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
+        {% if not is_observer %}
+        <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test
+            Case</button></center>
+        {% endif %}
+        <div class="spinner-border" role="status" id="test_case_loading">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <ul id="test_case_results" class="user_test_case_results"></ul>
       </div> 
       {% if not is_observer %}
         <div class="col-md-12 submit-section">
+             <hr />
             <center>
-            <div class="submit-content">
+            <div class="submit-content" data-intro="Rather than editing code, you can also upload a zip file containing the filled out stub files.">
                 <h4 class="or-upload">Or, upload the filled out stub files in a zip file:</h4><br />
 
                 <input type="text" id="file_name_field">
@@ -120,39 +152,21 @@
       
       <div class="col-md-12">
         <center>
-          <button type="submit" name="action" value="submit_code" class="btn btn-success btn-lg centered-button">Submit Code</button>
-          <button type="button" name="save_code" id="save_code" class="btn btn-info btn-lg">Save Code</button><br />
+          <button type="submit" name="action" value="submit_code" class="btn btn-success btn-lg centered-button" data-intro="When you are ready, submit your code.">Submit Code</button>
+          <button type="button" name="save_code" id="save_code" class="btn btn-info btn-lg" data-intro="You can always save your code and return to the problem later. Note: your code does not auto save.">Save Code</button><br />
           <p id="code_saved_status"></p>
           <p>Be sure to write test cases below before submitting!</p>
         </center>  
       </div>
       {% endif %}
   </form>
-  <div class="col-md-12 test-case-section">
-    <hr />
-    <h3 class="test-case-header">Write Test Cases</h3>
-    {% if question.base_question.allow_stdout %}
-    <p class="test-case-description">You can debug a failing test cases by using the print() method</p>
-    {% else %}
-    <p class="test-case-description">The question creator has disabled printing and standard output for tests</p>
-    {% endif %}
-    <div id="test_case_editor" class="test-case-editor">
-      
-    </div>
-    <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
-    {% if not is_observer %}
-    <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test
-        Case</button></center>
-    {% endif %}
-    <div class="spinner-border" role="status" id="test_case_loading">
-      <span class="sr-only">Loading...</span>
-    </div>
-    <ul id="test_case_results" class="user_test_case_results"></ul>
-  </div>
 </div>
 <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM="
   crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-language_tools.js" integrity="sha256-5GsAp93HE/XYlhrUPMw4VBAoawG9n3c7+DbQE4tRwW0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/intro.js@2.9.3/intro.min.js"></script>
 <script type='text/javascript'>
+    ace.require("ace/ext/language_tools");
     var themeData = ["textmate", "chrome", "clouds", "dawn", "dreamweaver", "eclipse", "github", "iplastic", "tomorrow", "xcode", "sqlserver", "ambiance", "gruvbox", "chaos", "clouds_midnight", "cobalt", "gob", "idle_fingers", "kr_theme", "merbivore", "merbivore_soft", "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark", "terminal", "tomorrow_night", "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties", "twilight", "vibrant_ink"];
 $.each(themeData, function(i, item) {
     $('#theme-one').append($('<option>', {
@@ -261,7 +275,9 @@ function textarea_edit(name) {
     editor.session.setMode("ace/mode/python");
     editor.setOptions({
         "showPrintMargin": !1,
-        fontSize: "12pt"
+        fontSize: "12pt",
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true
     });
     var textarea = $('textarea[name="' + name + '"]').hide();
     textarea.val(editor.getSession().getValue());
@@ -274,7 +290,9 @@ function textarea_edit_example_code(name) {
     editor.session.setMode("ace/mode/python");
     editor.setOptions({
         "showPrintMargin": !1,
-        fontSize: "12pt"
+        fontSize: "12pt", 
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true
     });
     return editor
 }
@@ -285,7 +303,9 @@ function textarea_edit_test_case(name) {
     editor.session.setMode("ace/mode/python");
     editor.setOptions({
         "showPrintMargin": !1,
-        fontSize: "12pt"
+        fontSize: "12pt",
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true
     });
     var textarea = $('#test_case_editor_textarea').hide();
     textarea.val(editor.getSession().getValue());
@@ -341,7 +361,7 @@ function setUpOnChangeForEditorTwo() {
         var element_exists = (typeof(element) != 'undefined' && element != null);
         if (element_exists) {
             element.value = curr_val;
-            send_socket_file_content_update(currently_selected_file_two, curr_val);
+            send_socket_file_content_update(currently_selected_file_two, curr_val, false, false);
         }
         if (currently_selected_file_one == currently_selected_file_two) {
             if (code_editor_one.getSession().getValue() != curr_val) {
@@ -363,7 +383,9 @@ for (var i = 0; i < example_code_snippets.length; ++i) {
     editor.session.setMode("ace/mode/python");
     editor.setOptions({
         "showPrintMargin": !1,
-        fontSize: "12pt"
+        fontSize: "12pt",
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true
     });
     editor.setReadOnly(!0);
     editor.setOptions({
@@ -589,6 +611,10 @@ $(document).on("keydown", ":input:not(textarea)", function(event) {
     return event.key != "Enter"
 });
 
+$('#walk_through').on('click', function() {
+    introJs().start();
+});
+
 interviewSocket.onmessage = function(e) {
   var data = JSON.parse(e.data);
   var new_content = data['content'];
@@ -650,6 +676,9 @@ interviewSocket.onclose = function(e) {
   alert("Live Interview Session Stopped Working Unexpectedly");
 };
 
+window.onbeforeunload = function(e) {
+    return "Are you sure you want to leave this page?";
+};
 
 window.onload = function() {
     $("#test_case_loading").hide();
@@ -664,6 +693,7 @@ window.onload = function() {
         }
     }
   };
+  
 </script>
 </body>
 

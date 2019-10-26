@@ -9,7 +9,7 @@
 {% block content %}
 {% if user.is_authenticated %}
 <center>
-<div style="padding-top: 10vh; max-width: 30vw;">
+<div style="padding-top: 10vh; max-width: 45vw;">
     <form class="form-signin" method="post">
       {% csrf_token %}
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">

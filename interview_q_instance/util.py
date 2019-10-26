@@ -27,13 +27,13 @@ def exists_bad_import(question, user_submission_dir):
             if line.startswith("import "):
                 import_name = line.split(" ")[1]
                 if import_name in bad_import_list:
-                    return False
+                    return True
             elif line.startswith("from "):
                 if "import" in line:
                     import_name = line.split(" ")[2]
                     if import_name in bad_import_list:
-                        return False
-    return True
+                        return True
+    return False
 
 def prepend_to_test_file(user_submission_dir, test_case_file_name, language):
     if language == "python":

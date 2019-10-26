@@ -333,3 +333,9 @@ width: 100%;
 }
 
 .alert {display:inline-block;}
+
+#walk_through {
+    font-size: .7em;
+    text-decoration: underline;
+    cursor: pointer;
+}

@@ -3,6 +3,7 @@ import json
 from interview_q_instance.models import InterviewQuestionInstance
 
 class InterviewConsumer(AsyncWebsocketConsumer):
+    num_users = 0
     async def connect(self):
         self.live_interview_id = self.scope['url_route']['kwargs']['live_interview_id']
         self.instance_id = self.scope['url_route']['kwargs']['instance_id']
@@ -22,36 +23,39 @@ class InterviewConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        self.num_users = self.num_users + 1
         await self.accept()
 
     async def disconnect(self, close_code):
+        self.num_users = self.num_users - 1
         await self.channel_layer.group_discard(
             self.interview_session_name,
             self.channel_name
         )
 
     async def receive(self, text_data):
-        update_data_json = json.loads(text_data)
-        file_to_update = update_data_json['file']
-        new_content = update_data_json['content']
+        if (self.num_users > 1):
+            update_data_json = json.loads(text_data)
+            file_to_update = update_data_json['file']
+            new_content = update_data_json['content']
 
-        is_test_body = update_data_json['is_test_body']
-        is_test_results = update_data_json['is_test_results']
+            is_test_body = update_data_json['is_test_body']
+            is_test_results = update_data_json['is_test_results']
 
-        sending_user = self.scope["user"]
+            sending_user = self.scope["user"]
 
-        
-        await self.channel_layer.group_send(
-            self.interview_session_name,
-            {
-                'type': 'update_file_content',
-                'content': new_content,
-                'file': file_to_update,
-                'sending_user': sending_user.username,
-                'is_test_body': is_test_body,
-                'is_test_results': is_test_results
-            }
-        )
+            
+            await self.channel_layer.group_send(
+                self.interview_session_name,
+                {
+                    'type': 'update_file_content',
+                    'content': new_content,
+                    'file': file_to_update,
+                    'sending_user': sending_user.username,
+                    'is_test_body': is_test_body,
+                    'is_test_results': is_test_results
+                }
+            )
 
     async def update_file_content(self, event):
         file_to_update = event['file']

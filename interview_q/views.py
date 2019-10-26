@@ -35,10 +35,12 @@ class CreateInterviewView(View):
 
     template_name = 'interview_q/create.html'
     def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return render(request, "no_auth.html", {})
         if request.user.subscription.plan_type != 'FREE':
             return render(request, self.template_name, {})
         else:
-            return render(request, "no_auth.html", {})
+            return render(request, "is_interviewee_account.html", {})
     def post(self, request,  *args, **kwargs):
         if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
             name = self.request.POST.get('name', '')
@@ -204,9 +206,12 @@ class DeleteQuestionView(View):
     def get(self, request, *args, **kwargs):
         question = None
         if request.user.is_authenticated:
-            question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
-            if question.creator == request.user:
-                return render(request, self.template_name, {'question': question})
+            if request.user.is_from_company:
+                question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
+                if question.creator == request.user:
+                    return render(request, self.template_name, {'question': question})
+            else:
+                return render(request, "is_interviewee_account.html", {})   
         return render(request, "no_auth.html", {})
     def post(self, request, *args, **kwargs):
         question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
@@ -223,8 +228,10 @@ class EditQuestionView(View):
 
     template_name = "interview_q/question.html"
     def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return render(request, "no_auth.html", {})
         if (not request.user.subscription) or request.user.subscription.plan_type == 'FREE':
-            return render(request, "no_auth.html", {})            
+            return render(request, "is_interviewee_account.html", {})            
         question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
         if question.creator != request.user:
             return render(request, "no_auth.html", {})
@@ -478,10 +485,13 @@ class CreateQuestionInstanceView(View):
     template_name = "interview_q/send.html"
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            if request.user.subscription.plan_type != 'FREE':
-                question = InterviewQuestion.objects.get(pk=kwargs['pk'])
-                if question.creator == request.user:
-                    return render(request, self.template_name, {'question': question})
+            if request.user.is_from_company:
+                if request.user.subscription.plan_type != 'FREE':
+                    question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+                    if question.creator == request.user:
+                        return render(request, self.template_name, {'question': question})
+            else:
+                return render(request, "is_interviewee_account.html", {})   
         return render(request, "no_auth.html", {})
     def post(self, request,  *args, **kwargs):
         if (not request.user.is_authenticated) or (not request.user.subscription.plan_type != 'FREE'):
@@ -557,7 +567,7 @@ class CreateOpenQuestionInstanceView(View):
                 question_instance.save()
             return HttpResponseRedirect("/questions/answer/" + str(question_instance.id) + "/")
         else:
-             return HttpResponseRedirect("/users/signup/")
+             return HttpResponseRedirect("/users/login/")
 
 
 class ValidateQuestionView(View):
@@ -565,19 +575,22 @@ class ValidateQuestionView(View):
     def get(self, request,  *args, **kwargs):
         question = None
         if request.user.is_authenticated:
-            question = InterviewQuestion.objects.get(pk=kwargs['pk'])
-            if request.user == question.creator:
-                try:
-                    interviewee = SiteUser.objects.get(email=user_email)
-                except SiteUser.DoesNotExist:
-                    interviewee = None
-                # create question instance
-                question_instance = InterviewQuestionInstance(interviewee=interviewee, interviewee_email=request.user.email, base_question=question, creator_email = question.creator.email, start_time=datetime.now())
-                question_instance.save()
-                test_passed, test_results, test_visability = create_and_run_submission(request, question, question_instance, True, '')
-                question_instance.delete_folder()
-                question_instance.delete()
-                return render(request, self.template_name, {'question': question, 'test_passed': test_passed, 'test_results': test_results})
+            if request.user.is_from_company:
+                question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+                if request.user == question.creator:
+                    try:
+                        interviewee = SiteUser.objects.get(email=user_email)
+                    except SiteUser.DoesNotExist:
+                        interviewee = None
+                    # create question instance
+                    question_instance = InterviewQuestionInstance(interviewee=interviewee, interviewee_email=request.user.email, base_question=question, creator_email = question.creator.email, start_time=datetime.now())
+                    question_instance.save()
+                    test_passed, test_results, test_visability = create_and_run_submission(request, question, question_instance, True, '')
+                    question_instance.delete_folder()
+                    question_instance.delete()
+                    return render(request, self.template_name, {'question': question, 'test_passed': test_passed, 'test_results': test_results})
+            else:
+                return render(request, "is_interviewee_account.html", {})   
         return render(request, "no_auth.html", {})
 
 class OpenQuestionView(View):
@@ -608,18 +621,24 @@ class SubmissionsQuestionView(View):
     template_name = "interview_q/submissions.html"
     def get(self, request,  *args, **kwargs):
         if request.user.is_authenticated:
-            question = InterviewQuestion.objects.get(pk=kwargs['pk'])
-            if question.creator == request.user:
-                submissions = SubmissionResult.objects.filter(interview_question=question)
-                return render(request, self.template_name, {'submissions': submissions, "question": question})
+            if request.user.is_from_company:
+                question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+                if question.creator == request.user:
+                    submissions = SubmissionResult.objects.filter(interview_question=question)
+                    return render(request, self.template_name, {'submissions': submissions, "question": question})
+            else:
+                return render(request, "is_interviewee_account.html", {})
         return render(request, "no_auth.html", {})
 
 class ObserveAnswerersView(View):
     template_name = "interview_q/observe_answerers.html"
     def get(self, request,  *args, **kwargs):
         if request.user.is_authenticated:
-            question = InterviewQuestion.objects.get(pk=kwargs['pk'])
-            if question.creator == request.user:
-                interview_instances = InterviewQuestionInstance.objects.filter(base_question=question, has_completed=False)
-                return render(request, self.template_name, {'interview_instances': interview_instances, "question": question})
+            if request.user.is_from_company:
+                question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+                if question.creator == request.user:
+                    interview_instances = InterviewQuestionInstance.objects.filter(base_question=question, has_completed=False)
+                    return render(request, self.template_name, {'interview_instances': interview_instances, "question": question})
+            else:
+                return render(request, "is_interviewee_account.html", {})
         return render(request, "no_auth.html", {})

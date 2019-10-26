@@ -3,17 +3,17 @@ body {
 }
 
 label {
-    color: #6c5ce7;
+    color: #000;
     font-size: 1.4em;
 }
 
 .page-title {
     font-size: 2em;
-    color: #6c5ce7;
+    color: #000;
 }
 
 .form-block {
-    color: #6c5ce7;
+    color: #000;
     border: 1px solid #6c5ce7;
     background: #FFF;
 }
@@ -117,9 +117,10 @@ label {
     right: 0px; 
 }
 
-
-
-
+.form-signin {
+    background: #C4BFFF;
+    padding: 3em;
+}
 
 .btn-primary {
     color: #6c5ce7;

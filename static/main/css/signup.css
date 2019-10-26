@@ -96,3 +96,8 @@
 .top-padded {
     margin-top: 2vh;
 }
+
+.alt {
+    color: #6c5ce7;
+    text-decoration: none;
+}
