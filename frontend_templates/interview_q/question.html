@@ -77,9 +77,11 @@
                         </div>
                         <div class="col-md-6">
                             <label class="centered code-label">Upload a requirements.txt file (Visible to users)</label> <br />
-                            <div class="alert alert-warning" role="alert">
-                                This must be re-uploaded if editing the question
-                              </div>
+                            {% if is_requirements_file %}
+                                <div class="alert alert-info" role="alert">
+                                    We will use your old requirements.txt file if no one new one is uploaded
+                                </div>
+                            {% endif %}
 
                             <input class="centered" type="file" id="requirements_file" name="requirements_file" accept=".txt">
 

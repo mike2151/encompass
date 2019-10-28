@@ -292,6 +292,8 @@ class EditQuestionView(View):
 
         api_methods = MethodSignature.objects.filter(interview_question_api=api)
 
+        is_requirements_file = bool(question.dependency_file)
+
         return render(request, self.template_name, {
             'question': question, 
             'supporting_code_names': supporting_code_names,
@@ -305,7 +307,8 @@ class EditQuestionView(View):
             'test_case_code_contents': test_case_code_contents,
             'example_code_names': example_code_names,
             'example_code_contents': example_code_contents,
-            'api_methods': api_methods
+            'api_methods': api_methods,
+            'is_requirements_file': is_requirements_file
         })
     def post(self, request,  *args, **kwargs):
         if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
@@ -333,6 +336,9 @@ class EditQuestionView(View):
             question.allow_stdout = allow_stdout
 
             if request.FILES.get("requirements_file", False):
+                # delete the old one if exists
+                if (question.dependency_file):
+                    question.dependency_file.delete()
                 question.dependency_file = request.FILES["requirements_file"]
 
             question.save()
