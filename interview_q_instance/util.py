@@ -25,12 +25,12 @@ def exists_bad_import(question, user_submission_dir):
             read_file.close()
         for line in lines:
             if line.startswith("import "):
-                import_name = line.split(" ")[1]
+                import_name = line.split(" ")[1].strip()
                 if import_name in bad_import_list:
                     return True
             elif line.startswith("from "):
                 if "import" in line:
-                    import_name = line.split(" ")[2]
+                    import_name = line.split(" ")[2].strip()
                     if import_name in bad_import_list:
                         return True
     return False
@@ -62,16 +62,15 @@ def prepend_to_user_submitted_files(user_submission_dir, support_code_dir, langu
                 write_file.close()
 
 def generate_imports_prepend(user_submission_dir):
-    base_code = "import subprocess\nimport sys\ndef import_or_install(package, version):\n\ttry:\n\t\t__import__(package)\n\texcept ImportError:\n\t\tsubprocess.call([sys.executable, '-m', 'pip', 'install', '{}=={}'.format(package, version)])\n"
+    base_code = "import importlib\nimport subprocess\nimport sys\ndef import_or_install(package, version):\n\ttry:\n\t\t__import__(package)\n\texcept ImportError:\n\t\tsubprocess.call(['pip3', 'install', '{}=={}'.format(package, version)])\n"
     import_statements = ""
     with open(os.path.join(user_submission_dir, "requirements.txt"), 'r') as imports_file:
         import_file_contents = imports_file.readlines()
 
     for line in import_file_contents:
         line_split = line.replace('==','=').replace('>=','=').replace('<=','=').replace('<','=').replace('>','=').replace("\n", "").split("=")
-        new_import_line = 'import_or_install("{0}", "{1}") \n'.format(line_split[0], line_split[1])
+        new_import_line = 'import_or_install("{0}", "{1}") \n{0} = importlib.import_module("{0}")\n'.format(line_split[0], line_split[1])
         import_statements = import_statements + new_import_line
-    
     return base_code + import_statements
 
 def generate_network_prepend():
