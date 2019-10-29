@@ -183,6 +183,7 @@ class CreateInterviewView(View):
             
             # increase count
             request.user.num_questions_made += 1
+            request.user.save()
 
             if submitted_solution:
                 return HttpResponseRedirect("/interview_questions/question/" + str(question_id) + "/validate/")
@@ -226,6 +227,7 @@ class DeleteQuestionView(View):
                 question.delete()
                 # decrease count
                 request.user.num_questions_made -= 1
+                request.user.save()
         return HttpResponseRedirect("/interview_questions/")
 
 class EditQuestionView(View):
