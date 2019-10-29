@@ -201,8 +201,11 @@ var currently_selected_file_one = $("#file-drop-down-one option:selected").text(
 var currently_selected_file_two = $("#file-drop-down-two option:selected").text();
 var start_millis = new Date().getTime();
 
+var is_localhost = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+var protocol = is_localhost ? 'ws://' : 'wss://';
+
 var interviewSocket = new WebSocket(
-        'ws://' + window.location.host +
+        protocol + window.location.host +
         '/ws/live_interview/' + instance_id + '/'
         + live_interview_id + '/');
 

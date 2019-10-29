@@ -54,6 +54,7 @@ class CreateInterviewView(View):
             if len(description) == 0:
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
             question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled, allow_stdout=allow_stdout, banned_imports=banned_imports)
+            question.save()
             if request.FILES.get("requirements_file", False):
                 question.dependency_file = request.FILES["requirements_file"]
             question.save()
