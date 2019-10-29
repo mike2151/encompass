@@ -260,6 +260,9 @@ else:
     EMAIL_PORT = 587
     DEFAULT_FROM_EMAIL = 'support@encompassinterviews.com'
 
-
-STRIPE_SECRET_KEY = 'sk_test_D012UDGEjxsgD8bDdqRJklKm00wV9Ku5Oj'
-STRIPE_PUBLISHABLE_KEY = 'pk_test_ioV3Z9uubVlAzLlAPgN5lX8v00LFLd0e5v'
+if DEBUG:
+    STRIPE_SECRET_KEY = 'sk_test_D012UDGEjxsgD8bDdqRJklKm00wV9Ku5Oj'
+    STRIPE_PUBLISHABLE_KEY = 'pk_test_ioV3Z9uubVlAzLlAPgN5lX8v00LFLd0e5v'
+else:
+    STRIPE_SECRET_KEY = 'sk_live_AX1Wz0ze3QJMnDhroDwBSlam00LPh0DGZ4'
+    STRIPE_PUBLISHABLE_KEY = 'pk_live_ct6Q6viO6x3NrruDeTnCrr6b00XeFjzqbG'
