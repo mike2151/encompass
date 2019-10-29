@@ -8,12 +8,23 @@
 {% block content %}
 <center>
 <div class="main-body">
-    <form class="form-signin" method="post">
-      {% csrf_token %}
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">BECOME A CREATOR</h1>
       {% if message %}
-        <p style="color: red">{{ message }}</p>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <p class="warning">{{message}}</p>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+        </div><br/>
+      {% endif %}
+      {% if success %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <p class="warning">{{success}}</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+    </div><br/>
       {% endif %}
       <h3>Option 1: Payment:</h3>
       <div id="price_table">   
@@ -50,11 +61,23 @@
                                 </div>                            
                                 <div class="generic_feature_list">
                                   <ul>
-                                      <li><span>{{plan.3}}</span> Questions</li>
-                                    </ul>
+                                      {% if plan.3 == 1 %}
+                                        <li><span>{{plan.3}}</span> Question</li>
+                                      {% else %}
+                                        <li><span>{{plan.3}}</span> Questions</li>
+                                      {% endif %}
+                                  </ul>
                                 </div>
                                 <div class="generic_price_btn clearfix">
-                                  <a class="" href="">Sign up</a>
+                                    <form action="{% url 'make_payment' %}" method="post">
+                                        {% csrf_token %}
+                                        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                            data-key="{{ key }}"
+                                            data-description="{{plan.0}} Plan"
+                                            data-amount="{{plan.2}}00"
+                                            data-locale="auto">
+                                        </script>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -63,10 +86,12 @@
                 </div>
             </section>             
         </div>
-      <h3>Option 2: Coupon/Promo Code:</h3>
-      <input type="text" id="coupon_code" name="coupon_code" class="form-control" placeholder="Coupon Code"><br />
-      <br />
-      <button class="btn btn-lg btn-primary btn-block form-block submit-btn" type="submit">Become a Creator</button>
+     <form class="form-signin" method="post"></form>
+        {% csrf_token %}
+        <h3>Option 2: Coupon/Promo Code:</h3>
+        <input type="text" id="coupon_code" name="coupon_code" class="form-control" placeholder="Coupon Code"><br />
+        <br />
+        <button class="btn btn-lg btn-primary btn-block form-block submit-btn" type="submit">Become a Creator</button>
     </form>
 </div>
 </center>

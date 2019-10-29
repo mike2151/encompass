@@ -11,9 +11,15 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
-from datetime import datetime
+from datetime import datetime, timedelta
 from .plans import get_paid_plans
+from django.conf import settings 
 import math
+from users.plans import get_plan_by_price
+
+import stripe
+from django.conf import settings
+stripe.api_key = settings.STRIPE_SECRET_KEY 
 
 
 class SignUpView(View):
@@ -130,7 +136,11 @@ class EnrollView(View):
         if request.user.is_authenticated:
             plans = get_paid_plans()
             col_length = math.floor(12.0 / len(plans))
-            return render(request, self.template_name, {"plans": plans, "col_length": col_length})
+            return render(request, self.template_name, {
+                "plans": plans, 
+                "col_length": col_length,
+                "key": settings.STRIPE_PUBLISHABLE_KEY
+                })
         else:
             return render(request, "no_auth.html", {})
 
@@ -152,6 +162,50 @@ class EnrollView(View):
                     return render(request, self.template_name, {"message": "Coupon code expired or invalid"})
 
         return HttpResponseRedirect("/interview_questions/")
+
+def make_payment(request):
+    template_name = 'registration/enroll.html' 
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return render(request, template_name, {"message": "There was an error processing your payment"})
+        if ('amount' not in request.POST or 'description' not in request.POST or 'stripeToken' not in request.POST):
+            return render(request, template_name, {"message": "There was an error processing your payment"})
+
+        amount = request.POST['amount']
+        description = request.POST['description']
+        stripe_token = request.POST['stripeToken']
+
+        charge = stripe.Charge.create(
+            amount=amount,
+            currency='usd',
+            description=description,
+            source=stripe_token
+        )
+        if charge:
+            # edit the user and make them a member
+            plan = get_plan_by_price(amount)
+            user = request.user
+            subscription = user.subscription
+            # see if termination day - if so then start after terminated
+            is_on_plan = False
+            now = datetime.now()
+            end = now
+            if subscription.terminated_on:
+                if subscription.terminated_on > now:
+                    end = subscription.terminated_on
+                    is_on_plan = True
+            end_date = end + timedelta(days=31)
+
+            if not is_on_plan:
+                subscription.initiated_on = now
+
+            subscription.plan_type = plan
+            subscription.terminated_on = end_date
+            subscription.save()
+            user.save()
+            return render(request, template_name, {"success": "You are successfully enrolled as a member"})
+        else:
+            return render(request, template_name, {"message": "There was an error processing your payment"})
 
 
 class AccountView(View):

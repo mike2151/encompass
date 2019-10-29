@@ -13,7 +13,7 @@ from django.views import View
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .utils import is_valid_test_case
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.core.files.base import ContentFile
 from starter_code.models import StarterCode
 from solution_code.models import SolutionCode
@@ -37,12 +37,12 @@ class CreateInterviewView(View):
     def get(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return render(request, "no_auth.html", {})
-        if request.user.subscription.plan_type != 'FREE':
+        if request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc):
             return render(request, self.template_name, {})
         else:
             return render(request, "is_interviewee_account.html", {})
     def post(self, request,  *args, **kwargs):
-        if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
+        if request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc):
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
             banned_imports = self.request.POST.get('banned_imports', '')
@@ -194,7 +194,7 @@ class HomeInterviewView(View):
         questions = []
         if request.user.is_authenticated:
             questions = InterviewQuestion.objects.filter(creator=request.user)
-            can_user_make_questions = request.user.subscription.plan_type != 'FREE'
+            can_user_make_questions = request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
             return render(request, self.template_name, {
                 'interview_questions': questions,
                 'can_user_make_questions': can_user_make_questions})
@@ -311,7 +311,7 @@ class EditQuestionView(View):
             'is_requirements_file': is_requirements_file
         })
     def post(self, request,  *args, **kwargs):
-        if request.user.is_authenticated and request.user.subscription.plan_type != 'FREE':
+        if request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc):
             name = self.request.POST.get('name', '')
             description = self.request.POST.get('description', '')
             banned_imports = self.request.POST.get('banned_imports', '')
@@ -492,7 +492,7 @@ class CreateQuestionInstanceView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.is_from_company:
-                if request.user.subscription.plan_type != 'FREE':
+                if request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc):
                     question = InterviewQuestion.objects.get(pk=kwargs['pk'])
                     if question.creator == request.user:
                         return render(request, self.template_name, {'question': question})
@@ -500,7 +500,7 @@ class CreateQuestionInstanceView(View):
                 return render(request, "is_interviewee_account.html", {})   
         return render(request, "no_auth.html", {})
     def post(self, request,  *args, **kwargs):
-        if (not request.user.is_authenticated) or (not request.user.subscription.plan_type != 'FREE'):
+        if (not request.user.is_authenticated) or (not request.user.subscription.plan_type != 'SHY') or (not request.user.subscription.terminated_on > datetime.now(timezone.utc)):
             return HttpResponseRedirect("/interview_questions/")
         user_email = self.request.POST.get('email', '')
         

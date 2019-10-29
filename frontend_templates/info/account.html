@@ -29,8 +29,11 @@
       <div class="form-group">
             <label for="account_status">Membership Status</label>
             <input type="text" id="account_status" name="account_status" class="form-control" value="{{ user.subscription.plan_type }}" readonly><br />
+
+            <label for="account_status">Membership Expiration</label>
+            <input type="text" id="account_status" name="account_status" class="form-control" value="{{ user.subscription.terminated_on }}" readonly><br />
       </div>
-      <p class="action-link"><a href="/users/enroll">Change Membership Status</a></p>
+      <a href="/users/enroll" class="action-link">Change or Renew Membership Status</a><br /><br/><br/>
       {% else %}
       {% endif %}
       <a href="/users/password_reset" class="action-link">Forgot password?</a>

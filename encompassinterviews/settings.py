@@ -46,6 +46,9 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
+STRIPE_SECRET_KEY = 'pk_test_ioV3Z9uubVlAzLlAPgN5lX8v00LFLd0e5v'
+STRIPE_PUBLISHABLE_KEY = 'sk_test_D012UDGEjxsgD8bDdqRJklKm00wV9Ku5Oj'
+
 # Application definition
 
 INSTALLED_APPS = [
