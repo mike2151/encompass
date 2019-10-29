@@ -72,7 +72,7 @@ a:hover {
 }
 
 .about-section-header-title {
-  color: #4F4FFB;
+  color: #000;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -129,7 +129,7 @@ a:hover {
 }
 
 .offer-section-header {
-  color: #4F4FFB;
+  color: #000;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -170,7 +170,7 @@ a:hover {
   display: block;
   text-align: center;
   padding-top: 2vh;
-  color: #4F4FFB;
+  color: #000;
   font-size: 3em;
 }
 
