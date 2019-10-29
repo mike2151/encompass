@@ -71,10 +71,14 @@
                                 <div class="generic_price_btn clearfix">
                                     <form action="{% url 'make_payment' %}" method="post">
                                         {% csrf_token %}
-                                        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                        <input type="hidden" name="amount" value="{{plan.2}}00"></input>
+                                        <input type="hidden" name="description" value="{{plan.0}} Plan"></input>
+                                        <script src="https://checkout.stripe.com/checkout.js" 
+                                            class="stripe-button"
                                             data-key="{{ key }}"
                                             data-description="{{plan.0}} Plan"
                                             data-amount="{{plan.2}}00"
+                                            data-currency='usd'
                                             data-locale="auto">
                                         </script>
                                     </form>
@@ -86,7 +90,7 @@
                 </div>
             </section>             
         </div>
-     <form class="form-signin" method="post"></form>
+     <form class="form-signin" method="post" action="{% url 'enroll' %}"></form>
         {% csrf_token %}
         <h3>Option 2: Coupon/Promo Code:</h3>
         <input type="text" id="coupon_code" name="coupon_code" class="form-control" placeholder="Coupon Code"><br />

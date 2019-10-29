@@ -180,6 +180,9 @@ class CreateInterviewView(View):
                         new_file.save()    
                         submitted_solution = True
                 number = number + 1
+            
+            # increase count
+            request.user.num_questions_made += 1
 
             if submitted_solution:
                 return HttpResponseRedirect("/interview_questions/question/" + str(question_id) + "/validate/")
@@ -195,9 +198,12 @@ class HomeInterviewView(View):
         if request.user.is_authenticated:
             questions = InterviewQuestion.objects.filter(creator=request.user)
             can_user_make_questions = request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
+            can_make_new_questions = request.user.num_questions_made < request.user.subscription.get_max_num_questions()
             return render(request, self.template_name, {
                 'interview_questions': questions,
-                'can_user_make_questions': can_user_make_questions})
+                'can_user_make_questions': can_user_make_questions,
+                'can_make_new_questions': can_make_new_questions
+                })
         else:
             return render(request, "no_auth.html", {})
 
@@ -218,6 +224,8 @@ class DeleteQuestionView(View):
         if request.user.is_authenticated:
             if request.user == question.creator:
                 question.delete()
+                # decrease count
+                request.user.num_questions_made -= 1
         return HttpResponseRedirect("/interview_questions/")
 
 class EditQuestionView(View):
@@ -502,6 +510,11 @@ class CreateQuestionInstanceView(View):
     def post(self, request,  *args, **kwargs):
         if (not request.user.is_authenticated) or (not request.user.subscription.plan_type != 'SHY') or (not request.user.subscription.terminated_on > datetime.now(timezone.utc)):
             return HttpResponseRedirect("/interview_questions/")
+
+        can_make_new_questions = request.user.num_questions_made < request.user.subscription.get_max_num_questions()
+        if not can_make_new_questions:
+            return HttpResponseRedirect("/interview_questions/")
+
         user_email = self.request.POST.get('email', '')
         
         try:

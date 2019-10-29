@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .plans import get_plan_names
+from .plans import get_plan_names, get_max_questions
 
 class SiteUser(AbstractUser):
     email = models.EmailField(
@@ -17,6 +17,8 @@ class SiteUser(AbstractUser):
 
     subscription = models.ForeignKey('Subscription', on_delete=models.SET_NULL, null=True)
 
+    num_questions_made = models.IntegerField(default=0)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
@@ -32,6 +34,10 @@ class Subscription(models.Model):
     initiated_on = models.DateTimeField(null=True, blank=True)
     terminated_on = models.DateTimeField(null=True, blank=True)
     coupon = models.ForeignKey('SubscriptionCouponCode', on_delete=models.SET_NULL, null=True)
+
+    def get_max_num_questions(self):
+        return get_max_questions(self.plan_type)
+
     def __str__(self):
         return self.plan_type
 

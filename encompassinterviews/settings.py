@@ -46,9 +46,6 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-STRIPE_SECRET_KEY = 'pk_test_ioV3Z9uubVlAzLlAPgN5lX8v00LFLd0e5v'
-STRIPE_PUBLISHABLE_KEY = 'sk_test_D012UDGEjxsgD8bDdqRJklKm00wV9Ku5Oj'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -262,3 +259,7 @@ else:
     EMAIL_HOST_PASSWORD = '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'
     EMAIL_PORT = 587
     DEFAULT_FROM_EMAIL = 'support@encompassinterviews.com'
+
+
+STRIPE_SECRET_KEY = 'sk_test_D012UDGEjxsgD8bDdqRJklKm00wV9Ku5Oj'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_ioV3Z9uubVlAzLlAPgN5lX8v00LFLd0e5v'

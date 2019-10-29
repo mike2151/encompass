@@ -11,13 +11,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from .plans import get_paid_plans, get_plan_by_price
 from django.conf import settings 
 import math
 
 import stripe
-stripe.api_key = settings.STRIPE_SECRET_KEY 
 
 
 class SignUpView(View):
@@ -144,6 +143,8 @@ class EnrollView(View):
 
     def post(self, request,  *args, **kwargs):
         if request.user.is_authenticated:
+            plans = get_paid_plans()
+            col_length = math.floor(12.0 / len(plans))
             coupon_code = request.POST.get("coupon_code", '')
             if len(coupon_code) > 0:
                 coupon = SubscriptionCouponCode.objects.filter(code=coupon_code).first()
@@ -156,19 +157,45 @@ class EnrollView(View):
                     subscription.save()
                     coupon.curr_redeems = coupon.curr_redeems + 1
                     coupon.save()
+
+                    
+                    return render(request, self.template_name, {
+                        "plans": plans, 
+                        "col_length": col_length,
+                        "key": settings.STRIPE_PUBLISHABLE_KEY,
+                        "success": "You are successfully enrolled as a member"
+                        })
                 else:
-                    return render(request, self.template_name, {"message": "Coupon code expired or invalid"})
+                    return render(request, self.template_name, {
+                        "plans": plans, 
+                        "col_length": col_length,
+                        "key": settings.STRIPE_PUBLISHABLE_KEY,
+                        "message": "Coupon code expired or invalid"
+                        })
 
         return HttpResponseRedirect("/interview_questions/")
 
 def make_payment(request):
     template_name = 'registration/enroll.html' 
     if request.method == 'POST':
+        plans = get_paid_plans()
+        col_length = math.floor(12.0 / len(plans))
         if not request.user.is_authenticated:
-            return render(request, template_name, {"message": "There was an error processing your payment"})
+            return render(request, template_name, {
+                        "plans": plans, 
+                        "col_length": col_length,
+                        "key": settings.STRIPE_PUBLISHABLE_KEY,
+                        "message": "You are not logged in"
+                        })
         if ('amount' not in request.POST or 'description' not in request.POST or 'stripeToken' not in request.POST):
-            return render(request, template_name, {"message": "There was an error processing your payment"})
+            return render(request, template_name, {
+                        "plans": plans, 
+                        "col_length": col_length,
+                        "key": settings.STRIPE_PUBLISHABLE_KEY,
+                        "message": "There was an error processing your payment"
+                        })
 
+        stripe.api_key = settings.STRIPE_SECRET_KEY 
         amount = request.POST['amount']
         description = request.POST['description']
         stripe_token = request.POST['stripeToken']
@@ -181,12 +208,12 @@ def make_payment(request):
         )
         if charge:
             # edit the user and make them a member
-            plan = get_plan_by_price(amount)
+            plan = get_plan_by_price(float(amount)/100)
             user = request.user
             subscription = user.subscription
             # see if termination day - if so then start after terminated
             is_on_plan = False
-            now = datetime.now()
+            now = datetime.now(timezone.utc)
             end = now
             if subscription.terminated_on:
                 if subscription.terminated_on > now:
@@ -201,9 +228,19 @@ def make_payment(request):
             subscription.terminated_on = end_date
             subscription.save()
             user.save()
-            return render(request, template_name, {"success": "You are successfully enrolled as a member"})
+            return render(request, template_name, {
+                        "plans": plans, 
+                        "col_length": col_length,
+                        "key": settings.STRIPE_PUBLISHABLE_KEY,
+                        "success": "You are successfully enrolled as a member"
+                        })
         else:
-            return render(request, template_name, {"message": "There was an error processing your payment"})
+            return render(request, template_name, {
+                        "plans": plans, 
+                        "col_length": col_length,
+                        "key": settings.STRIPE_PUBLISHABLE_KEY,
+                        "message": "There was an error processing your payment"
+                        })
 
 class AccountView(View):
     template_name = 'info/account.html'   

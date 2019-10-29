@@ -38,7 +38,11 @@
                     <div class="create-section">
                         <h2 class="create-section-title">Create a New Interview Question: </h2><br />
                         {% if can_user_make_questions %}
+                            {% if can_make_new_questions %}
                             <a href="/interview_questions/create" class="btn btn-lg btn-outline-primary  create-section-button">Create</a>
+                            {% else %}
+                            <p class="create-section-text">You have reached the maximum number of questions. You can upgrade your plan <a href="/users/enroll">here</a></p>
+                            {% endif %}
                         {% else %}
                             <p class="create-section-text">You must have creator status to create a question. You can become a creator <a href="/users/enroll">here</a></p><br />
                         {% endif %}

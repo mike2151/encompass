@@ -14,7 +14,12 @@ def get_plan_names():
 def get_paid_plans():
     return plans[1:]
 
+def get_max_questions(plan_name):
+    for plan in plans:
+        if plan[0] == plan_name:
+            return plan[3]   
+
 def get_plan_by_price(price):
     for plan in plans:
-        if plan[2] == price:
+        if float(plan[2]) == price:
             return plan[0]   
