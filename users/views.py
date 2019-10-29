@@ -12,13 +12,11 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
 from datetime import datetime, timedelta
-from .plans import get_paid_plans
+from .plans import get_paid_plans, get_plan_by_price
 from django.conf import settings 
 import math
-from users.plans import get_plan_by_price
 
 import stripe
-from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY 
 
 
@@ -206,7 +204,6 @@ def make_payment(request):
             return render(request, template_name, {"success": "You are successfully enrolled as a member"})
         else:
             return render(request, template_name, {"message": "There was an error processing your payment"})
-
 
 class AccountView(View):
     template_name = 'info/account.html'   
