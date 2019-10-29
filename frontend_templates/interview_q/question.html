@@ -41,7 +41,7 @@
                                 <input class="form-control" id="name" maxlength="128" name="name" type="text" value="{{ question.name }}"/><br />
     
                                 <label htmlFor="description">Description of Question (Visible to users)</label>
-                                <textarea class="form-control" id="description" name="description" rows=5>{{ question.description }}</textarea><br/>
+                                <textarea class="form-control" id="description" name="description" rows=11>{{ question.description }}</textarea><br/>
     
                                 <label for="question_language">Question Language (Visible to users) </label>
                                 <select class="form-control" id="question_language" name="question_language">
@@ -51,13 +51,16 @@
                                 <div class="form-check">
                                     <input class="form-check-input checkbox-style" type="checkbox" id="network_enabled" name="network_enabled" {% if question.network_enabled %}checked{% endif %}>
                                     <label class="form-check-label checkbox-label" for="network_enabled">
-                                            Enable Network For This Question? <br /> <p class="checkbox-label-description">We normally disable network access to best protect your supporting code.</p>                               </label>
-                                </div><br />
+                                            Enable Network For This Question? <br /> </label>
+                                </div>
+                                <p class="checkbox-label-description">We normally disable network access to best protect your supporting code.</p>  
+                                <br />
                                 <div class="form-check">
                                     <input class="form-check-input checkbox-style" type="checkbox" id="allow_stdout" name="allow_stdout" {% if question.allow_stdout %}checked{% endif %}> 
                                     <label class="form-check-label checkbox-label" for="allow_stdout">
-                                            Enable The User To Print During User Tests<br /> <p class="checkbox-label-description">We normally disable this so they cannot try and inspect your library and supporting code.      </p>                        </label>
+                                            Enable The User To Print During User Tests<br /></label>
                                 </div>
+                                <p class="checkbox-label-description">We normally disable this so they cannot try and inspect your library and supporting code. </p>  
                                 <br/>
                             </div>
                         </div>
@@ -175,7 +178,7 @@
                                     a starter code file should be declared. You can just type the name of the file in the name of file field. You can optionally fill in some parts of the file 
                                     to get the user started. We automatically import 
                                     all of the supporting code files for each starter file. For example, if one of your support files was called, support.py, then import support would be automatically
-                                    added to each starter file. Telling the user what files and methods they have access to should be done in the API section.
+                                    added to each starter file. One can access a method in support by typing support.method(). You should communicate this with the user in either comments in the stub files or in API documentation. Telling the user what files and methods they have access to should be done in the API section.
                             </p>
                         </div>
                     </div>
@@ -235,7 +238,7 @@
 
 <span style="color: #0000ff">import</span> user_submitted_file
 <span style="color: #008000"># indicate the visibility of your test 
-to the user with a @visible @not_visible annotation</span>
+# to the user with a @visible @not_visible annotation</span>
 
 <span style="color: #008000"># all test cases should be written in this class</span>
 <span style="color: #008000"># all test methods must begin with the prefix test_</span>
