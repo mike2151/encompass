@@ -171,7 +171,7 @@ class QuestionAnswerView(View):
                 not_allowed_imports = str(question.base_question.banned_imports).replace(",", "<br />")
                 allowed_str = "" if len(allowed_imports) == 0 else "Allowed Imports: <br />" + allowed_imports
                 not_allowed_imports = "Imports Not Allowed: <br />" + not_allowed_imports
-                imports_body = allowed_str + "\n" + not_allowed_imports
+                imports_body = allowed_str + "<br />" + not_allowed_imports
 
             return render(request, self.template_name, {
                 'question': question,
