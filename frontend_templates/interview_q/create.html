@@ -84,7 +84,7 @@
                             {% endfor %}
                         </select>      
                         <br />   
-
+                        <br />
                         <label class="centered code-label">Specify Which Imports Are Not Allowed (Visible to users) <br />
                         <p class="field_description">List the names of the modules, separated by commas.
                             <br />We suggest banning the library os so the user cannot snoop around and look at your library.</p></label> <br />
@@ -168,7 +168,7 @@
                         <p class="step-description">In this step, you will detail the files that the user has to submit. For every file that has to be submitted, 
                             a starter code file should be declared. You can just type the name of the file in the name of file field. You can optionally fill in some parts of the file 
                             to get the user started. We automatically import 
-                            all of the supporting code files for each starter file. For example, if one of your support files was called, support.py, then import support would be automatically
+                            all of the supporting code files for each starter file when the user submits or runs test cases. For example, if one of your support files was called, support.py, then import support would be automatically
                             added to each starter file. One can access a method in support by typing support.method(). You should communicate this with the user in either comments in the stub files or in API documentation. Telling the user what files and methods they have access to should be done in the API section.
                         </p>
                     </div>
@@ -225,7 +225,7 @@
                             <div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;" id="test_case_example">
                                <pre style="margin: 0; line-height: 125%"><span style="color: #008000"># this unittest import is needed</span>
 <span style="color: #0000ff">import</span> unittest
-
+<span style="color: #008000"># replace with your support file name here</span>
 <span style="color: #0000ff">import</span> user_submitted_file
 <span style="color: #008000"># indicate the visibility of your test 
 # to the user with a @visible @not_visible annotation</span>

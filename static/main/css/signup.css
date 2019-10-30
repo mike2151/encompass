@@ -101,3 +101,14 @@
     color: #6c5ce7;
     text-decoration: none;
 }
+
+.form-body {
+    padding-top: 10vh; 
+    max-width: 35vw;
+}
+
+@media only screen and (max-width: 900px) {
+    .form-body {
+        max-width: 50vw;
+    }
+  }
