@@ -170,7 +170,12 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
     if match:
         items = match.groups()
         language = items[0]
-        version = int(items[1])
+        str_base_version = items[1]
+        str_sub_version_list = language_option.split(".")
+        str_sub_version = ""
+        if len(str_sub_version_list) > 1:
+            str_sub_version = "." + str_sub_version_list[1]
+        version = float(str_base_version + str_sub_version)
 
     # see if there are any banned imports
     does_bad_import_exist = exists_bad_import(question, user_submission_dir)

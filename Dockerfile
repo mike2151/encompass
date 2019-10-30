@@ -1,17 +1,9 @@
-FROM ubuntu:trusty
+FROM ubuntu:18.04
 
-RUN apt-get update
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && apt-get install -y python3.6 python3.6-dev python3-pip python-virtualenv
 
-# Install Python
-RUN apt-get install -y python
-RUN apt-get install -y python-dev 
-RUN apt-get install -y python3-pip
-RUN apt-get install -y python-virtualenv
 RUN rm -rf /var/lib/apt/lists/*
-
-RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
-RUN apt-get update
-RUN apt-get -y install software-properties-common
 
 # grab oracle java (auto accept licence)
 # RUN add-apt-repository -y ppa:webupd8team/java
