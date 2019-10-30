@@ -9,9 +9,9 @@
 <center>
 <div class="main-body">
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">BECOME A CREATOR</h1>
+      <h1 class="h3 mb-3 font-weight-normal">BECOME A CREATOR</h1><br />
       {% if message %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <div class="alert alert-warning alert-dismissible fade show page-message" role="alert">
                 <p class="warning">{{message}}</p>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -19,25 +19,34 @@
         </div><br/>
       {% endif %}
       {% if success %}
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <div class="alert alert-success alert-dismissible fade show page-message" role="alert">
             <p class="warning">{{success}}</p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
     </div><br/>
       {% endif %}
-      <h3>Option 1: Payment:</h3>
+      <h3 class="option-header">Option 1: Payment:</h3>
+      {% if is_active_member %}
+      <br />
+        <div class="alert alert-info alert-dismissible fade show page-message" role="alert">
+            <p class="warning">As a member, if you downgrade or upgrade to a different plan listed below, then the new plan will immediately take effect and will last 31 days from its purchase time.
+                <br /><br /><b>Your current plan is {{ user.subscription.plan_type }}</b>
+            </p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+      <br/>
+      {% endif %}
+      <div class="alert alert-info alert-dismissible fade show page-message" role="alert">
+        <p class="warning">If you purchase a plan, you will only be charged once on a non-recurring basis for a 31 day plan. To continue your membership, you will need to purchase the plan again.</p>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
       <div id="price_table">   
         <section>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="price-heading clearfix">
-                                <h1>Available Plans</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="container">
                     <div class="row">
                       {% for plan in plans %}
@@ -90,9 +99,11 @@
                 </div>
             </section>             
         </div>
+        <hr />
+        <br />
      <form class="form-signin" method="post" action="{% url 'enroll' %}"></form>
         {% csrf_token %}
-        <h3>Option 2: Coupon/Promo Code:</h3>
+        <h3 class="option-header">Option 2: Coupon/Promo Code:</h3><br />
         <input type="text" id="coupon_code" name="coupon_code" class="form-control" placeholder="Coupon Code"><br />
         <br />
         <button class="btn btn-lg btn-primary btn-block form-block submit-btn" type="submit">Become a Creator</button>

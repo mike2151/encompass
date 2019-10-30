@@ -470,3 +470,11 @@
 	text-decoration:none;
 	
 }
+
+.option-header {
+	color: #6C5CE7;
+}
+
+.page-message {
+	max-width: 50vw;
+}

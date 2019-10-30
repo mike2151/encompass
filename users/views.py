@@ -67,6 +67,9 @@ class SignUpView(View):
         subscription.save()
         if is_from_company:
             company_org = request.POST.get('comp_org', '')
+            if len(company_org) == 0:
+                error_messages.append("No company/organization specified")
+                return render(request, self.template_name, {"error_messages": error_messages})
             user = SiteUser.objects.create_user(username=email, email=email, password=password, company_org=company_org, is_from_company=True, first_name=first_name, last_name=last_name, is_active=False, subscription=subscription)
         else:
             user_role = request.POST.get('user_role', '')
@@ -136,10 +139,12 @@ class EnrollView(View):
         if request.user.is_authenticated:
             plans = get_paid_plans()
             col_length = math.floor(12.0 / len(plans))
+            is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
             return render(request, self.template_name, {
                 "plans": plans, 
                 "col_length": col_length,
-                "key": settings.STRIPE_PUBLISHABLE_KEY
+                "key": settings.STRIPE_PUBLISHABLE_KEY,
+                "is_active_member": is_active_member
                 })
         else:
             return render(request, "no_auth.html", {})
@@ -154,26 +159,27 @@ class EnrollView(View):
                 if coupon is not None and coupon.curr_redeems < coupon.max_redeems:
                     user = request.user
                     subscription = user.subscription
-                    subscription.plan_type = 'MONTHLY_CREATOR'
+                    subscription.plan_type = 'ASKER'
                     subscription.initiated_on = datetime.now()
                     subscription.terminated_on = coupon.expiration_date
                     subscription.save()
                     coupon.curr_redeems = coupon.curr_redeems + 1
                     coupon.save()
-
-                    
                     return render(request, self.template_name, {
                         "plans": plans, 
                         "col_length": col_length,
                         "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "success": "You are successfully enrolled as a member"
+                        "success": "You are successfully enrolled as a creator. Your plan type is " + str(subscription.plan_type),
+                        "is_active_member": True
                         })
                 else:
+                    is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
                     return render(request, self.template_name, {
                         "plans": plans, 
                         "col_length": col_length,
                         "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "message": "Coupon code expired or invalid"
+                        "message": "Coupon code expired or invalid",
+                        "is_active_member": is_active_member
                         })
 
         return HttpResponseRedirect("/interview_questions/")
@@ -188,14 +194,17 @@ def make_payment(request):
                         "plans": plans, 
                         "col_length": col_length,
                         "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "message": "You are not logged in"
+                        "message": "You are not logged in",
+                        "is_active_member": False
                         })
         if ('amount' not in request.POST or 'description' not in request.POST or 'stripeToken' not in request.POST):
+            is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
             return render(request, template_name, {
                         "plans": plans, 
                         "col_length": col_length,
                         "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "message": "There was an error processing your payment"
+                        "message": "There was an error processing your payment",
+                        "is_active_member": is_active_member
                         })
 
         stripe.api_key = settings.STRIPE_SECRET_KEY 
@@ -214,42 +223,66 @@ def make_payment(request):
             plan = get_plan_by_price(float(amount)/100)
             user = request.user
             subscription = user.subscription
-            # see if termination day - if so then start after terminated
-            is_on_plan = False
+            # see if user is currently on plan
             now = datetime.now(timezone.utc)
-            end = now
-            if subscription.terminated_on:
-                if subscription.terminated_on > now:
-                    end = subscription.terminated_on
-                    is_on_plan = True
-            end_date = end + timedelta(days=31)
+            is_on_plan = subscription.terminated_on and subscription.plan_type != 'SHY' and subscription.terminated_on > now
+            # see if on plan and changing
+            if is_on_plan and subscription.plan_type != plan:
+                # reset termination to be 31 days from now and change plan type
+                end_date = now + timedelta(days=31)
+                subscription.plan_type = plan
+                subscription.terminated_on = end_date
+                subscription.save()
+                user.save()
+                return render(request, template_name, {
+                            "plans": plans, 
+                            "col_length": col_length,
+                            "key": settings.STRIPE_PUBLISHABLE_KEY,
+                            "success": "You are successfully enrolled as a creator. Your plan type is " + str(plan),
+                            "is_active_member": True
+                            })
+            else:
+                # see if termination day - if so then start after terminated
+                end = now
+                if is_on_plan:
+                        end = subscription.terminated_on
+                        is_on_plan = True
+                end_date = end + timedelta(days=31)
 
-            if not is_on_plan:
-                subscription.initiated_on = now
+                if not is_on_plan:
+                    subscription.initiated_on = now
 
-            subscription.plan_type = plan
-            subscription.terminated_on = end_date
-            subscription.save()
-            user.save()
-            return render(request, template_name, {
-                        "plans": plans, 
-                        "col_length": col_length,
-                        "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "success": "You are successfully enrolled as a member"
-                        })
+                subscription.plan_type = plan
+                subscription.terminated_on = end_date
+                subscription.save()
+                user.save()
+                return render(request, template_name, {
+                            "plans": plans, 
+                            "col_length": col_length,
+                            "key": settings.STRIPE_PUBLISHABLE_KEY,
+                            "success": "You are successfully enrolled as a creator. Your plan type is " + str(plan),
+                            "is_active_member": True
+                            })
         else:
+            is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
             return render(request, template_name, {
                         "plans": plans, 
                         "col_length": col_length,
                         "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "message": "There was an error processing your payment"
+                        "message": "There was an error processing your payment",
+                        "is_active_member": is_active_member
                         })
 
 class AccountView(View):
     template_name = 'info/account.html'   
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return render(request, self.template_name, {"user": request.user})
+            terminated_time = ""
+            if request.user.is_from_company:
+                 is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
+                 if is_active_member:
+                     terminated_time = request.user.subscription.terminated_on.strftime('%b %d, %Y, %I:%M%p') + " (UTC Timezone)"
+            return render(request, self.template_name, {"user": request.user, "terminated_time": terminated_time})
         return HttpResponseRedirect("/")
 
     def post(self, request,  *args, **kwargs):
