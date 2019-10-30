@@ -111,7 +111,10 @@ class LoginView(View):
         if user:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect("/questions/answer")
+                if user.is_from_company:
+                    return HttpResponseRedirect("/interview_questions")
+                else:
+                    return HttpResponseRedirect("/questions/answer")
         return render(request, self.template_name, {"message": "Invalid email/password combination", "message_color": "red"})
 
 def activate(request, uidb64, token):

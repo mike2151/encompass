@@ -220,7 +220,7 @@ class QuestionAnswerView(View):
                     results_url = get_current_site(request) + "/results/submissions/" + str(submission_result.pk)
                     if not question_instance.base_question.is_open:
                         mail_subject = "An Interview Question Has Been Submitted"
-                        message = "Hello ,\n {0} has submitted {1}. You can view the submission here: {2}. \n Best, \n The Encompass Team".format(name_of_user, name_of_question, results_url)
+                        message = "Hello ,\n\n {0} has submitted {1}. You can view the submission here: {2}. \n\n Best, \n The Encompass Team".format(name_of_user, name_of_question, results_url)
                         email_obj = EmailMessage(
                             mail_subject, message, to=[user_email]
                         )
