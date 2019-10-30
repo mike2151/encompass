@@ -14,7 +14,7 @@ def id_generator(size=15, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def run_submission_file(file_name, host_folder_path, language, version, given_dependency_file):
+def run_submission_file(file_name, host_folder_path, language, version):
     client = docker.from_env()
     manager = multiprocessing.Manager()
     return_dict = manager.dict()

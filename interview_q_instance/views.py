@@ -158,20 +158,12 @@ class QuestionAnswerView(View):
                     question.save()
 
                 # imports
-                imports_body = ""
-                allowed_imports = ""
-                base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(question.base_question.pk))
-                dependency_dir = os.path.join(base_question_dir, 'dependency')
-                dependency_file = os.path.join(dependency_dir, "requirements.txt")
-                if os.path.exists(dependency_file):
-                    with open(dependency_file, 'r') as read_file:
-                        allowed_imports = read_file.read()
-                        read_file.close()
+                allowed_imports = str(question.base_question.dependencies).replace(",", "<br />")
+                allowed_imports = "Allowed Imports: <br />" + allowed_imports if len(allowed_imports) > 0 else ""
 
                 not_allowed_imports = str(question.base_question.banned_imports).replace(",", "<br />")
-                allowed_str = "" if len(allowed_imports) == 0 else "Allowed Imports: <br />" + allowed_imports
-                not_allowed_imports = "Imports Not Allowed: <br />" + not_allowed_imports
-                imports_body = allowed_str + "<br />" + not_allowed_imports
+                not_allowed_imports = "Imports Not Allowed: <br />" + not_allowed_imports if len(not_allowed_imports) > 0 else ""
+                imports_body = allowed_imports + "<br />" + not_allowed_imports
 
             return render(request, self.template_name, {
                 'question': question,

@@ -61,30 +61,14 @@ def prepend_to_user_submitted_files(user_submission_dir, support_code_dir, langu
                 write_file.write(prepend_string + data)
                 write_file.close()
 
-def generate_imports_prepend(user_submission_dir):
-    base_code = "import importlib\nimport subprocess\nimport sys\ndef import_or_install(package, version):\n\ttry:\n\t\t__import__(package)\n\texcept ImportError:\n\t\tsubprocess.call(['pip3', 'install', '{}=={}'.format(package, version)])\n"
-    import_statements = ""
-    with open(os.path.join(user_submission_dir, "requirements.txt"), 'r') as imports_file:
-        import_file_contents = imports_file.readlines()
-
-    for line in import_file_contents:
-        line_split = line.replace('==','=').replace('>=','=').replace('<=','=').replace('<','=').replace('>','=').replace("\n", "").split("=")
-        new_import_line = 'import_or_install("{0}", "{1}") \n{0} = importlib.import_module("{0}")\n'.format(line_split[0], line_split[1])
-        import_statements = import_statements + new_import_line
-    return base_code + import_statements
-
 def generate_network_prepend():
     return "import socket\ndef guard(*args, **kwargs):\n\traise Exception('Network is disabled')\nsocket.socket = guard\n"
 
-def create_runner_file(user_submission_dir, test_case_file_name, language, question, is_dep_in_folder, is_network_enabled):
+def create_runner_file(user_submission_dir, test_case_file_name, language, question, dependencies, is_network_enabled):
     if language == "python":
         # copy the original file
         runner_dir = os.path.join(settings.MEDIA_ROOT, 'core/runner.py')
         shutil.copy(runner_dir, user_submission_dir)
-        # prepend the external imports
-        external_imports_prepend_str = ""
-        if is_dep_in_folder:
-            external_imports_prepend_str = generate_imports_prepend(user_submission_dir)
         # prepend the network disabling code
         network_prepend_str = ""
         if not is_network_enabled:
@@ -92,7 +76,7 @@ def create_runner_file(user_submission_dir, test_case_file_name, language, quest
         # prepend the single test case import import 
         single_import_prepend_str = "from " + test_case_file_name.split(".")[0] + " import TestCases\n"
 
-        prepend_contents = external_imports_prepend_str + network_prepend_str + single_import_prepend_str
+        prepend_contents = network_prepend_str + single_import_prepend_str
 
         new_file = os.path.join(user_submission_dir, "runner.py")
 
@@ -191,12 +175,6 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
 
     copy_folder_contents(supporting_code_dir, user_submission_dir)
 
-    # copy dependencies
-    dependency_dir = os.path.join(base_question_dir, 'dependency')
-    is_dep_file_in_dir = not (len(os.listdir(dependency_dir)) == 0)
-    if is_dep_file_in_dir:
-        copy_folder_contents(dependency_dir, user_submission_dir)
-
     # if user test case
     if len(user_test_case) > 0:
         # create the test file
@@ -240,9 +218,9 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         # prepend decorators to test file
         prepend_to_test_file(user_submission_dir, test_case_file_name, language)
         # create the runner file
-        create_runner_file(user_submission_dir, test_case_file_name, language, question, is_dep_file_in_dir, question.network_enabled)
+        create_runner_file(user_submission_dir, test_case_file_name, language, question, question.dependencies, question.network_enabled)
 
-        run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version, is_dep_file_in_dir)
+        run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version)
         all_unit_tests_results = run_submission_result['result']
         all_unit_tests_results_str = all_unit_tests_results
         if not isinstance(all_unit_tests_results_str, str):

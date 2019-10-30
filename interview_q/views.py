@@ -25,6 +25,8 @@ from dateutil import parser
 import pytz
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings
+import os
 
 
 class CreateInterviewView(View):
@@ -38,7 +40,12 @@ class CreateInterviewView(View):
         if not request.user.is_authenticated:
             return render(request, "no_auth.html", {})
         if request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc):
-            return render(request, self.template_name, {})
+            available_modules = []
+            with open(os.path.join(settings.BASE_DIR, "docker-python-dep.txt")) as available_file_dep:
+                for line in available_file_dep.readlines():
+                    available_modules.append(line)
+                available_file_dep.close()
+            return render(request, self.template_name, {'available_modules': available_modules})
         else:
             return render(request, "is_interviewee_account.html", {})
     def post(self, request,  *args, **kwargs):
@@ -49,14 +56,13 @@ class CreateInterviewView(View):
             network_enabled = self.request.POST.get('network_enabled', '') == 'on'
             allow_stdout = self.request.POST.get('allow_stdout', '') == 'on'
             question_language = self.request.POST.get('question_language', '')
+            dependencies_list = self.request.POST.getlist('dependencies')
+            dependencies = ",".join(dependencies_list)
             if len(name) == 0:
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
-            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled, allow_stdout=allow_stdout, banned_imports=banned_imports)
-            question.save()
-            if request.FILES.get("requirements_file", False):
-                question.dependency_file = request.FILES["requirements_file"]
+            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled, allow_stdout=allow_stdout, banned_imports=banned_imports, dependencies=dependencies)
             question.save()
 
             question_id = question.id
@@ -303,7 +309,11 @@ class EditQuestionView(View):
 
         api_methods = MethodSignature.objects.filter(interview_question_api=api)
 
-        is_requirements_file = bool(question.dependency_file)
+        available_modules = []
+        with open(os.path.join(settings.BASE_DIR, "docker-python-dep.txt")) as available_file_dep:
+            for line in available_file_dep.readlines():
+                available_modules.append(line)
+            available_file_dep.close()
 
         return render(request, self.template_name, {
             'question': question, 
@@ -319,7 +329,8 @@ class EditQuestionView(View):
             'example_code_names': example_code_names,
             'example_code_contents': example_code_contents,
             'api_methods': api_methods,
-            'is_requirements_file': is_requirements_file
+            'available_modules': available_modules,
+            'already_used_dep': question.dependencies
         })
     def post(self, request,  *args, **kwargs):
         if request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc):
@@ -329,6 +340,8 @@ class EditQuestionView(View):
             question_language = self.request.POST.get('question_language', '')
             network_enabled = self.request.POST.get('network_enabled', '') == 'on'
             allow_stdout = self.request.POST.get('allow_stdout', '') == 'on'
+            dependencies_list = self.request.POST.getlist('dependencies')
+            dependencies = ",".join(dependencies_list)
             if len(name) == 0:
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
@@ -345,12 +358,7 @@ class EditQuestionView(View):
             question.language = question_language
             question.network_enabled = network_enabled
             question.allow_stdout = allow_stdout
-
-            if request.FILES.get("requirements_file", False):
-                # delete the old one if exists
-                if (question.dependency_file):
-                    question.dependency_file.delete()
-                question.dependency_file = request.FILES["requirements_file"]
+            question.dependencies = dependencies
 
             question.save()
             question_id = question.id

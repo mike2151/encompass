@@ -2,7 +2,7 @@ from django.db import models
 
 class InterviewQuestion(models.Model):
     def upload_path_handler(question, filename):
-        return "{id}/dependency/{file}".format(id=question.pk, file=filename)
+        pass
 
     name = models.CharField(max_length=128)
     description = models.TextField()
@@ -13,7 +13,7 @@ class InterviewQuestion(models.Model):
     allow_stdout = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    dependency_file = models.FileField(upload_to=upload_path_handler, null=True)
+    dependencies = models.TextField()
     banned_imports = models.TextField()
 
     id = models.AutoField(primary_key=True)
