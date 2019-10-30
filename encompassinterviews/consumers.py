@@ -23,18 +23,18 @@ class InterviewConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        self.num_users = self.num_users + 1
+        InterviewConsumer.num_users += 1
         await self.accept()
 
     async def disconnect(self, close_code):
-        self.num_users = self.num_users - 1
+        InterviewConsumer.num_users -= 1
         await self.channel_layer.group_discard(
             self.interview_session_name,
             self.channel_name
         )
 
     async def receive(self, text_data):
-        if (self.num_users > 1):
+        if (InterviewConsumer.num_users > 1):
             update_data_json = json.loads(text_data)
             file_to_update = update_data_json['file']
             new_content = update_data_json['content']

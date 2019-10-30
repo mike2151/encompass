@@ -249,101 +249,102 @@ class QuestionAnswerView(View):
 class QuestionObserveView(View):
     template_name = "interview_q_instance/answer.html"
     def get(self, request, *args, **kwargs):
-        question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
-        if question.base_question.creator.email == request.user.email:
-            if question.has_completed and (not question.base_question.is_open):
-                return HttpResponseRedirect("/questions/answer")
-            files_to_work_on = StarterCode.objects.filter(interview_question=question.base_question)
+        if request.user.is_authenticated:
+            question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
+            if question.base_question.creator.email == request.user.email:
+                if question.has_completed and (not question.base_question.is_open):
+                    return HttpResponseRedirect("/questions/answer")
+                files_to_work_on = StarterCode.objects.filter(interview_question=question.base_question)
 
-            api_methods = ""
-            api = InterviewAPI.objects.filter(interview_question=question.base_question).first()
-            if api is not None:
-                api_description = api.description
-                api_methods_objs = MethodSignature.objects.filter(interview_question_api=api)
-                for api_method_obj in api_methods_objs:
-                    api_methods = api_methods + str(api_method_obj.api_signature) + "<br><br>"
+                api_methods = ""
+                api = InterviewAPI.objects.filter(interview_question=question.base_question).first()
+                if api is not None:
+                    api_description = api.description
+                    api_methods_objs = MethodSignature.objects.filter(interview_question_api=api)
+                    for api_method_obj in api_methods_objs:
+                        api_methods = api_methods + str(api_method_obj.api_signature) + "<br><br>"
 
-            files_to_work_on_names = []
-            files_to_work_on_bodies = []
+                files_to_work_on_names = []
+                files_to_work_on_bodies = []
 
-            previous_work = {}
-            try:
-                previous_work = json.loads(question.current_working_body)
-            except:
                 previous_work = {}
+                try:
+                    previous_work = json.loads(question.current_working_body)
+                except:
+                    previous_work = {}
 
-            for file_obj in files_to_work_on:
-                filename = file_obj.code_file.name.split("/")[-1]
-                if "file_" + filename in previous_work:
-                    files_to_work_on_names.append(filename)
-                    files_to_work_on_bodies.append(previous_work["file_" + filename])
-                else:
-                    files_to_work_on_names.append(filename)
-                    f = file_obj.code_file
+                for file_obj in files_to_work_on:
+                    filename = file_obj.code_file.name.split("/")[-1]
+                    if "file_" + filename in previous_work:
+                        files_to_work_on_names.append(filename)
+                        files_to_work_on_bodies.append(previous_work["file_" + filename])
+                    else:
+                        files_to_work_on_names.append(filename)
+                        f = file_obj.code_file
+                        f.open(mode='r') 
+                        content = f.read()
+                        f.close()
+                        files_to_work_on_bodies.append(content)
+
+
+                example_file_objs = ExampleCode.objects.filter(interview_question=question.base_question)
+                example_files_names = []
+                example_files_bodies = []
+                for example_file_obj in example_file_objs:
+                    filename = example_file_obj.code_file.name.split("/")[-1]
+                    example_files_names.append(filename)
+                    f = example_file_obj.code_file
                     f.open(mode='r') 
                     content = f.read()
                     f.close()
-                    files_to_work_on_bodies.append(content)
+                    example_files_bodies.append(content)
 
+                is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
-            example_file_objs = ExampleCode.objects.filter(interview_question=question.base_question)
-            example_files_names = []
-            example_files_bodies = []
-            for example_file_obj in example_file_objs:
-                filename = example_file_obj.code_file.name.split("/")[-1]
-                example_files_names.append(filename)
-                f = example_file_obj.code_file
-                f.open(mode='r') 
-                content = f.read()
-                f.close()
-                example_files_bodies.append(content)
+                opt_groups = ["Question (Not Modifiable)", "Stub Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)"]
 
-            is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
+                expiration_time_in_seconds = 0
+                has_expiration = True
 
-            opt_groups = ["Question (Not Modifiable)", "Stub Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)"]
+                if is_preview:
+                    has_expiration = False
+                    files_to_work_on_names = []
+                    files_to_work_on_bodies = []
+                else:
+                    if not question.expire_time:
+                        if question.how_many_minutes == 0:
+                            has_expiration = False
+                            if not question.has_started:
+                                question.has_started = True
+                                question.save()
+                        else:
+                            expiration_time_in_seconds = question.how_many_minutes * 60.0
 
-            expiration_time_in_seconds = 0
-            has_expiration = True
-
-            if is_preview:
-                has_expiration = False
-                files_to_work_on_names = []
-                files_to_work_on_bodies = []
-            else:
-                if not question.expire_time:
-                    if question.how_many_minutes == 0:
-                        has_expiration = False
-                        if not question.has_started:
+                            question.expire_time = datetime.now() + timedelta(minutes=question.how_many_minutes)
+                            
                             question.has_started = True
                             question.save()
                     else:
-                        expiration_time_in_seconds = question.how_many_minutes * 60.0
-
-                        question.expire_time = datetime.now() + timedelta(minutes=question.how_many_minutes)
-                        
+                        utc = pytz.utc
+                        now = datetime.now(tz=utc)
+                        expire_time = question.expire_time
+                        expiration_time_in_seconds = (expire_time - now).total_seconds()
                         question.has_started = True
                         question.save()
-                else:
-                    utc = pytz.utc
-                    now = datetime.now(tz=utc)
-                    expire_time = question.expire_time
-                    expiration_time_in_seconds = (expire_time - now).total_seconds()
-                    question.has_started = True
-                    question.save()
-            return render(request, self.template_name, {
-                'question': question,
-                'question_description': question.base_question.description,
-                'api_methods': api_methods,
-                'api_description': api_description,
-                'example_files_bodies': json.dumps(example_files_bodies),
-                'example_files_names': example_files_names,
-                'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
-                'files_to_work_on_names': files_to_work_on_names,
-                'is_preview': is_preview,
-                "opt_groups": opt_groups,
-                "expiration_time": expiration_time_in_seconds,
-                'has_expiration': has_expiration,
-                "live_interview_id": question.live_interview_id,
-                "is_observer": True
-                })
+                return render(request, self.template_name, {
+                    'question': question,
+                    'question_description': question.base_question.description,
+                    'api_methods': api_methods,
+                    'api_description': api_description,
+                    'example_files_bodies': json.dumps(example_files_bodies),
+                    'example_files_names': example_files_names,
+                    'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
+                    'files_to_work_on_names': files_to_work_on_names,
+                    'is_preview': is_preview,
+                    "opt_groups": opt_groups,
+                    "expiration_time": expiration_time_in_seconds,
+                    'has_expiration': has_expiration,
+                    "live_interview_id": question.live_interview_id,
+                    "is_observer": True
+                    })
         return render(request, "no_auth.html", {})
