@@ -247,6 +247,7 @@ else:
     STATIC_ROOT = '/home/django/encompass/static/'
 
 AXES_COOLOFF_TIME = 5
+AXES_FAILURE_LIMIT = 5
 RATELIMIT_ENABLE = True
 
 
