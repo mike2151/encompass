@@ -1,65 +1,19 @@
-.onoffswitch {
-    position: relative; width: 90px;
-    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
-}
-.onoffswitch-checkbox {
-    display: none;
-}
-.onoffswitch-label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 20px;
-}
-.onoffswitch-inner {
-    display: block; width: 200%; margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
-}
-.onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-    box-sizing: border-box;
-}
-.onoffswitch-inner:before {
-    content: "YES";
-    padding-left: 10px;
-    background-color: #6c5ce7; color: #FFFFFF;
-}
-.onoffswitch-inner:after {
-    content: "NO";
-    padding-right: 10px;
-    background-color: #EEEEEE; color: #999999;
-    text-align: right;
-}
-.onoffswitch-switch {
-    display: block; width: 18px; margin: 6px;
-    background: #FFFFFF;
-    position: absolute; top: 0; bottom: 0;
-    right: 56px;
-    border: 2px solid #999999; border-radius: 20px;
-    transition: all 0.3s ease-in 0s; 
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-    margin-left: 0;
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px; 
-}
-
 .btn-primary {
-    color: #6c5ce7;
-    background-color: #FFF;
-    border: 1px solid #6c5ce7;
+    color: #FFF;
+    background-color: #FEBC4E;
+    border: 1px solid #FEBC4E;
 }
 
 .btn-primary:hover {
-    color: #FFF;
-    background-color: #6c5ce7;
-    border: 1px solid #6c5ce7;
+    color: #FEBC4E;
+    background-color: #FFF;
+    border: 1px solid #FEBC4E;
 }
 
 .btn-primary:active:focus {
     color: #FFF !important;
-    background-color: #6c5ce7 !important;
-    border: 1px solid #6c5ce7 !important;
+    background-color: #FEBC4E !important;
+    border: 1px solid #FEBC4E !important;
 }
 
 .action-link {
@@ -76,6 +30,7 @@
 .form-signin {
     background: #C4BFFF;
     padding: 3em;
+    border-radius: 10px;
 }
 
 .page-title {
@@ -83,9 +38,12 @@
     font-size: 2em;
 }
 
+.footer-text {
+    font-size: 1.3em;
+}
+
 .forgot-password {
     color: #000;
-    font-size: 1.3em;
 } 
 
 .forgot-password:hover {

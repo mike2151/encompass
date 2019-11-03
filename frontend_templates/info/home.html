@@ -4,10 +4,8 @@
 {% block css_imports %}
 <link href="{% static 'main/css/homepage.css' %}" rel="stylesheet">
 {% endblock %}
-
-
 {% block content %}
-  <!-- Page Content -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <div class="container homepage-container">
     <div class="col-lg-12 mb-12 landing-section">
       <div class="landing-text">
@@ -26,16 +24,14 @@
       </div>
     </div>
     {% if questions|length > 0 %}
-    <div class="open-questions">
-      <h1 class="open-questions-title">Explore Example Questions</h1>
-      <!-- Marketing Icons Section -->
+    <div class="open-questions" data-aos="fade-in">
         <div class="row">
             {% for question in questions %}
           <div class="col-lg-3 mb-3">
               <div class="open-question-box">
                   <div class="card open-question-card" >
                     <div class="card-body">
-                      <h5 class="card-title">{{ question.name }}</h5>
+                      <h5 class="card-title question-card-title">{{ question.name }}</h5>
                       <p class="card-text question-card-text">{{ question.description | markdown | striptags| truncatechars:200 | safe}}</p>
                       <a href="/interview_questions/question/{{ question.id }}/try/" class="btn btn-primary btn-block question-btn">Answer</a>
                     </div>
@@ -44,45 +40,11 @@
           </div>
           {% endfor %}
         </div>
-      <!-- /.row -->
     </div>
     {% endif %}
-    <div class="row appeal-section" style="margin-bottom: 3vh">
-      <h3 class="col-md-12 about-section-header-title">Let's Offer Another Way</h3>
-      <div class="col-lg-6 mb-6 left-section">
-        <div class="about-section">
-          <h3 class="about-section-header">Candidates,<br><br> Do Interviews That Matter</h3>
-          <p class="about-section-text">You have spent your career creating impressive personal projects, tackling difficult challenges, and having invaluable industry experience. Your next programming opportunity will allow you to grow and develop even more. There’s only one problem that is stopping you from this dream job: your college algorithms class. Do problems that you will encounter in the real world.</p>
-        </div>
-      </div>
-      <div class="col-lg-6 mb-6 right-section">
-          <div class="about-section">
-            <h3 class="about-section-header">Interviewers,<br><br> Offer Candidates High Signal Interview Questions</h3>
-            <p class="about-section-text">Want to know how a potential candidate would perform in the job? Why not give them a challenge similar to what they would experience? Get the best signal now.</p>
-          </div>
-      </div>
     </div>
-    <div class="row offer-section">
-        <h3 class="col-md-12 offer-section-header">What We Offer</h3>
-          <div class="col-lg-4 mb-4">
-            <div class="offer-section-item">
-              <h3 class="about-section-header">Integrated Problems</h3>
-              <p class="about-section-text">We allow you to incorporate your existing code, declare APIs, create example code snippets, specify libraries, and write tests to create programming challenges that cannot be created anywhere else online.</p>
-            </div>
-          </div>
-          <div class="col-lg-4 mb-4">
-              <div class="offer-section-item">
-                <h3 class="about-section-header">Total Customization</h3>
-                <p class="about-section-text">Use whatever code you would like. Write all the test cases you need. We have you covered.</p>
-              </div>
-          </div>
-          <div class="col-lg-4 mb-4">
-            <div class="offer-section-item">
-              <h3 class="about-section-header">Code Base Security</h3>
-              <p class="about-section-text">We give you the tools to make sure your code that supports the user submission is kept safe.</p>
-             </div>
-          </div>
-    </div>
-    </div>
-  <!-- /.container -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
 {% endblock %}

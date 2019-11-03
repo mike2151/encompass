@@ -3,8 +3,6 @@
 {% block css_imports %}
 <link href="{% static 'main/css/signup.css' %}" rel="stylesheet">
 {% endblock %}
-
-
 {% block content %}
 <center>
 <div class="form-body">
@@ -27,11 +25,10 @@
       <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus><br />
       <label for="password" class="sr-only">Password</label>
       <input type="password" id="password" name="password" class="form-control" placeholder="Password" required><br />
-      <br />
-      <a class="forgot-password" href="/users/password_reset">Forgot password?</a>
       <br /><br />
       <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Sign In</button><br />
-      <p>Don't have an account? <a class="alt" href="/users/signup">Create one</a></p>
+      <a class="footer-text forgot-password" href="/users/password_reset">Forgot password?</a><br />
+      <p class="footer-text">Don't have an account? <a class="alt" href="/users/signup">Create one</a></p>
     </form>
 </div>
 </center>

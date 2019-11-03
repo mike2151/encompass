@@ -3,6 +3,10 @@ body {
     overflow-x: hidden;
 }
 
+select {
+    -webkit-appearance: none
+}
+
 ::-webkit-scrollbar {
     width: 0px; 
     background: transparent; 
@@ -43,13 +47,6 @@ body {
 .example-code-list {
     list-style-type: none;
     padding-left: 1vw;
-}
-
-.answer-section-one {
-
-}
-
-.answer-section-two {
 }
 
 .editor-holder {

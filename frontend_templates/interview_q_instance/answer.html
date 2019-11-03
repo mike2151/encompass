@@ -65,7 +65,6 @@
                     </optgroup>
                   {% endfor %}
               </select>
-              <p class="theme-name">Theme: </p><select id="theme-one" class="select-css" onchange="onSelectNewThemeOne()" data-intro="You can edit the theme of the editor below with this widget."></select>
             </div>
           </div>
         </div>
@@ -103,7 +102,7 @@
                     </optgroup>
                   {% endfor %}
               </select>
-              <p class="theme-name">Theme: </p><select id="theme-two" class="select-css" onchange="onSelectNewThemeTwo()"> </select>
+              <p class="theme-name">Theme: </p><select id="theme-site" class="select-css" onchange="onSelectNewThemeSite()"> </select>
             </div>
           </div>
         </div>
@@ -152,10 +151,11 @@
       
       <div class="col-md-12">
         <center>
-          <button type="submit" name="action" value="submit_code" class="btn btn-success btn-lg centered-button" data-intro="When you are ready, submit your code.">Submit Code</button>
+          <button type="submit" name="action" value="submit_code" class="btn btn-success btn-lg centered-button" data-intro="When you are ready, submit your code. Once you submit, you cannot return to the question.">Submit Code</button>
           <button type="button" name="save_code" id="save_code" class="btn btn-info btn-lg" data-intro="You can always save your code and return to the problem later. Note: your code does not auto save.">Save Code</button><br />
           <p id="code_saved_status"></p>
-          <p>Be sure to write test cases below before submitting!</p>
+          <p>Note: Once you submit your code, you cannot return back to this question.
+              <br/>Be sure to write test cases below before submitting!</p>
         </center>  
       </div>
       {% endif %}
@@ -167,13 +167,9 @@
 <script src="https://cdn.jsdelivr.net/npm/intro.js@2.9.3/intro.min.js"></script>
 <script type='text/javascript'>
     ace.require("ace/ext/language_tools");
-    var themeData = ["textmate", "chrome", "clouds", "dawn", "dreamweaver", "eclipse", "github", "iplastic", "tomorrow", "xcode", "sqlserver", "ambiance", "gruvbox", "chaos", "clouds_midnight", "cobalt", "gob", "idle_fingers", "kr_theme", "merbivore", "merbivore_soft", "mono_industrial", "monokai", "pastel_on_dark", "solarized_dark", "terminal", "tomorrow_night", "tomorrow_night_blue", "tomorrow_night_bright", "tomorrow_night_eighties", "twilight", "vibrant_ink"];
+    var themeData = ["textmate", "dreamweaver", "solarized_dark", "twilight"];
 $.each(themeData, function(i, item) {
-    $('#theme-one').append($('<option>', {
-        value: item,
-        text: item
-    }));
-    $('#theme-two').append($('<option>', {
+    $('#theme-site').append($('<option>', {
         value: item,
         text: item
     }))
@@ -396,14 +392,11 @@ for (var i = 0; i < example_code_snippets.length; ++i) {
     })
 }
 
-function onSelectNewThemeOne() {
-    var theme = $("#theme-one").val();
-    code_editor_one.setTheme("ace/theme/" + theme)
-}
-
-function onSelectNewThemeTwo() {
-    var theme = $("#theme-two").val();
+function onSelectNewThemeSite() {
+    var theme = $("#theme-site").val();
     code_editor_two.setTheme("ace/theme/" + theme)
+    code_editor_one.setTheme("ace/theme/" + theme)
+    test_case_editor.setTheme("ace/theme/" + theme)
 }
 code_editor_two.setValue(name_to_body[currently_selected_file_two].toString(), -1);
 $('#file-drop-down-one').change(function() {

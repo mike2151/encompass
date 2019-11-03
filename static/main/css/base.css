@@ -4,17 +4,19 @@
     min-height: 95vh;
 }
 
-.footer-copyright {
-    font-size: 1em;
+.footer-title {
+    color: #FFF;
+    text-align: center;
 }
 
 .footer-item {
     color: #FFF;
-    margin-left: 2ve;
+    margin-left: 2vw;
 }
 
 .footer-item:hover {
     color: #6c5ce7;
+    text-decoration: underline;
 }
 
 .footer {
