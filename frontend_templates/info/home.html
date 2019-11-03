@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load compress %}
 {% load markdown_extras %}
 {% block css_imports %}
 <link href="{% static 'main/css/homepage.css' %}" rel="stylesheet">
@@ -23,8 +24,63 @@
         {% endif %}
       </div>
     </div>
+    <div class="row example-answer" data-aos="fade-in">
+      <div class="col-md-6">
+        <div class="col-md-11 editor-holder-one">
+            <div class="editor_options">
+              <select class="select-css" id="file_drop_down_one">
+                <optgroup label="Question (Not Modifiable)">
+                  <option value="Question Description">Question Description</option>
+                </optgroup>
+                <optgroup label="Stub Files (Modifiable)">
+                  <option value="Stub File">Stub File</option>
+                </optgroup>
+                <optgroup label="API (Not Modifiable)">
+                  <option value="API Description">API Description</option>
+                  <option value="API Methods">API Methods</option>
+                </optgroup>
+                <optgroup label="Example Code (Not Modifiable)">
+                  <option value="Example Code File">Example Code File</option>
+                </optgroup>
+                <optgroup label="Allowed Imports (Not Modifiable)">
+                  <option value="Allowed Imports">Allowed Imports</option>
+                </optgroup>
+              </select>
+            </div>
+            <div id="editor_one" class="actual-editor"></div>
+            <textarea name="editor_one"></textarea>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="col-md-11 editor-holder-two">
+            <div class="editor_options">
+              <select class="select-css" id="file_drop_down_two">
+                <optgroup label="Question (Not Modifiable)">
+                  <option value="Question Description">Question Description</option>
+                </optgroup>
+                <optgroup label="Stub Files (Modifiable)">
+                  <option value="Stub File">Stub File</option>
+                </optgroup>
+                <optgroup label="API (Not Modifiable)">
+                  <option value="API Description">API Description</option>
+                  <option value="API Methods">API Methods</option>
+                </optgroup>
+                <optgroup label="Example Code (Not Modifiable)">
+                  <option value="Example Code File">Example Code File</option>
+                </optgroup>
+                <optgroup label="Allowed Imports (Not Modifiable)">
+                  <option value="Allowed Imports">Allowed Imports</option>
+                </optgroup>
+              </select>
+              </div>
+            <div id="editor_two" class="actual-editor"></div>
+            <textarea name="editor_two"></textarea>
+        </div>
+      </div>
+    </div>
     {% if questions|length > 0 %}
     <div class="open-questions" data-aos="fade-in">
+        <h2 class="open-questions-title">Explore more questions...</h2><br />
         <div class="row">
             {% for question in questions %}
           <div class="col-lg-3 mb-3">
@@ -43,8 +99,154 @@
     </div>
     {% endif %}
     </div>
+    <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM="
+  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-language_tools.js" integrity="sha256-5GsAp93HE/XYlhrUPMw4VBAoawG9n3c7+DbQE4tRwW0=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-      AOS.init();
-    </script>
+    {% compress js inline %}
+      <script>
+        AOS.init();
+
+        // editor script
+        // functions
+        function textarea_edit(name) {
+        var editor = ace.edit(name);
+        editor.setTheme("ace/theme/textmate");
+        editor.session.setMode("ace/mode/python");
+        editor.setOptions({
+            "showPrintMargin": !1,
+            fontSize: "13pt",
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true
+        });
+        var textarea = $('textarea[name="' + name + '"]').hide();
+        textarea.val(editor.getSession().getValue());
+        return editor
+        }
+        
+        function setUpNameToBody(name_to_body) {
+          name_to_body["Question Description"] = `<h2> Welcome to Encompass Interviews.</h2> <br />
+          We allow you to incorporate your existing code, declare APIs, create example code snippets, 
+          specify libraries, and write tests to create programming challenges that cannot be created anywhere else online.
+          <br /> This question will give you a better idea of what Encompass Interviews can offer.`;
+          name_to_body["Stub File"] = `import your_code_library\n
+def tell_them_what_encompass_is_all_about():
+  description = '''Write questions which directly include your 
+  code bases and have the interviewer interact with them 
+  when answering questions. Have the user fill out as many
+  stub files like this as you would like. 
+  Customize the question to your liking.'''
+  message = your_code_library.yourMethod(description)
+#TODO Add more methods here.
+          `;
+          name_to_body["API Description"] = `Because Encompass won't allow the user to see your code base, describe 
+          what the user can interact with in this API description!`;
+          name_to_body["API Methods"] = '<code>yourMethod(message)</code>: Sets the message attribute of the class. One argument: message (String). Returns a string';
+          name_to_body["Example Code"] = `# Give the user examples of how your code is used\nunique_function_return = your_code_library.UniqueMethod(342, "yes")`;
+          name_to_body["Allowed Imports"] = `Allowed Imports:<br />
+          numpy<br />pandas<br />scipy<br /><br />Imports Not Allowed:<br />csv<br />os<br />logging`;
+        }
+
+        // calling of functions
+        var code_editor_two = textarea_edit("editor_two");
+        var code_editor_one = textarea_edit("editor_one");
+        var name_to_body = {};
+        setUpNameToBody(name_to_body);
+        $('#file_drop_down_one').change(function() {
+          var selected = $(':selected', this);
+          var opt_group = selected.parent().attr('label');
+          if (opt_group === "Question (Not Modifiable)") {
+            if (code_editor_one !== null) {
+                code_editor_one.destroy()
+            }
+            $("#editor_one").html(name_to_body["Question Description"])
+          } else if (opt_group === "Allowed Imports (Not Modifiable)") {
+              if (code_editor_one !== null) {
+                  code_editor_one.destroy()
+              }
+              $("#editor_one").html(name_to_body["Allowed Imports"])
+          } else if (opt_group === "Stub Files (Modifiable)") {
+              if (code_editor_one !== null) {
+                  code_editor_one.destroy()
+              }
+              $("#editor_one").html('')
+              code_editor_one = textarea_edit("editor_one");
+              code_editor_one.setReadOnly(0);
+              code_editor_one.setValue(name_to_body["Stub File"].toString(), -1)
+          } else if (opt_group === "API (Not Modifiable)") {
+              if (selected.val() === "API Description") {
+                  if (code_editor_one !== null) {
+                      code_editor_one.destroy()
+                  }
+                  $("#editor_one").html(name_to_body["API Description"])
+              } else if (selected.val() === "API Methods") {
+                  if (code_editor_one !== null) {
+                      code_editor_one.destroy()
+                  }
+                  $("#editor_one").html(name_to_body["API Methods"])
+              }
+          } else if (opt_group === "Example Code (Not Modifiable)") {
+              if (code_editor_one !== null) {
+                  code_editor_one.destroy()
+              }
+              $("#editor_one").html('')
+              code_editor_one = textarea_edit("editor_one");
+              code_editor_one.setReadOnly(1);
+              code_editor_one.setValue(name_to_body["Example Code"].toString(), -1);
+          }
+          });
+
+          $('#file_drop_down_two').change(function() {
+              var selected = $(':selected', this);
+              var opt_group = selected.parent().attr('label');
+              if (opt_group === "Question (Not Modifiable)") {
+              if (code_editor_two !== null) {
+                  code_editor_two.destroy()
+              }
+              $("#editor_two").html(name_to_body["Question Description"])
+              } else if (opt_group === "Allowed Imports (Not Modifiable)") {
+                  if (code_editor_two !== null) {
+                      code_editor_two.destroy()
+                  }
+                  $("#editor_two").html(name_to_body["Allowed Imports"])
+              } else if (opt_group === "Stub Files (Modifiable)") {
+                  if (code_editor_two !== null) {
+                      code_editor_two.destroy()
+                  }
+                  $("#editor_two").html('')
+                  code_editor_two = textarea_edit("editor_two");
+                  code_editor_two.setReadOnly(0);
+                  code_editor_two.setValue(name_to_body["Stub File"].toString(), -1)
+              } else if (opt_group === "API (Not Modifiable)") {
+                  if (selected.val() === "API Description") {
+                      if (code_editor_two !== null) {
+                          code_editor_two.destroy()
+                      }
+                      $("#editor_two").html(name_to_body["API Description"])
+                  } else if (selected.val() === "API Methods") {
+                      if (code_editor_two !== null) {
+                          code_editor_two.destroy()
+                      }
+                      $("#editor_two").html(name_to_body["API Methods"])
+                  }
+              } else if (opt_group === "Example Code (Not Modifiable)") {
+                  if (code_editor_two !== null) {
+                      code_editor_two.destroy()
+                  }
+                  $("#editor_two").html('')
+                  code_editor_two = textarea_edit("editor_two");
+                  code_editor_two.setReadOnly(1);
+                  code_editor_two.setValue(name_to_body["Example Code"].toString(), -1);
+              }
+          });
+
+          // set init bodies
+          $("#editor_one").html(name_to_body["Question Description"]);
+          $('#file_drop_down_two').val("Stub File");
+          code_editor_two = textarea_edit("editor_two");
+          code_editor_two.setReadOnly(0);
+          code_editor_two.setValue(name_to_body["Stub File"].toString(), -1)
+
+      </script>
+    {% endcompress %}
 {% endblock %}

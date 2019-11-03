@@ -197,6 +197,7 @@ select {
     height: 70vh; 
     width: 100%;
     border: 3px solid #6c5ce7;
+    padding: 1em;
 }
 
 .test-case-editor {
