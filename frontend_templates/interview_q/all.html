@@ -5,41 +5,38 @@
 {% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top: 70px; max-width: 90vw;">
+<div class="container page-container">
     <div class="row">
         <div class="col-sm-12">
              {% if user.is_authenticated %}
                 {% if user.is_from_company %}
-                <h1 class="page-title">Your Interview Questions:</h1>
-                </section>
-                <div class="container-questions">
-                    <div class="row">
-                        {% for interview_q in interview_questions %}
-                            <div class="col-md-3">
-                                <div class="card mb-3 box-shadow">
-                                <div class="card-body question-box">
-                                    <p class="card-text question-card-title">{{ interview_q.name }}</p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="btn-toolbar">
-                                            <a href="/interview_questions/question/{{interview_q.id}}/send/" class="btn btn-outline-primary question-card-button">Send</a>
-                                            <a href="/interview_questions/question/{{interview_q.id}}/submissions/" class="btn btn-outline-primary question-card-button">View Submissions</a>
-                                            <a href="/interview_questions/question/{{interview_q.id}}/observe_answerers/" class="btn btn-outline-primary question-card-button">Observe Answerers</a>
-                                            <a href="/interview_questions/question/{{interview_q.id}}/edit/" class="btn btn-outline-primary question-card-button">Edit</a>
-                                            <a href="/interview_questions/question/{{interview_q.id}}/try/" class="btn btn-outline-primary question-card-button">Try</a>
-                                            <a href="/interview_questions/question/{{interview_q.id}}/delete/" class="btn btn-outline-primary question-card-button">Delete</a>
-                                        </div>
+                  {% if interview_questions|length > 0 %}
+                    <h1 class="page-title">Your Interview Questions:</h1>
+                    </section>
+                    <div class="container-questions">
+                        <div class="row">
+                            {% for interview_q in interview_questions %}
+                                <div class="col-md-12 centered">
+                                    <div class="question-box">
+                                        <p class="question-card-title">{{ forloop.counter }}. {{ interview_q.name }}:</p>
+                                        <a href="/interview_questions/question/{{interview_q.id}}/send/" class="btn btn-outline-primary question-card-button">Send</a>
+                                        <a href="/interview_questions/question/{{interview_q.id}}/submissions/" class="btn btn-outline-primary question-card-button">View Submissions</a>
+                                        <a href="/interview_questions/question/{{interview_q.id}}/observe_answerers/" class="btn btn-outline-primary question-card-button">Observe Answerers</a>
+                                        <a href="/interview_questions/question/{{interview_q.id}}/try/" class="btn btn-outline-primary question-card-button">Try</a>
+                                        <a href="/interview_questions/question/{{interview_q.id}}/edit/" class="btn btn-outline-primary question-card-button">Edit</a>
+                                        <a href="/interview_questions/question/{{interview_q.id}}/delete/" class="btn btn-outline-primary question-card-button">Delete</a>
+                                        <hr />
                                     </div>
                                 </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                            {% endfor %}
+                        </div>
+                  {% endif %}
                     
                     <div class="create-section">
                         <h2 class="create-section-title">Create a New Interview Question: </h2><br />
                         {% if can_user_make_questions %}
                             {% if can_make_new_questions %}
-                            <a href="/interview_questions/create" class="btn btn-lg btn-outline-primary  create-section-button">Create</a>
+                            <a href="/interview_questions/create" class="btn btn-lg btn-outline-primary create-section-button">Create</a>
                             {% else %}
                             <p class="create-section-text">You have reached the maximum number of questions. You can upgrade your plan <a href="/users/enroll">here</a></p>
                             {% endif %}
