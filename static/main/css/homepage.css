@@ -162,6 +162,14 @@ a:hover {
 
 .open-questions {
   background: rgb(255, 229, 186);
+  background: rgb(255, 229, 186); 
+  background: -moz-linear-gradient(-45deg,  rgb(255, 229, 186) 0%, rgb(253, 220, 167) 50%, rgb(250, 209, 143) 63%, rgb(255, 222, 170) 100%); 
+  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgb(255, 229, 186)), color-stop(50%,rgb(253, 220, 167)), color-stop(63%,rgb(250, 209, 143)), color-stop(100%,rgb(255, 222, 170))); 
+  background: -webkit-linear-gradient(-45deg,  rgb(255, 229, 186) 0%,rgb(253, 220, 167) 50%,rgb(250, 209, 143) 63%,rgb(255, 222, 170) 100%); 
+  background: -o-linear-gradient(-45deg,  rgb(255, 229, 186) 0%,rgb(253, 220, 167) 50%,rgb(250, 209, 143) 63%,rgb(255, 222, 170) 100%); 
+  background: -ms-linear-gradient(-45deg,  rgb(255, 229, 186) 0%,rgb(253, 220, 167) 50%,rgb(250, 209, 143) 63%,rgb(255, 222, 170) 100%); 
+  background: linear-gradient(135deg,  rgb(255, 229, 186) 0%,rgb(253, 220, 167) 50%,rgb(250, 209, 143) 63%,rgb(255, 222, 170) 100%); 
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(255, 229, 186)', endColorstr='rgb(255, 222, 170)',GradientType=1 ); 
 }
 
 .open-questions-title {
@@ -177,10 +185,23 @@ a:hover {
   min-height: 30vh;
 }
 
+@keyframes float {
+	0% {
+		transform: translatey(0px);
+	}
+	50% {
+		transform: translatey(-5px);
+	}
+	100% {
+		transform: translatey(0px);
+	}
+}
+
 .open-question-card {
   width: 23vw;
-  border: 2px solid #000;
+  border: 1px solid #000;
   border-radius: 15px;
+  animation: float 10s ease-in-out infinite;
 }
 
 .question-card-title {
@@ -239,23 +260,25 @@ a:hover {
 /* EDITOR CSS */
 
 .editor-holder-one {
+  margin-top: 19vh;
   float:right; 
 }
 .editor-holder-two {
+  margin-top: 19vh;
   float:left; 
 }
 
 .actual-editor {
-  height: 40vh; 
+  height: 60vh; 
   width: 100%;
   border: 1px solid #6c5ce7;
   padding: 1em;
 }
 
-.example-answer {
-  padding-top: 10vh;
-  padding-bottom: 10vh;
-  background-color: rgb(199, 192, 245);
+.example-answer-section {
+  height: 100vh;
+  background-image: url(/static/images/example_background.png);
+  background-repeat: repeat
 }
 
 .file-name {
@@ -264,7 +287,7 @@ a:hover {
 }
 
 .select-css {
-	font-size: 1.2em;
+	font-size: 1.3em;
 	font-family: sans-serif;
 	font-weight: 700;
 	line-height: 1.3;
@@ -295,8 +318,8 @@ a:hover {
 @media only screen and (max-width: 600px) {
   .open-question-card {
     width: 45vw;
-    border: 2px solid #6c5ce7;
-    border-radius: 15px
+    border: 1px solid #000;
+    border-radius: 15px;
   }
 
   .about-section {

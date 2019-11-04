@@ -24,7 +24,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="row example-answer" data-aos="fade-in">
+    <div class="row example-answer-section" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
       <div class="col-md-6">
         <div class="col-md-11 editor-holder-one">
             <div class="editor_options">
@@ -79,13 +79,13 @@
       </div>
     </div>
     {% if questions|length > 0 %}
-    <div class="open-questions" data-aos="fade-in">
+    <div class="open-questions" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
         <h2 class="open-questions-title">Explore more questions...</h2><br />
         <div class="row">
             {% for question in questions %}
-          <div class="col-lg-3 mb-3">
+          <div class="col-lg-3 mb-3" data-aos="fade-up" data-aos-duration="2200" data-aos-once="true">
               <div class="open-question-box">
-                  <div class="card open-question-card" >
+                  <div class="card open-question-card">
                     <div class="card-body">
                       <h5 class="card-title question-card-title">{{ question.name }}</h5>
                       <p class="card-text question-card-text">{{ question.description | markdown | striptags| truncatechars:200 | safe}}</p>
@@ -115,7 +115,7 @@
         editor.session.setMode("ace/mode/python");
         editor.setOptions({
             "showPrintMargin": !1,
-            fontSize: "13pt",
+            fontSize: "14pt",
             enableBasicAutocompletion: true,
             enableLiveAutocompletion: true
         });
@@ -131,11 +131,14 @@
           <br /> This question will give you a better idea of what Encompass Interviews can offer.`;
           name_to_body["Stub File"] = `import your_code_library\n
 def tell_them_what_encompass_is_all_about():
-  description = '''Write questions which directly include your 
+  description = '''
+  Write questions which directly include your 
   code bases and have the interviewer interact with them 
   when answering questions. Have the user fill out as many
   stub files like this as you would like. 
-  Customize the question to your liking.'''
+  Customize the question to your liking.
+  '''
+
   message = your_code_library.yourMethod(description)
 #TODO Add more methods here.
           `;
