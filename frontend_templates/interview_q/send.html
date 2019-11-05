@@ -3,57 +3,138 @@
 {% load compress %}
 {% block css_imports %}
 <link href="{% static 'main/css/basic-form.css' %}" rel="stylesheet">
+<style>
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 16vw;
+      height: 3.7vh;
+      margin-top: 1vh;
+    }
+    
+    .switch input {display:none;}
+    
+    .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #FFF;
+    -webkit-transition: .4s;
+    transition: .4s;
+    }
+    
+    .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #000;
+    -webkit-transition: .4s;
+    transition: .4s;
+    }
+    
+    input:checked + .slider {
+    background-color: #FEBC4E;
+    }
+  
+    
+    input:checked + .slider:before {
+    -webkit-transform: translateX(13vw);
+    -ms-transform: translateX(13vw);
+    transform: translateX(13vw);
+    }
+    
+    .on
+    {
+    display: none;
+    }
+    
+    .on
+    {
+    color: #000;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    font-size: 1.1em;
+    font-family: Verdana, sans-serif;
+    }
+
+    .off {
+    color: #000;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    font-size: 1.1em;
+    font-family: Verdana, sans-serif;
+    }
+    
+    input:checked+ .slider .on
+    {display: block;}
+    
+    input:checked + .slider .off
+    {display: none;}
+    
+    .slider.round {
+    border-radius: 34px;
+    }
+    
+    .slider.round:before {
+    border-radius: 50%;}
+</style>
 {% endblock %}
-
-
 {% block content %}
 {% if user.is_authenticated %}
 <center>
-<div style="padding-top: 10vh; max-width: 45vw;">
+<div class="form-body">
     <form class="form-signin" method="post">
       {% csrf_token %}
       <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal page-title">Send {{question.name}}</h1>
-      <label for="email">Interviewee Email address</label>
+      <hr />
       <input type="email" id="email" name="email" class="form-control" placeholder="Interviewee Email address" required autofocus><br />
-      <label for="start_date">Time When User Can Start Question</label>
+      <label for="start_date">Time When Interviewee Can Start Question:</label>
       <input class="form-control" type="datetime-local" name="start_date" id="start_date">
-      <label for="start_time_tz">Timezone:</label>
+      <label for="start_time_tz">Timezone For Interviewee:</label>
       <select class="form-control" id="start_time_tz", name="start_time_tz">
         </select>											
                
       <br />
-
-      Do you wish to have a deadline in which the user should finish the question or a time limit to complete it upon opening the question? <br />
-      <div class="onoffswitch">
-          <input type="checkbox" name="minutes_option" class="onoffswitch-checkbox" id="minutes_option">
-          <label class="onoffswitch-label" for="minutes_option">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-          </label>
-      </div>
+      <p class="enlarged">Do you wish to have a deadline in which the user should finish the question or a time limit to complete it upon opening the question? </p>
+      <label class="switch"><input type="checkbox" name="minutes_option" id="minutes_option">
+        <div class="slider round">
+          <span class="on">Deadline</span>
+          <span class="off">Time Limit</span>
+        </div>
+      </label>
       <br />
 
       <div id="expiration_date_div">
-       <label for="start_date">Interview Expiration Date (Same timezone as above)</label>
+       <label for="start_date">Interview Expiration Date (Assuming same timezone as above):</label>
        <input class="form-control" type="datetime-local" name="expiration_date" id="expiration_date">
       </div>
       <div id="how_many_minutes_div">
-       <label for="how_many_minutes">How Many Minutes Does the User Have?</label>
-       <input class="form-control" type="number" name="how_many_minutes" id="how_many_minutes" min="1"><br />
+       <label for="how_many_minutes">How Many Minutes Does the User Have To Answer The Question?</label>
+       <input class="form-control" type="number" name="how_many_minutes" id="how_many_minutes" min="1" placeholder="60"><br />
       </div>
 
       <br>
-        Allow the API and example files to be previewed before the question start to 
-        allow users to familiarize themselves with the code base?
-        <div class="preview_switch">
-            <input type="checkbox" name="preview_option" class="preview_switch-checkbox" id="preview_option">
-            <label class="preview_switch-label" for="preview_option">
-                <span class="preview_switch-inner"></span>
-                <span class="preview_switch-switch"></span>
-            </label>
-        </div>
-      <br>
+        <p class="enlarged">
+          Allow the API and example files to be previewed before the question start to 
+          allow users to familiarize themselves with the code base?
+        </p>
+        <label class="switch"><input type="checkbox" name="preview_option" id="preview_option">
+          <div class="slider round">
+            <span class="on">Preview</span>
+            <span class="off">No Preview</span>
+          </div>
+        </label>
+      <br/><br/>
       <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Send Interview Question</button>
     </form>
 </div>

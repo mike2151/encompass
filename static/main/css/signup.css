@@ -63,6 +63,7 @@
 .form-body {
     padding-top: 10vh; 
     max-width: 35vw;
+    padding-bottom: 10vh;
 }
 
 @media only screen and (max-width: 900px) {

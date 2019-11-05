@@ -1,5 +1,11 @@
+body {
+    background-image: url(/static/images/example_background.png);
+    background-repeat: repeat
+}
+
 .main-section {
-    padding-top: 70px; 
+    background-color: #FFF;
+    margin-top: 10vh;
     max-width: 90vw;
 }
 

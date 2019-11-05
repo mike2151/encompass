@@ -5,7 +5,9 @@ body {
 label {
     color: #000;
     font-size: 1.4em;
+    margin-top: 3vh;
 }
+
 
 .page-title {
     font-size: 2em;
@@ -24,118 +26,36 @@ label {
     border: 1px solid #6c5ce7;
 }
 
-
-
-.onoffswitch {
-    position: relative; width: 15vw;
-    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
-}
-.onoffswitch-checkbox {
-    display: none;
-}
-.onoffswitch-label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 20px;
-}
-.onoffswitch-inner {
-    display: block; width: 200%; margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
-}
-.onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-    box-sizing: border-box;
-}
-.onoffswitch-inner:before {
-    content: "TIME LIMIT";
-    padding-left: 10px;
-    background-color: #6c5ce7; color: #FFFFFF;
-}
-.onoffswitch-inner:after {
-    content: "EXPIRATION DATE";
-    background-color: #EEEEEE; color: #999999;
-}
-
-.onoffswitch-switch {
-    display: block; width: 18px; margin: 6px;
-    background: #FFFFFF;
-    position: absolute; top: 0; bottom: 0;
-    right: 12vw;
-    border: 2px solid #999999; border-radius: 20px;
-    transition: all 0.3s ease-in 0s; 
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-    margin-left: 0;
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px; 
-}
-
-
-.preview_switch {
-    position: relative; width: 15vw;
-    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
-}
-.preview_switch-checkbox {
-    display: none;
-}
-.preview_switch-label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 20px;
-}
-.preview_switch-inner {
-    display: block; width: 200%; margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
-}
-.preview_switch-inner:before, .preview_switch-inner:after {
-    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-    box-sizing: border-box;
-}
-.preview_switch-inner:before {
-    content: "CAN PREVIEW";
-    padding-left: 10px;
-    background-color: #6c5ce7; color: #FFFFFF;
-}
-.preview_switch-inner:after {
-    content: "CANNOT PREVIEW";
-    background-color: #EEEEEE; color: #999999;
-}
-
-.preview_switch-switch {
-    display: block; width: 18px; margin: 6px;
-    background: #FFFFFF;
-    position: absolute; top: 0; bottom: 0;
-    right: 12vw;
-    border: 2px solid #999999; border-radius: 20px;
-    transition: all 0.3s ease-in 0s; 
-}
-.preview_switch-checkbox:checked + .preview_switch-label .preview_switch-inner {
-    margin-left: 0;
-}
-.preview_switch-checkbox:checked + .preview_switch-label .preview_switch-switch {
-    right: 0px; 
+.form-body {
+    padding-top: 10vh; 
+    padding-bottom: 10vh;
+    max-width: 45vw;
 }
 
 .form-signin {
     background: #C4BFFF;
+    border-radius: 10px;
     padding: 3em;
 }
 
 .btn-primary {
-    color: #6c5ce7;
-    background-color: #FFF;
-    border: 1px solid #6c5ce7;
+    background-color: #FEBC4E;
+    color: #FFF;
+    border: 1px solid #FEBC4E;
 }
 
 .btn-primary:hover {
-    color: #FFF;
-    background-color: #6c5ce7;
-    border: 1px solid #6c5ce7;
+    background-color: #FFF;
+    color: #FEBC4E;
+    border: 1px solid #FEBC4E;
 }
 
 .btn-primary:active:focus {
-    color: #FFF !important;
-    background-color: #6c5ce7 !important;
-    border: 1px solid #6c5ce7 !important;
+    background-color: #FFF !important;
+    color: #FEBC4E !important;
+    border: 1px solid #FEBC4E !important;
+}
+
+.enlarged {
+    font-size: 1.2em;
 }

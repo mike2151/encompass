@@ -1,5 +1,6 @@
 body {
-    background: #FFF;
+  background-image: url(/static/images/example_background.png);
+  background-repeat: repeat;
 }
 
 .question-card-title {
@@ -25,7 +26,11 @@ body {
 }
 
 .main-section {
+    background: #FFF;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
     padding-top: 70px; 
+    padding-bottom: 7vh;
     max-width: 90vw;
 }
 
@@ -40,6 +45,8 @@ body {
     padding-left: 20%;
     padding-right: 20%;
     font-size: 1.2em;
+    margin-top: 2vh;
+    margin-bottom: 3vh;
 }
 
 .question-row-title {
@@ -65,26 +72,26 @@ hr {
     margin-right: auto;
     content: block;
     color: #FFF; 
-    background-color: #6c5ce7;
+    background-color: #FEBC4E;
     border: 1px solid #FFF;
 }
 
 .open-q-btn:hover {
-    color: #6c5ce7;
+    color: #FEBC4E;
     background-color: #FFF;
-    border: 1px solid #6c5ce7;
+    border: 1px solid #FEBC4E;
 }
 
 .open-q-btn:active:focus {
-    color: #6c5ce7 !important;
+    color: #FEBC4E !important;
     background-color: #FFF !important;
-    border: 1px solid #6c5ce7 !important;
+    border: 1px solid #FEBC4E !important;
 }
 
 .open-q-btn:active:focus {
-    color: #6c5ce7 !important;
+    color: #FEBC4E !important;
     background-color: #FFF !important;
-    border: 1px solid #6c5ce7 !important;
+    border: 1px solid #FEBC4E !important;
 }
 
 .centered {
@@ -96,4 +103,8 @@ hr {
 
 .browse-text {
     font-size: 1.2em;
+}
+
+.last-part {
+    margin-top: 12vh;
 }
