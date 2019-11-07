@@ -6,18 +6,18 @@
 <link href="{% static 'interview/creation/main.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<div class="container" style="padding-top: 70px; max-width: 90vw;">
+<div class="container main-container">
         <div class="row">
             <div class="col-sm-12">
                     <div class="py-5 text-center">
                         <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
                         <h2 class="page-title">Edit Interview Question: {{ question.name }}</h2>
                         <p class="page-description">
-                            <b>How it works:</b><br /> During the process of creating a question, you will upload various files. When a user submits their code,
-                            the user's code, your support (code base) files and test files will all be moved in the same directory and the test files
-                            will be ran. You should keep this in mind when writing your code. 
-                            The user will be brought to the results screen with a display of the visible tests they passed. After the user submits, you
-                            will be able to see the user's test results and code submission. 
+                            <b class="bold-text">How it works:</b><br /><br /> When a user submits their code,
+                        the interviewee's code, your support (code base) files and test files will all be moved in the same directory and the test files
+                        will be ran. You should keep this in mind when writing your code. 
+                        The interviewee will be brought to the results screen with a display of the visible tests they passed. After the interviewee submits, you
+                        will be able to see the interviewee's test results and code submission. 
                         </p>
                     </div>
             </div>
@@ -286,7 +286,7 @@
                     </div>
                     <!-- end step -->
                     <br /><br />
-                    <center><button class="btn btn-success create-button" type="submit">Edit Interview Question</button></center>
+                    <center><button class="btn btn-primary create-button" type="submit">Edit Interview Question</button></center>
                 </form>
             </div>
     </div>

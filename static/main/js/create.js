@@ -7,21 +7,22 @@ var add_api_field = function () {
     var name = "api_method_" + curr_method_number.toString();
 
     var textarea = document.createElement("textarea");
-    textarea.className = "form-control";
     textarea.setAttribute("id", name);
     textarea.setAttribute("name", name);
+    textarea.setAttribute("placeholder", "Method Name: description, args, return type");
+    textarea.setAttribute("class", "form-control small-margin-top");
 
-    var label = document.createElement("label");
-    label.innerHTML = "Method:";
-    label.setAttribute("htmlFor", name);
-
-    added.appendChild(label);
-    added.appendChild(document.createElement("br"));
     added.appendChild(textarea);
-    added.appendChild(document.createElement("br"));
     
     curr_method_number = curr_method_number + 1;
 };
+
+var remove_api_field = function() {
+    if (curr_method_number > 2) {
+        document.getElementById("api_method_" + (curr_method_number-1).toString()).remove();
+        curr_method_number = curr_method_number - 1;
+    }
+}
 
 function element_exists(string_id) {
     var element =  document.getElementById(string_id);
@@ -60,7 +61,7 @@ var add_code_file = function (class_name) {
 
         var switch_div = document.createElement("div");
         switch_div.setAttribute("class", "centered");
-        switch_div.innerHTML = 'Code <label class="switch"><input type="checkbox" name="' + class_name + '_switch_' + curr_code_numbers[class_name].toString() +'" id="' + class_name + '_switch_' + curr_code_numbers[class_name].toString() +'"><span class="slider round"></span></label> File';
+        switch_div.innerHTML = 'File <label class="switch"><input type="checkbox" name="' + class_name + '_switch_' + curr_code_numbers[class_name].toString() +'" id="' + class_name + '_switch_' + curr_code_numbers[class_name].toString() +'"><span class="slider round"></span></label> Code';
 
         var file_div = document.createElement("div");
         file_div.setAttribute("class", "centered");
@@ -92,3 +93,119 @@ var remove_code_file = function (class_name) {
         curr_code_numbers[class_name] = curr_code_numbers[class_name] - 1;
     }
 }
+
+function textarea_edit(name) {
+    var editor = ace.edit(name);
+    editor.setTheme("ace/theme/chrome");
+    editor.session.setMode("ace/mode/python");
+    editor.setOptions({
+        "showPrintMargin": !1,
+        fontSize: "12pt",
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: true
+    });
+
+    var textarea = $('textarea[name="' + name + '"]').hide();
+    textarea.val(editor.getSession().getValue());
+    editor.getSession().on('change', function(){
+        textarea.val(editor.getSession().getValue());
+    });
+}    
+
+function switch_code(number, name) {
+    $("#" + name + "_body_name_" + number).hide();
+    $("#" + name + "_body_" + number).hide();
+    $("#" + name + "_switch_" + number).change(function() {
+        if(this.checked) {
+            $("#" + name + "_body_" + number).show();
+            $("#" + name + "_body_name_" + number).show();
+            $("#" + name + "_file_" + number).hide();
+        } else {
+            $("#" + name + "_body_name_" + number).hide();
+            $("#" + name + "_body_" + number).hide();
+            $("#" + name + "_file_" + number).show();
+        }
+    });
+}
+
+$(document).on("keydown", ":input:not(textarea)", function(event) {
+    return event.key != "Enter";
+});
+
+// form library things
+var has_been_created = {};
+has_been_created[2] = false;
+has_been_created[4] = false;
+has_been_created[5] = false;
+has_been_created[6] = false;
+has_been_created[7] = false;
+var form = $("#wizard");
+form.validate({
+    errorPlacement: function errorPlacement(error, element) { element.before(error); },
+    rules: {
+        name: "required",
+        description: "required",
+        // starter
+        starter_file_1: {
+            required: '#starter_body_name_1:blank'
+        },
+        starter_body_name_1: {
+            required: '#starter_file_1:blank'
+        }
+    }
+});
+form.steps({
+    headerTag: "h2",
+    bodyTag: "section",
+    transitionEffect: "slideLeft",
+    autoFocus: true,
+    enableFinishButton: false,
+    onStepChanging: function (event, currentIndex, newIndex)
+    {
+        form.validate().settings.ignore = ":disabled,:hidden";
+        return form.valid();
+    },
+    onFinishing: function (event, currentIndex)
+    {
+        form.validate().settings.ignore = ":disabled";
+        return form.valid();
+    },
+    onStepChanged: function (event, currentIndex, newIndex)
+    {
+        if (currentIndex === 2) {
+            if (!has_been_created[currentIndex]) {
+                textarea_edit("supporting_body_1");
+                switch_code("1", "supporting")
+                has_been_created[currentIndex] = true;
+            }
+        } else if  (currentIndex === 4) {
+            if (!has_been_created[currentIndex]) {
+                textarea_edit("starter_body_1");
+                switch_code("1", "starter");
+                has_been_created[currentIndex] = true;
+            }
+        } else if  (currentIndex === 5) {
+            if (!has_been_created[currentIndex]) {
+                textarea_edit("example_body_1");
+                switch_code("1", "example");
+                has_been_created[currentIndex] = true;
+            }
+        } else if  (currentIndex === 6) {
+            if (!has_been_created[currentIndex]) {
+                textarea_edit("test_body_1");
+                switch_code("1", "test");
+                has_been_created[currentIndex] = true;
+            }
+        } else if  (currentIndex === 7) {
+            if (!has_been_created[currentIndex]) {
+                textarea_edit("solution_body_1");
+                switch_code("1", "solution");
+                has_been_created[currentIndex] = true;
+            }
+        } 
+    }
+});
+
+$('#banned_imports').amsifySuggestags({
+    type :'amsify',
+  });

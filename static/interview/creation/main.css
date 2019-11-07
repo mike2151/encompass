@@ -1,22 +1,24 @@
+
 body {
-  background: #FFF;
+  background-image: url(/static/images/example_background.png);
+  background-repeat: repeat;
 }
 
-input {
-  box-shadow: 0 0 5px #6c5ce7;
+#wizard {
+  padding-bottom: 1vh;
 }
 
-input:focus {
-  box-shadow: 0 0 5px #6c5ce7;
+.main-container {
+  background-color: #FFF;
+  margin-top: 10vh;
+  margin-bottom: 10vh;
+  max-width: 90vw;
+  padding-left: 3vw;
+  padding-right: 3vw;
+  display: flex;
 }
 
-textarea {
-  box-shadow: 0 0 5px #6c5ce7;
-}
 
-textarea:focus {
-  box-shadow: 0 0 5px #6c5ce7;
-}
 
 .checkbox-style {
   box-shadow: none;
@@ -46,7 +48,7 @@ label {
     color: #000;
     padding: .6em;
     margin-top: 2vh;
-    font-size: 1.4em;
+    font-size: 1.25em;
 }
 
 .step-title {
@@ -60,12 +62,26 @@ label {
     font-size: 1.8em;
     padding-left: 1em;
     padding-right: 1em;
+    background-color: #FEBC4E;
+    border: 1px solid #FFF;
+}
+
+.create-button:hover {
+  color: #FEBC4E;
+  background-color: #FFF;
+  border: 1px solid #FEBC4E;
+}
+
+.create-button:active:focus {
+  color: #FEBC4E !important;
+  background-color: #FFF !important;
+  border: 1px solid #FEBC4E !important;
 }
 
 .page-description {
   margin-top: 2vh;
   color: #000;
-  font-size: 1.2em;
+  font-size: 1.3em;
 }
 input[type=checkbox]
 {
@@ -116,11 +132,11 @@ input[type=checkbox]
   }
   
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #FEBC4E;
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #FEBC4E;
   }
   
   input:checked + .slider:before {
@@ -189,7 +205,6 @@ hr {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  color: #6c5ce7;
 }
 
 .code-label {
@@ -198,7 +213,7 @@ hr {
 }
 
 .code-editor {
-  height: 20vh; 
+  height: 35vh; 
   width: 100%; 
   margin-bottom: 1vh;
   border: 2px solid #6c5ce7;
@@ -221,6 +236,15 @@ hr {
 }
 
 .field_description {
+  text-align: left;
   font-size: .6em;
   color: #000;
+}
+
+.bold-text {
+  font-size: 1.4em;
+}
+
+.small-margin-top {
+  margin-top: 1vh;
 }

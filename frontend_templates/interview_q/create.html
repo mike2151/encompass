@@ -3,328 +3,274 @@
 {% load compress %}
 {% block css_imports %}
 <link href="{% static 'interview/creation/main.css' %}" rel="stylesheet">
+<link href="{% static 'interview/creation/steps.css' %}" rel="stylesheet">
+<link href="{% static 'interview/creation/amsify.suggestags.css' %}" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<div class="container" style="padding-top: 70px; max-width: 90vw;">
+<div class="container main-container">
     <div class="row">
         <div class="col-sm-12">
                 <div class="py-5 text-center">
                     <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
-                    <h2 class="page-title">Create Interview Question</h2>
-                    <p class="page-description">
-                        <b>How it works:</b><br /> During the process of creating a question, you will upload various files. When a user submits their code,
-                        the user's code, your support (code base) files and test files will all be moved in the same directory and the test files
-                        will be ran. You should keep this in mind when writing your code. 
-                        The user will be brought to the results screen with a display of the visible tests they passed. After the user submits, you
-                        will be able to see the user's test results and code submission. 
-                    </p>
+                    <h2 class="page-title">Create An Interview Question</h2>
                 </div>
         </div>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div id="form_errors">
-                    {% if error_message %}
-                        Creation Error: {{ error_message }}
-                    {% endif %}
-                </div>
-                <!-- step -->
-                <hr />
-                <div class="row">
-                    <div class="col-md-12">
-                            <h2 class="step-title">Step 1: Basic Information About Your Question:</h2><br />
+        <div id="form_errors">
+                {% if error_message %}
+                    Creation Error: {{ error_message }}
+                {% endif %}
+            </div>
+            <form method="post" enctype="multipart/form-data" id="wizard">
+                <h2 class="step-title">How It Works</h2>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="page-description">
+                                <b class="bold-text">How it works:</b><br /><br /> When a user submits their code,
+                                the interviewee's code, your support (code base) files and test files will all be moved in the same directory and the test files
+                                will be ran. You should keep this in mind when writing your code. 
+                                The interviewee will be brought to the results screen with a display of the visible tests they passed. After the interviewee submits, you
+                                will be able to see the interviewee's test results and code submission. 
+                            </p>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group, step">
-                            <label htmlFor="name">Name of Question (Visible to users)</label>
-                            <input class="form-control" id="name" maxlength="128" name="name" type="text" /><br />
+                </section>
+                <h2 class="step-title">Basic Information</h2>
+                <section>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="step-description">Provide a name and a description (Markdown supported) detailing what the user has to do. 
+                                    Fill out other settings including programming language and network availability.                        
+                            </p><hr />
+                            <div class="form-group, step">
+                                <label htmlFor="name">Name of Question (Visible to users)</label>
+                                <input class="form-control" id="name" maxlength="128" name="name" type="text" /><br />
 
-                            <label htmlFor="description">Description of Question (Visible to users)</label>
-                            <textarea class="form-control" id="description" name="description" rows=11 placeholder="Write your description here. Markdown is supported."></textarea><br/>
+                                <label htmlFor="description">Description of Question (Visible to users)</label>
+                                <textarea class="form-control" id="description" name="description" rows=11 placeholder="Write your description here. Markdown is supported."></textarea><br/>
 
-                            <label for="question_language">Question Language (Visible to users) </label>
-                            <select class="form-control" id="question_language" name="question_language">
-                                <option>Python3.6</option>
-                            </select> <br/>
+                                <label for="question_language">Question Language (Visible to users) </label>
+                                <select class="form-control" id="question_language" name="question_language">
+                                    <option>Python3.6</option>
+                                </select> <br/>
 
-                            <div class="form-check">
-                                <input class="form-check-input checkbox-style" type="checkbox" id="network_enabled" name="network_enabled">
-                                <label class="form-check-label checkbox-label" for="network_enabled">
-                                    Enable Network For This Question? <br /></label>
+                                <div class="form-check">
+                                    <input class="form-check-input checkbox-style" type="checkbox" id="network_enabled" name="network_enabled">
+                                    <label class="form-check-label checkbox-label" for="network_enabled">
+                                        Enable Network For This Question? <br /></label>
+                                </div>
+                                <p class="checkbox-label-description">We normally disable network access to best protect your supporting code.</p>  
+                                <br />
+                                <div class="form-check">
+                                    <input class="form-check-input checkbox-style" type="checkbox" id="allow_stdout" name="allow_stdout">
+                                    <label class="form-check-label checkbox-label" for="allow_stdout">
+                                            Enable The User To Print During User Tests<br /></label>
+                                </div>
+                                <p class="checkbox-label-description">We normally disable this so they cannot try and inspect your library and supporting code. </p>  
+                                    <br/>
                             </div>
-                            <p class="checkbox-label-description">We normally disable network access to best protect your supporting code.</p>  
+                        </div>
+                    </div>
+                </section>
+                <h2 class="step-title">Supporting Code</h2>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                        <p class="step-description">This section is for your code base. Write code that the user can interact with. This code is not seen 
+                                by the user and is used only for compilation.                         
+                        </p><hr />
+                        <label class="code-label">Select Additional Imports For Your Project (Visible to users) <br />
+                            <p class="field_description">Don't see something you need? <a href="mailto: support@encompassinterviews.com">Contact Us</a></p></label><br />
+                            <select class="selectpicker form-control" id="dependencies" name="dependencies" multiple data-live-search="true">
+                                {% for module in available_modules %}
+                                    <option>{{ module }}</option>
+                                {% endfor %}
+                            </select>      
+                            <br />   
                             <br />
-                            <div class="form-check">
-                                <input class="form-check-input checkbox-style" type="checkbox" id="allow_stdout" name="allow_stdout">
-                                <label class="form-check-label checkbox-label" for="allow_stdout">
-                                        Enable The User To Print During User Tests<br /></label>
+                            <label class="code-label" style="text-align: left;">Specify Which Imports Are Not Allowed (Visible to users) <br />
+                            <p class="field_description">List the names of the modules, separated by commas.
+                                <br />We suggest banning the library <code>os</code> so the user cannot snoop around and look at your library.</p></label> <br />
+                            <input type="text" name="banned_imports" id="banned_imports" value="os", class="form-control">    
+                            <div class="form-group, step">
+                            <label class="code-label">Supporting Code/Code Base (Not visible to users)</label> <br />
+                            <div id="supporting_fields">
+                            <div>
+                                <div class="centered">File <label class="switch"><input type="checkbox" name="supporting_switch_1" id="supporting_switch_1"><span class="slider round"></span></label> Code</div>
+                                <div class="centered"><input class="inputfile" type="file" id="supporting_file_1" name="supporting_file_1"></div>
+                                <div><input class="form-control name-of-file" id="supporting_body_name_1" maxlength="128" name="supporting_body_name_1" placeholder="name of file (include extension)"></input></div>
+                                <div id="supporting_body_1" class="code-editor"></div>
+                                <textarea name="supporting_body_1"></textarea>
                             </div>
-                            <p class="checkbox-label-description">We normally disable this so they cannot try and inspect your library and supporting code. </p>  
-                                <br/>
+                            </div>
+                            <hr>
+                            <button type="button" class="btn btn-light" onclick="add_code_file('supporting')">Add File</button>
+                            <button type="button" class="btn btn-light" onclick="remove_code_file('supporting')">Remove File</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <p class="step-description">In this step, provide a name for your question and a description detailing what the user has to do. 
-                               Indicate the programming language of your question along with whether or not you want this question to be viewed and attempted by all users on the site. Markdown is supported.                            
-                        </p>
+                </section>
+                <h2 class="step-title">API</h2>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="step-description">Declare what methods are available to the interviewee when they write their code. For instance, you may have a function that you do not want 
+                                    the interviewee to see the implementation of but still want it to be used in their solution. Outline those along with a general description (markdown supported) of your API.
+                            </p>
+                            <hr />
+                            <div class="form-group, step">
+                                <label htmlFor="api_description">Description of API (Visible to users)</label> <br />
+                                <textarea class="form-control" id="api_description" name="api_description" rows=8 placeholder="Write your API description here. Markdown is supported."></textarea><br/>
+            
+                                <center><label>Methods Shown To The User (Visible to users)</label><hr /></center>
+                                <div id="api_fields">
+                                    <div>
+                                        <textarea class="form-control" id="api_method_1" name="api_method_1" placeholder="Method Name: description, args, return type"></textarea><br />
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light small-margin-top" onclick="add_api_field()">Add Method</button>
+                                <button type="button" class="btn btn-light small-margin-top" onclick="remove_api_field()">Remove Method</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- end step -->
-                <!-- step -->
-                <hr />
-                <div class="row">
-                    <div class="col-md-12">
-                            <h2 class="step-title">Step 2: Write Your Supporting Code</h2><br />
-                    </div>
-                    <div class="col-md-6">
-                    <label class="centered code-label">Select Additional Imports For Your Project (Visible to users) <br />
-                        <p class="field_description">Don't see something you need? <a href="mailto: support@encompassinterviews.com">Contact Us</a></p></label><br />
-                        <select class="selectpicker form-control" id="dependencies" name="dependencies" multiple>
-                            {% for module in available_modules %}
-                                <option>{{ module }}</option>
-                            {% endfor %}
-                        </select>      
-                        <br />   
-                        <br />
-                        <label class="centered code-label">Specify Which Imports Are Not Allowed (Visible to users) <br />
-                        <p class="field_description">List the names of the modules, separated by commas.
-                            <br />We suggest banning the library os so the user cannot snoop around and look at your library.</p></label> <br />
-                        <textarea class="form-control" id="banned_imports" name="banned_imports" rows="4" spellcheck="false">os,some_other_python_module_one,some_other_python_module_two</textarea><br />
+                </section>
+                <h2 class="step-title">Starter Code</h2>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="step-description">Detail the names and contents of the files that the user has to submit. For every file that has to be submitted, 
+                                    a starter code file needs to be declared. You can optionally fill in some parts of the file 
+                                    to get the user started. We automatically import 
+                                    all of the supporting code files for each starter file when the user submits or runs test cases. <br />An example is below in the "Code" option of the toggle.
+                            </p>
+                            <hr />
+                            <div class="form-group, step">
+                                <label class="code-label">Starter Code (visible to users)</label> <br />
+                                <div id="starter_fields">
+                                    <div>
+                                        <div class="centered">File <label class="switch"><input type="checkbox" name="starter_switch_1" id="starter_switch_1"><span class="slider round"></span></label> Code</div>
+                                        <div class="centered"><input class="inputfile" type="file" id="starter_file_1" name="starter_file_1"></div>
+                                        <div><input class="form-control name-of-file" id="starter_body_name_1" maxlength="128" name="starter_body_name_1" placeholder="name of file (include extension)"></input></div>                                     
+<div id="starter_body_1" class="code-editor">def example_stub_file_method_the_user_can_implement():
+    pass
 
-                        <div class="form-group, step">
-                        <label class="centered code-label">Supporting Code (Not visible to users)</label> <br />
-                        <div id="supporting_fields">
-                        <div>
-                            <div class="centered">Code<label class="switch"><input type="checkbox" name="supporting_switch_1" id="supporting_switch_1"><span class="slider round"></span></label> File</div>
-                            <div class="centered"><input class="inputfile" type="file" id="supporting_file_1" name="supporting_file_1"></div>
-                            <div><input class="form-control name-of-file" id="supporting_body_name_1" maxlength="128" name="supporting_body_name_1" placeholder="name of file (include extension)"></input></div>
-                            <div id="supporting_body_1" class="code-editor"></div>
-                            <textarea name="supporting_body_1"></textarea>
-                        </div>
-                        </div>
-                        <hr>
-                        <button type="button" class="btn btn-light" onclick="add_code_file('supporting')">Add</button>
-                        <button type="button" class="btn btn-light" onclick="remove_code_file('supporting')">Remove</button>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="step-description">In this step, write the code that, with the user submitted code, will determine if the user has correctly implemented your task. This code is not seen 
-                            by the user and is used for compilation. An example would be if you wanted the user to implement a function for some part of your codebase that the user should not see. 
-                        </p>
-                    </div>
-                </div>
-                <!-- end step -->
-                <!-- step -->
-                <hr />
-                <div class="row">
-                    <div class="col-md-12">
-                            <h2 class="step-title">Step 3: Define Your API</h2><br />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group, step">
-                            <label htmlFor="api_description">Description of API (Visible to users)</label> <br />
-                            <textarea class="form-control" id="api_description" name="api_description" rows=5 placeholder="Write your API description here. Markdown is supported."></textarea><br/>
-        
-                            <center><label>Methods Shown To The User (Visible to users)</label><hr /></center>
-                            <div id="api_fields">
-                                <div>
-                                    <label htmlFor="api_method_1">Method:</label><br/>
-                                    <textarea class="form-control" id="api_method_1" name="api_method_1" ></textarea><br />
+class StubClassThatTheUserCanFillOut:
+    def method_in_stub_class(self):
+        pass</div>
+                                        <textarea name="starter_body_1"></textarea>
+                                    </div>
                                 </div>
+                                <hr/>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('starter')">Add File</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('starter')">Remove File</button>
                             </div>
-                            <button type="button" class="btn btn-light" onclick="add_api_field()">Add</button>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <p class="step-description">In this step, you will declare what methods are available to the user when they submit. For instance, you may have a function that you do not want 
-                            the user to see the implementation of but still want it to be used in their solution. Outline what those functions are here along with a general description of your API.  Markdown is supported.
-                        </p>
-                    </div>
-                </div>
-                <!-- end step -->
-                <!-- step -->
-                <hr />
-                <div class="row">
-                    <div class="col-md-12">
-                            <h2 class="step-title">Step 4: Provide Starter Code</h2><br />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group, step">
-                            <label class="centered code-label">Starter Code (visible to users)</label> <br />
-                            <div id="starter_fields">
-                                <div>
-                                    <div class="centered">Code<label class="switch"><input type="checkbox" name="starter_switch_1" id="starter_switch_1"><span class="slider round"></span></label> File</div>
-                                    <div class="centered"><input class="inputfile" type="file" id="starter_file_1" name="starter_file_1"></div>
-                                    <div><input class="form-control name-of-file" id="starter_body_name_1" maxlength="128" name="starter_body_name_1" placeholder="name of file (include extension)"></input></div>
-                                    <div id="starter_body_1" class="code-editor"></div>
-                                    <textarea name="starter_body_1"></textarea>
+                </section>
+                <h2 class="step-title">Example Code</h2>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="step-description">Provide example code snippets and files. These will not be compiled. These are for the user to view to get
+                                    a better understanding of your question.
+                                </p>
+                                <hr />
+                            <div class="form-group, step">
+                                <label class="code-label">Example Code (visible to users)</label> <br />
+                                <div id="example_fields">
+                                    <div>
+                                        <div class="centered">File <label class="switch"><input type="checkbox" name="example_switch_1" id="example_switch_1"><span class="slider round"></span></label> Code</div>
+                                        <div class="centered"><input class="inputfile" type="file" id="example_file_1" name="example_file_1"></div>
+                                        <div><input class="form-control name-of-file" id="example_body_name_1" maxlength="128" name="example_body_name_1" placeholder="name of file (include extension)"></input></div>
+                                        <div id="example_body_1" class="code-editor">#include any helpful example code here</div>
+                                        <textarea name="example_body_1"></textarea>
+                                    </div>
                                 </div>
+                                <hr/>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('example')">Add File</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('example')">Remove File</button>
                             </div>
-                            <hr/>
-                            <button type="button" class="btn btn-light" onclick="add_code_file('starter')">Add</button>
-                            <button type="button" class="btn btn-light" onclick="remove_code_file('starter')">Remove</button>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <p class="step-description">In this step, you will detail the files that the user has to submit. For every file that has to be submitted, 
-                            a starter code file should be declared. You can just type the name of the file in the name of file field. You can optionally fill in some parts of the file 
-                            to get the user started. We automatically import 
-                            all of the supporting code files for each starter file when the user submits or runs test cases. For example, if one of your support files was called, support.py, then import support would be automatically
-                            added to each starter file. One can access a method in support by typing support.method(). You should communicate this with the user in either comments in the stub files or in API documentation. Telling the user what files and methods they have access to should be done in the API section.
-                        </p>
-                    </div>
-                </div>
-                <!-- end step -->
-                <!-- step -->
-                <hr />
-                <div class="row">
-                    <div class="col-md-12">
-                            <h2 class="step-title">Step 5: Provide Useful Example Code</h2><br />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group, step">
-                            <label class="centered code-label">Example Code (visible to users)</label> <br />
-                            <div id="example_fields">
-                                <div>
-                                    <div class="centered">Code<label class="switch"><input type="checkbox" name="example_switch_1" id="example_switch_1"><span class="slider round"></span></label> File</div>
-                                    <div class="centered"><input class="inputfile" type="file" id="example_file_1" name="example_file_1"></div>
-                                    <div><input class="form-control name-of-file" id="example_body_name_1" maxlength="128" name="example_body_name_1" placeholder="name of file (include extension)"></input></div>
-                                    <div id="example_body_1" class="code-editor"></div>
-                                    <textarea name="example_body_1"></textarea>
-                                </div>
-                            </div>
-                            <hr/>
-                            <button type="button" class="btn btn-light" onclick="add_code_file('example')">Add</button>
-                            <button type="button" class="btn btn-light" onclick="remove_code_file('example')">Remove</button>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="step-description">In this step, you provide example code snippets and files. These will not be compiled. These are for the user to view to get
-                            a better understanding of your question.
-                        </p>
-                    </div>
-                </div>
-                <!-- end step -->
-                <!-- step -->
-                <hr />
-                <div class="row">
-                    <div class="col-md-12">
-                            <h2 class="step-title">Step 6: Provide Test Cases</h2><br />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group, step">
-                            <label class="centered code-label">Test Case Code (Not visible to users)</label> <br />
-                            <div class="centered">Code<label class="switch"><input type="checkbox" name="test_switch_1" id="test_switch_1"><span class="slider round"></span></label> File</div>
-                            <div class="centered"><input class="inputfile" type="file" id="test_file_1" name="test_file_1"></div>
-                            <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="name of file (include extension)"></input></div>
-                            <div id="test_body_1" class="code-editor"></div>
-                            <textarea name="test_body_1"></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="step-description">In this step, you provide test cases. An example is below:
-                            <div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;" id="test_case_example">
-                               <pre style="margin: 0; line-height: 125%"><span style="color: #008000"># this unittest import is needed</span>
-<span style="color: #0000ff">import</span> unittest
-<span style="color: #008000"># replace with your support file name here</span>
-<span style="color: #0000ff">import</span> user_submitted_file
-<span style="color: #008000"># indicate the visibility of your test 
-# to the user with a @visible @not_visible annotation</span>
+                </section>
+                <h2 class="step-title">Test Cases</h2>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                                <p class="step-description">Provide test cases. An example is below in the "Code" option of the toggle.</p>
+                            <div class="form-group, step">
+                                <label class="code-label">Test Case Code (Not visible to users)</label> <br />
+                                <div class="centered">File <label class="switch"><input type="checkbox" name="test_switch_1" id="test_switch_1"><span class="slider round"></span></label> Code</div>
+                                <div class="centered"><input class="inputfile" type="file" id="test_file_1" name="test_file_1"></div>
+                                <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="name of file (include extension)"></input></div>
+                                <div id="test_body_1" class="code-editor">
+<div id="test_body_1" class="code-editor"># this unittest import is needed
+import unittest
+# replace with your support file name here
+import user_submitted_file
+# indicate the visibility of your test 
+# to the user with a @visible @not_visible annotation
 
-<span style="color: #008000"># all test cases should be written in this class</span>
-<span style="color: #008000"># all test methods must begin with the prefix test_</span>
-<span style="color: #0000ff">class</span> <span style="color: #2b91af">TestCases</span>(unittest.TestCase):
+# all test cases should be written in this class
+# all test methods must begin with the prefix test_
+class TestCases(unittest.TestCase):
     @visible
-    <span style="color: #0000ff">def</span> test_user_submitted_file(self):
-        <span style="color: #0000ff">assert</span> user_submitted_file.custom_function() == 5
+    def test_user_submitted_file(self):
+        assert user_submitted_file.custom_function() == 5
 
     @not_visible
-    <span style="color: #0000ff">def</span> test_user_submitted_file_two(self):
-        <span style="color: #0000ff">assert</span> user_submitted_file.custom_function() != 5
-</pre></div>
-                        </p>
-                    </div>
-                </div>
-                <!-- end step -->
-                <!-- step -->
-                <hr />
-                <div class="row">
-                    <div class="col-md-12">
-                            <h2 class="step-title">Step 7: Provide A Solution</h2><br />
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group, step">
-                            <label class="centered code-label">Optional Solution Code (Not visible to users)</label> <br />
-                            <div id="solution_fields">
-                                <div>
-                                    <div class="centered">Code<label class="switch"><input type="checkbox" name="solution_switch_1" id="solution_switch_1"><span class="slider round"></span></label> File</div>
-                                    <div class="centered"><input class="inputfile" type="file" id="solution_file_1" name="solution_file_1"></div>
-                                    <div><input class="form-control name-of-file" id="solution_body_name_1" maxlength="128" name="solution_body_name_1" placeholder="name of file (include extension)"></input></div>
-                                    <div id="solution_body_1" class="code-editor"></div>
-                                    <textarea name="solution_body_1"></textarea>
-                                </div>
+    def test_user_submitted_file_two(self):
+        assert user_submitted_file.custom_function() != 5</div>
+                                <textarea name="test_body_1">
+                                </textarea>
                             </div>
-                            <hr/>
-                            <button type="button" class="btn btn-light" onclick="add_code_file('solution')">Add</button>
-                            <button type="button" class="btn btn-light" onclick="remove_code_file('solution')">Remove</button>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <p class="step-description">In this step, you should provide a solution to ensure the code compiles. The solution files should correspond to the starter files. If you do not provide this, then the only way to validate behavior is to try out the question.
-                            If you submit solution files, we will run your solution and the problem after you create this question to ensure everything is running smoothly. 
-                        </p>
+                </section>
+                <h2 class="step-title">Solution</h2>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="step-description">Provide a solution to ensure the code compiles. The solution files should correspond to the starter files. If you do not provide this, then the only way to validate behavior is to try out the question.
+                                    If you submit solution files, we will run your solution and the problem after you create this question to ensure everything is running smoothly. <br />An example is below in the "Code" option of the toggle.
+                                </p>
+                                <hr />
+                            <div class="form-group, step">
+                                <label class="code-label">Optional Solution Code (Not visible to users)</label> <br />
+                                <div id="solution_fields">
+                                    <div>
+                                        <div class="centered">File <label class="switch"><input type="checkbox" name="solution_switch_1" id="solution_switch_1"><span class="slider round"></span></label> Code</div>
+                                        <div class="centered"><input class="inputfile" type="file" id="solution_file_1" name="solution_file_1"></div>
+                                        <div><input class="form-control name-of-file" id="solution_body_name_1" maxlength="128" name="solution_body_name_1" placeholder="name of file (include extension)"></input></div>
+<div id="solution_body_1" class="code-editor">def example_stub_file_method_the_user_can_implement():
+    # your implementation to the stub file here
+
+class StubClassThatTheUserCanFillOut:
+    def method_in_stub_class(self):
+        # your implementation to the stub file here</div>
+                                        <textarea name="solution_body_1"></textarea>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('solution')">Add File</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('solution')">Remove File</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- end step -->
                 <br /><br />
-                <center><button class="btn btn-success create-button" type="submit">Create Interview Question</button></center>
+                <center><button class="btn btn-primary create-button" type="submit">Create Interview Question</button></center>
+                </section>
             </form>
         </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-steps/1.1.0/jquery.steps.min.js" integrity="sha256-yUWanhHkxj+3ow0qZE6AtzP8lZkwLvPagULL6PnZMz0=" crossorigin="anonymous"></script>
 <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM=" crossorigin="anonymous"></script>    
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-language_tools.js" integrity="sha256-5GsAp93HE/XYlhrUPMw4VBAoawG9n3c7+DbQE4tRwW0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+<script src="{% static 'interview/creation/jquery.amsify.suggestags.js' %}"></script>
 {% compress js inline %}
-<script>
-    function textarea_edit(name) {
-        var editor = ace.edit(name);
-        editor.setTheme("ace/theme/chrome");
-        editor.session.setMode("ace/mode/python");
-
-        var textarea = $('textarea[name="' + name + '"]').hide();
-        textarea.val(editor.getSession().getValue());
-        editor.getSession().on('change', function(){
-            textarea.val(editor.getSession().getValue());
-        });
-    }
-    textarea_edit("supporting_body_1");
-    textarea_edit("starter_body_1");
-    textarea_edit("example_body_1");
-    textarea_edit("test_body_1");
-    textarea_edit("solution_body_1");
-
-    function switch_code(number, name) {
-        $("#" + name + "_file_" + number).hide();
-        $("#" + name + "_switch_" + number).change(function() {
-            if(this.checked) {
-                $("#" + name + "_body_name_" + number).hide();
-                $("#" + name + "_body_" + number).hide();
-                $("#" + name + "_file_" + number).show();
-            } else {
-                $("#" + name + "_body_" + number).show();
-                $("#" + name + "_body_name_" + number).show();
-                $("#" + name + "_file_" + number).hide();
-            }
-        });
-    }
-    switch_code("1", "example");
-    switch_code("1", "supporting");
-    switch_code("1", "starter");
-    switch_code("1", "test");
-    switch_code("1", "solution");
-    
-    $(document).on("keydown", ":input:not(textarea)", function(event) {
-        return event.key != "Enter";
-    });
-</script>
 <script src="{% static 'main/js/create.js' %}"></script>
 {% endcompress %}
 {% endblock %}

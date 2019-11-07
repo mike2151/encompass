@@ -71,7 +71,7 @@ class CreateInterviewView(View):
             name = "supporting"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = SupportCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -108,7 +108,7 @@ class CreateInterviewView(View):
             name = "starter"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = StarterCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -128,7 +128,7 @@ class CreateInterviewView(View):
             name = "example"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = ExampleCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -149,7 +149,7 @@ class CreateInterviewView(View):
             name = "test"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = InterviewTestCase(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -170,7 +170,7 @@ class CreateInterviewView(View):
             name = "solution"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = SolutionCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -382,7 +382,7 @@ class EditQuestionView(View):
             name = "supporting"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = SupportCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -419,7 +419,7 @@ class EditQuestionView(View):
             name = "starter"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = StarterCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -439,7 +439,7 @@ class EditQuestionView(View):
             name = "example"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = ExampleCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -460,7 +460,7 @@ class EditQuestionView(View):
             name = "test"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = InterviewTestCase(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -481,7 +481,7 @@ class EditQuestionView(View):
             name = "solution"
             number = 1
             while self.check_condition(request, name, number):
-                if request.POST.get(name + "_switch_" + str(number), False):
+                if not request.POST.get(name + "_switch_" + str(number), True):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = SolutionCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)

@@ -20,11 +20,13 @@
            <center><a class="image-button" href="/questions/answer">Answer Questions &#8594;</a></center>
           {% endif %}
         {% else %}
-          <center><a class="image-button" href="/users/signup">Sign Up</a></center>
+          <center><a class="image-button" href="/users/signup">Sign Up</a><br />
+          <a href="#demo-section" id="scroll-link"><span class="scroll-button"></span></a>
+        </center>
         {% endif %}
       </div>
     </div>
-    <div class="row example-answer-section" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
+    <div id="demo-section" class="row example-answer-section" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
       <div class="col-md-6">
         <div class="col-md-11 editor-holder-one">
             <div class="editor_options">
@@ -140,8 +142,7 @@ def tell_them_what_encompass_is_all_about():
   '''
 
   message = your_code_library.yourMethod(description)
-#TODO Add more methods here.
-          `;
+#TODO Add more methods here.`;
           name_to_body["API Description"] = `Because Encompass won't allow the user to see your code base, describe 
           what the user can interact with in this API description!`;
           name_to_body["API Methods"] = '<code>yourMethod(message)</code>: Sets the message attribute of the class. One argument: message (String). Returns a string';
@@ -248,7 +249,14 @@ def tell_them_what_encompass_is_all_about():
           $('#file_drop_down_two').val("Stub File");
           code_editor_two = textarea_edit("editor_two");
           code_editor_two.setReadOnly(0);
-          code_editor_two.setValue(name_to_body["Stub File"].toString(), -1)
+          code_editor_two.setValue(name_to_body["Stub File"].toString(), -1);
+
+          $(function() {
+            $('#scroll-link').on('click', function(e) {
+              e.preventDefault();
+              $('html, body').animate({ scrollTop: $($(this).attr('href')).offset().top}, 700, 'linear');
+            });
+          });
 
       </script>
     {% endcompress %}
