@@ -100,7 +100,7 @@
                             <div>
                                 {% for support_code_name in supporting_code_names %}
                                     <div id="div_supporting_code_{{ forloop.counter }}">
-                                        <div class="centered">File <label class="switch"><input type="checkbox" name="supporting_switch_{{ forloop.counter }}" id="supporting_switch_{{ forloop.counter }}" checked disabled><span class="slider round"></span></label> Code</div>
+                                        <div class="centered">File <label class="switch"><input type="checkbox" name="supporting_switch_{{ forloop.counter }}" id="supporting_switch_{{ forloop.counter }}" disabled checked><span class="slider round"></span></label> Code</div>
                                         <div class="centered"><input class="inputfile" type="file" id="supporting_file_{{ forloop.counter }}" name="supporting_file_{{ forloop.counter }}"></div>
                                         <div><input class="form-control name-of-file" id="supporting_body_name_{{ forloop.counter }}" maxlength="128" name="supporting_body_name_{{ forloop.counter }}" placeholder="Name of file" value="{{ support_code_name }}"></input></div>
                                         <div id="supporting_body_{{ forloop.counter }}" class="code-editor">{{ supporting_code_contents|index:forloop.counter0 }}</div>
@@ -110,8 +110,8 @@
                             </div>
                             </div>
                             <hr>
-                            <button type="button" class="btn btn-light-action" onclick="add_code_file('supporting')">Add File</button>
-                            <button type="button" class="btn btn-light-action" onclick="remove_code_file('supporting')">Remove File</button>
+                            <button type="button" class="btn btn-light" onclick="add_code_file('supporting')">Add File</button>
+                            <button type="button" class="btn btn-light" onclick="remove_code_file('supporting')">Remove File</button>
                             </div>
                         </div>
                     </div>
@@ -137,8 +137,8 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                                <button type="button" class="btn btn-light-action small-margin-top" onclick="add_api_field()">Add Method</button>
-                                <button type="button" class="btn btn-light-action small-margin-top" onclick="remove_api_field()">Remove Method</button>
+                                <button type="button" class="btn btn-light small-margin-top" onclick="add_api_field()">Add Method</button>
+                                <button type="button" class="btn btn-light small-margin-top" onclick="remove_api_field()">Remove Method</button>
                             </div>
                         </div>
                     </div>
@@ -167,8 +167,8 @@
                                     {% endfor %}
                                 </div>
                                 <hr/>
-                                <button type="button" class="btn btn-light-action" onclick="add_code_file('starter')">Add File</button>
-                                <button type="button" class="btn btn-light-action" onclick="remove_code_file('starter')">Remove File</button>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('starter')">Add File</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('starter')">Remove File</button>
                             </div>
                         </div>
                     </div>
@@ -195,8 +195,8 @@
                                     {% endfor %}
                                 </div>
                                 <hr/>
-                                <button type="button" class="btn btn-light-action" onclick="add_code_file('example')">Add File</button>
-                                <button type="button" class="btn btn-light-action" onclick="remove_code_file('example')">Remove File</button>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('example')">Add File</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('example')">Remove File</button>
                             </div>
                         </div>
                     </div>
@@ -210,7 +210,7 @@
                                 <label class="code-label">Test Case Code (Not visible to users)</label> <br />
                                 <div class="centered">File <label class="switch"><input type="checkbox" name="test_switch_1" id="test_switch_1" checked disabled><span class="slider round"></span></label> Code</div>
                                 <div class="centered"><input class="inputfile" type="file" id="test_file_1" name="test_file_1"></div>
-                                <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="name of file (include extension)" value="{{ test_case_name }}"></input></div>
+                                <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="name of file (include extension)"></input></div>
                                 <div id="test_body_1" class="code-editor">{{ test_case_code_contents }}</div>
                                 <textarea name="test_body_1">
                                 </textarea>
@@ -230,7 +230,7 @@
                                 <label class="code-label">Optional Solution Code (Not visible to users)</label> <br />
                                 <div id="solution_fields">
                                     {% for solution_code_name in solution_code_names %}
-                                        <div id="div_solution_code_{{ forloop.counter }}">
+                                        <div id="div_solutiion_code_{{ forloop.counter }}">
                                             <div class="centered">File <label class="switch"><input type="checkbox" name="solution_switch_{{ forloop.counter }}" id="solution_switch_{{ forloop.counter }}" checked disabled><span class="slider round"></span></label> Code</div>
                                             <div class="centered"><input class="inputfile" type="file" id="solution_file_{{ forloop.counter }}" name="solution_file_{{ forloop.counter }}"></div>
                                             <div><input class="form-control name-of-file" id="solution_body_name_{{ forloop.counter }}" maxlength="128" name="solution_body_name_{{ forloop.counter }}" placeholder="Name of file" value="{{ solution_code_name }}"></input></div>
@@ -240,8 +240,8 @@
                                     {% endfor %}
                                 </div>
                                 <hr/>
-                                <button type="button" class="btn btn-light-action" onclick="add_code_file('solution')">Add File</button>
-                                <button type="button" class="btn btn-light-action" onclick="remove_code_file('solution')">Remove File</button>
+                                <button type="button" class="btn btn-light" onclick="add_code_file('solution')">Add File</button>
+                                <button type="button" class="btn btn-light" onclick="remove_code_file('solution')">Remove File</button>
                             </div>
                         </div>
                     </div>
@@ -258,30 +258,14 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
 <script src="{% static 'interview/creation/jquery.amsify.suggestags.js' %}"></script>
 <script>
+function textarea_edit(name){var editor=ace.edit(name);editor.setTheme("ace/theme/chrome");editor.session.setMode("ace/mode/python");var textarea=$('textarea[name="'+name+'"]').hide();textarea.val(editor.getSession().getValue());editor.getSession().on('change',function(){textarea.val(editor.getSession().getValue())})}
+function switch_code(number,name){$("#"+name+"_file_"+number).hide();$("#"+name+"_switch_"+number).change(function(){if(this.checked){$("#"+name+"_body_name_"+number).hide();$("#"+name+"_body_"+number).hide();$("#"+name+"_file_"+number).show()}else{$("#"+name+"_body_"+number).show();$("#"+name+"_body_name_"+number).show();$("#"+name+"_file_"+number).hide()}})}
 function populate_array(array,string_name){for(var i=1;i<array.length+1;i++){textarea_edit(string_name+"_body_"+i.toString());switch_code(i.toString(),string_name)}}
-var curr_method_number=get_starting_method_number();var curr_code_numbers={};var add_api_field=function(){var added=document.createElement("div");document.getElementById("api_fields").appendChild(added);var name="api_method_"+curr_method_number.toString();var textarea=document.createElement("textarea");textarea.setAttribute("id",name);textarea.setAttribute("name",name);textarea.setAttribute("placeholder","Method Name: description, args, return type");textarea.setAttribute("class","form-control small-margin-top");added.appendChild(textarea);curr_method_number=curr_method_number+1};var remove_api_field=function(){if(curr_method_number>2){document.getElementById("api_method_"+(curr_method_number-1).toString()).remove();curr_method_number=curr_method_number-1}}
-function element_exists(string_id){var element=document.getElementById(string_id);return(typeof(element)!='undefined'&&element!=null)}
-function get_starting_method_number(class_name){var curr_num=1;var string_name="api_method_"+curr_num.toString();while(element_exists(string_name)){curr_num=curr_num+1;string_name="api_method_"+curr_num.toString()}
-return curr_num}
-function get_starting_num(class_name){var curr_num=1;var string_name=class_name+"_switch_"+curr_num.toString();while(element_exists(string_name)){curr_num=curr_num+1;string_name=class_name+"_switch_"+curr_num.toString()}
-return curr_num}
-var add_code_file=function(class_name){if(!(class_name in curr_code_numbers)){curr_code_numbers[class_name]=get_starting_num(class_name)}
-if(curr_code_numbers[class_name]<10){var added=document.createElement("div");added.setAttribute("id","div_"+class_name+"_code_"+curr_code_numbers[class_name].toString())
-document.getElementById(class_name+"_fields").appendChild(added);var name=class_name+"_body_"+curr_code_numbers[class_name].toString();var textarea=document.createElement("textarea");textarea.setAttribute("name",name);var file_name=document.createElement("div");file_name.innerHTML='<input class="form-control name-of-file" id="'+class_name+'_body_name_'+curr_code_numbers[class_name].toString()+'" maxlength="128" name="'+class_name+'_body_name_'+curr_code_numbers[class_name].toString()+'" placeholder="Name of file"></input>'
-var editor=document.createElement("div");editor.setAttribute("id",name);editor.setAttribute("class","code-editor");var switch_div=document.createElement("div");switch_div.setAttribute("class","centered");switch_div.innerHTML='File <label class="switch"><input type="checkbox" name="'+class_name+'_switch_'+curr_code_numbers[class_name].toString()+'" id="'+class_name+'_switch_'+curr_code_numbers[class_name].toString()+'"><span class="slider round"></span></label> Code';var file_div=document.createElement("div");file_div.setAttribute("class","centered");file_div.innerHTML='<input type="file" id="'+class_name+'_file_'+curr_code_numbers[class_name].toString()+'" name="'+class_name+'_file_'+curr_code_numbers[class_name].toString()+'"></input>';added.appendChild(document.createElement("center"));added.appendChild(switch_div);added.appendChild(document.createElement("center"));added.appendChild(file_div);added.appendChild(file_name);added.appendChild(editor);added.appendChild(document.createElement("br"));added.appendChild(textarea);added.appendChild(document.createElement("br"));textarea_edit(name);switch_code(curr_code_numbers[class_name].toString(),class_name);curr_code_numbers[class_name]=curr_code_numbers[class_name]+1}}
-var remove_code_file=function(class_name){if(!(class_name in curr_code_numbers)){curr_code_numbers[class_name]=get_starting_num(class_name)}
-if(curr_code_numbers[class_name]>2){document.getElementById("div_"+class_name+"_code_"+(curr_code_numbers[class_name]-1).toString()).remove();curr_code_numbers[class_name]=curr_code_numbers[class_name]-1}}
-function textarea_edit(name){var editor=ace.edit(name);editor.setTheme("ace/theme/chrome");editor.session.setMode("ace/mode/python");editor.setOptions({"showPrintMargin":!1,fontSize:"12pt",enableBasicAutocompletion:!0,enableLiveAutocompletion:!0});var textarea=$('textarea[name="'+name+'"]').hide();textarea.val(editor.getSession().getValue());editor.getSession().on('change',function(){textarea.val(editor.getSession().getValue())})}
-function switch_code(number,name){if($("#"+name+"_switch_"+number).is(':checked')){$("#"+name+"_body_"+number).show();$("#"+name+"_body_name_"+number).show();$("#"+name+"_file_"+number).hide()}else{$("#"+name+"_body_name_"+number).hide();$("#"+name+"_body_"+number).hide();$("#"+name+"_file_"+number).show()}
-$("#"+name+"_switch_"+number).change(function(){if(this.checked){$("#"+name+"_body_"+number).show();$("#"+name+"_body_name_"+number).show();$("#"+name+"_file_"+number).hide()}else{$("#"+name+"_body_name_"+number).hide();$("#"+name+"_body_"+number).hide();$("#"+name+"_file_"+number).show()}})}
-$(document).on("keydown",":input:not(textarea)",function(event){return event.key!="Enter"});var has_been_created={};has_been_created[2]=!1;has_been_created[4]=!1;has_been_created[5]=!1;has_been_created[6]=!1;has_been_created[7]=!1;var form=$("#wizard");form.validate({errorPlacement:function errorPlacement(error,element){element.before(error)},rules:{name:"required",description:"required",starter_file_1:{required:'#starter_body_name_1:blank'},starter_body_name_1:{required:'#starter_file_1:blank'}}});form.steps({headerTag:"h2",bodyTag:"section",transitionEffect:"slideLeft",autoFocus:!0,enableFinishButton:!1,onStepChanging:function(event,currentIndex,newIndex)
-{form.validate().settings.ignore=":disabled,:hidden";return form.valid()},onFinishing:function(event,currentIndex)
-{form.validate().settings.ignore=":disabled";return form.valid()},onStepChanged:function(event,currentIndex,newIndex)
-{if(currentIndex===2){if(!has_been_created[currentIndex]){if(element_exists("supporting_body_1")){textarea_edit("supporting_body_1");switch_code("1","supporting")}
-has_been_created[currentIndex]=!0}}else if(currentIndex===4){if(!has_been_created[currentIndex]){if(element_exists("starter_body_1")){textarea_edit("starter_body_1");switch_code("1","starter")}
-has_been_created[currentIndex]=!0}}else if(currentIndex===5){if(!has_been_created[currentIndex]){if(element_exists("example_body_1")){textarea_edit("example_body_1");switch_code("1","example")}
-has_been_created[currentIndex]=!0}}else if(currentIndex===6){if(!has_been_created[currentIndex]){if(element_exists("test_body_1")){textarea_edit("test_body_1");switch_code("1","test")}
-has_been_created[currentIndex]=!0}}else if(currentIndex===7){if(!has_been_created[currentIndex]){if(element_exists("solution_body_1")){textarea_edit("solution_body_1");switch_code("1","solution")}
-has_been_created[currentIndex]=!0}}}});$('#banned_imports').amsifySuggestags({type:'amsify',});var code_names={{supporting_code_names|safe}};populate_array(code_names,"supporting");code_names={{starter_code_names|safe}};populate_array(code_names,"starter");code_names={{example_code_names|safe}};populate_array(code_names,"example");code_names={{solution_code_names|safe}};populate_array(code_names,"solution");textarea_edit("test_body_1");switch_code("1","test");$(document).on("keydown",":input:not(textarea)",function(event){return event.key!="Enter"});var all_deps="{{already_used_dep | safe}}";var dep_array=all_deps.split(",");$("#dependencies").val(dep_array)
-</script>
+var code_names={{supporting_code_names|safe}};populate_array(code_names,"supporting");code_names={{starter_code_names|safe}};populate_array(code_names,"starter");code_names={{example_code_names|safe}};populate_array(code_names,"example");code_names={{solution_code_names|safe}};populate_array(code_names,"solution");textarea_edit("test_body_1");switch_code("1","test");
+$(document).on("keydown", ":input:not(textarea)", function(event) {return event.key != "Enter";});var all_deps = "{{already_used_dep | safe}}"; var dep_array = all_deps.split(",");$("#dependencies").val(dep_array);
+    </script>
+        
+    {% compress js %}
+    <script src="{% static 'main/js/create.js' %}"></script>
+    {% endcompress %}
 {% endblock %}

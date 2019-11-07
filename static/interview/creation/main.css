@@ -219,18 +219,18 @@ hr {
   border: 2px solid #6c5ce7;
 }
 
-.btn-light {
+.btn-light-action {
   background-color: #FFF; 
   color: #6c5ce7;
   border: 1px solid #6c5ce7;
 }
 
-.btn-light:hover {
+.btn-light-action:hover {
   background-color: #6c5ce7;
   color: #FFF;
 }
 
-.btn-light:active:focus {
+.btn-light-action:active:focus {
   background-color: #6c5ce7 !important;
   color: #FFF !important;
 }
@@ -247,4 +247,8 @@ hr {
 
 .small-margin-top {
   margin-top: 1vh;
+}
+
+.btn-light {
+  background-color: #FFF; 
 }
