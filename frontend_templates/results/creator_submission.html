@@ -10,24 +10,27 @@
     <div class="row">
         <div class="col-sm-12">
              {% if user.is_authenticated %}
-                <h1 class="page-title">Submission Result For : {{ question.name }}</h1>
+                <h1 class="page-title">Submission Result For {{ question.name }}</h1>
                 <div class="container">
                     <div class="row">
                         {% for test_name, test_p in test_passed.items %}
-                            <div class="col-md-4">
-                                <div class="card mb-4 box-shadow">
-                                <div class="card-body">
-                                    <p class="card-text question-card-title">{{ test_name }}</p>
-                                    {% if test_p %}
-                                        <p class="passed">Passed</p>
-                                    {% else %}
-                                        <p class="failed">Failed</p>
+                           <div class="col-md-4">
+                                {% if test_p %}
+                                <div class="card mb-4 box-shadow result-card-passed">
+                                    <div class="card-body">
+                                        <p class="card-text question-card-title">Passed: {{ test_name }}</p>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <div class="card mb-4 box-shadow result-card-failed">
+                                    <div class="card-body">
+                                        <p class="card-text question-card-title">Failed: {{ test_name }}</p>
                                         {% if test_results|get_item_len:test_name > 0 %}
                                             <p class="output"><br /> {{ test_results|get_item:test_name }}</p>
                                         {% endif %}
-                                    {% endif %}
+                                    </div>
                                 </div>
-                                </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
                        
@@ -38,7 +41,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <a href="/interview_questions" class="go-back-button">Go Back To Questions</a>
+                        <a href="/interview_questions" class="btn btn-lg btn-outline-primary go-back-button">Go Back To Questions</a>
                     </div>
                     </div>
                 </div>

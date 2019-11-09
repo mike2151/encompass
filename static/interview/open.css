@@ -1,26 +1,35 @@
 body {
     background-image: url(/static/images/example_background.png);
-    background-repeat: repeat
+    background-repeat: repeat;
 }
 
 .main-section {
     background-color: #FFF;
     margin-top: 10vh;
     max-width: 90vw;
+    border-radius: 10px;
 }
 
 .page-title {
-    color: #6c5ce7;
+    color: #000;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
     padding-top: 3vh;
-    padding-bottom: 3vh;
+    padding-bottom: 1vh;
     padding-left: 4vw;
     padding-right: 4vw;
+    border-bottom: 2px solid #FEBC4E;
+    max-width: 75%;
+    margin-bottom: 2vh;
 }
 
 .pages {
     margin-left: auto;
     margin-right: auto;
+}
+
+table {
+    margin-left: 2vw;
+    margin-right: 2vw;
 }

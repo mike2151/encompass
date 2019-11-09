@@ -11,27 +11,33 @@
              {% if user.is_authenticated %}
                 {% if user.is_from_company %}
                   {% if interview_questions|length > 0 %}
-                    <h1 class="page-title">Your Interview Questions:</h1>
+                    {% if success_message %}
+                        <div class="alert alert-success alert-dismissible fade show alert-message" role="alert">
+                            <p style="text-align: center;">{{success_message}}</p>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                        </div>
+                    {% endif %}
+                    <h1 class="page-title">Your Interview Questions</h1>
                     </section>
                     <div class="container-questions">
-                        <div class="row">
+                        <div class="row">    
+                            <table id="questions">
                             {% for interview_q in interview_questions %}
-                                <div class="col-md-12 centered">
-                                    <div class="question-box">
-                                        <hr />
-                                        <p class="question-card-title">{{ forloop.counter }}. {{ interview_q.name }}:</p>
+                                <tr>
+                                    <td class="question-card-title">{{ forloop.counter }}. {{ interview_q.name }}</p></td>
+                                    <td>
                                         <a href="/interview_questions/question/{{interview_q.id}}/send/" class="btn btn-outline-primary question-card-button">Send</a>
                                         <a href="/interview_questions/question/{{interview_q.id}}/submissions/" class="btn btn-outline-primary question-card-button">View Submissions</a>
                                         <a href="/interview_questions/question/{{interview_q.id}}/observe_answerers/" class="btn btn-outline-primary question-card-button">Observe Answerers</a>
                                         <a href="/interview_questions/question/{{interview_q.id}}/try/" class="btn btn-outline-primary question-card-button">Try</a>
                                         <a href="/interview_questions/question/{{interview_q.id}}/edit/" class="btn btn-outline-primary question-card-button">Edit</a>
                                         <a href="/interview_questions/question/{{interview_q.id}}/delete/" class="btn btn-outline-primary question-card-button">Delete</a>
-                                        {% if forloop.counter == interview_questions|length %}
-                                        <hr />
-                                        {% endif %}
-                                    </div>
-                                </div>
+                                    </td>
+                                </tr>   
                             {% endfor %}
+                            </table>
                         </div>
                   {% endif %}
                     
@@ -46,7 +52,7 @@
                             <p class="create-section-text">You must have creator status to create a question. You can become a creator <a href="/users/enroll">here</a></p><br />
                         {% endif %}
                     </div>
-                 </div>
+                    </div>
                 {% else %}
                     {% include "is_interviewee_account.html" %}
                 {% endif %}

@@ -85,7 +85,7 @@
         <h2 class="open-questions-title">Explore more questions...</h2><br />
         <div class="row">
             {% for question in questions %}
-          <div class="col-lg-3 mb-3" data-aos="fade-up" data-aos-duration="2200" data-aos-once="true">
+          <div class="col-lg-3 mb-3" data-aos="fade-up" data-aos-duration="1500" data-aos-once="true">
               <div class="open-question-box">
                   <div class="card open-question-card">
                     <div class="card-body">
@@ -136,17 +136,17 @@ def tell_them_what_encompass_is_all_about():
   description = '''
   Write questions which directly include your 
   code bases and have the interviewer interact with them 
-  when answering questions. Have the user fill out as many
+  when answering questions. Have the interviewee fill out as many
   stub files like this as you would like. 
   Customize the question to your liking.
   '''
 
   message = your_code_library.yourMethod(description)
-#TODO Add more methods here.`;
-          name_to_body["API Description"] = `Because Encompass won't allow the user to see your code base, describe 
-          what the user can interact with in this API description!`;
+#TODO: Add more methods here.`;
+          name_to_body["API Description"] = `Because Encompass offers tools to prevent the interviewee from seeing your code base, describe 
+          what the interviewee can interact with in this API description!`;
           name_to_body["API Methods"] = '<code>yourMethod(message)</code>: Sets the message attribute of the class. One argument: message (String). Returns a string';
-          name_to_body["Example Code"] = `# Give the user examples of how your code is used\nunique_function_return = your_code_library.UniqueMethod(342, "yes")`;
+          name_to_body["Example Code"] = `# Give the interviewee examples of how your code is used\nunique_function_return = your_code_library.UniqueMethod(342, "yes")`;
           name_to_body["Allowed Imports"] = `Allowed Imports:<br />
           numpy<br />pandas<br />scipy<br /><br />Imports Not Allowed:<br />csv<br />os<br />logging`;
         }

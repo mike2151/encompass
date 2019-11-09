@@ -13,7 +13,7 @@
                     <h1 class="page-title">Answer Interview Questions</h1><br />
                     <p class="page-description">On this page, you have the opportunity to interact with interview questions sent to you.
                         You can preview certain questions before they are available to you. This will allow you to look at the question, API description, and
-                        example code.
+                        example code but you will not be able to answer the question.
                     </p>
                 </div>
                 <div class="row">
@@ -26,6 +26,7 @@
                             <div class="card-body question-card">
                                 <center>
                                 <p class="card-text question-card-title">{{ question.base_question.name }}</p>
+                                <p class="sent-by">Sent by: {{question.creator_email}}</p>
                                 <p>Start Time: {{ question.start_time_date_str }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <a href="/questions/answer/{{question.id}}" class="btn btn-outline-primary answer-btn">Preview</a>
@@ -70,6 +71,7 @@
                 </div>
                 <div class="row last-part">
                     <div class="col-md-12 centered">
+                        <hr />
                      <p class="browse-text">Want to answer more questions?</p>
                      <a href="/interview_questions/open" class="btn btn-primary btn-lg open-q-btn">Browse Open Questions</a>
                     </div>

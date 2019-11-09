@@ -322,8 +322,6 @@ width: 100%;
 }
 
 #code_saved_status {
-    color: #6c5ce7;
-    font-size: 1.3em;
 }
 
 .warning {
@@ -336,4 +334,8 @@ width: 100%;
     font-size: .7em;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.bottom-padding {
+    padding-bottom: 3vh;
 }

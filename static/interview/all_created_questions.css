@@ -12,6 +12,7 @@ hr { display: block; height: 1px;
     min-height: 90vh;
     margin-top: 10vh;
     background: #FFF;
+    border-radius: 10px;
 }
 
 .question-card-title {
@@ -38,11 +39,6 @@ hr { display: block; height: 1px;
     color: #FFF !important;
     background-color: #6c5ce7 !important;
     border: 1px solid #6c5ce7 !important;
-}
-
-.question-box {
-    border: none;
-    display:inline-block;
 }
 
 .centered {
@@ -98,11 +94,11 @@ hr { display: block; height: 1px;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    border: 2px solid white;
-    padding-top: 3vh;
-    padding-bottom: 3vh;
-    padding-left: 4vw;
-    padding-right: 4vw;
+    border-bottom: 2px solid #FEBC4E;
+    padding-bottom: 1vh;
+    margin-top: 2vh;
+    margin-bottom: 5vh;
+    max-width: 35%;
 }
 
 .create-section-text {
@@ -115,3 +111,23 @@ hr { display: block; height: 1px;
 .enlarged-text {
     font-size: 1.4em;
 }
+
+
+#questions {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #6c5ce7;
+  }
+
+  
+  #questions td{
+    padding: .7em;
+  }
+  
+.alert-message {
+    margin-top: 2vh;
+}
+
+  #questions tr:nth-child(even){background-color: #f2f2f2;}
+  #questions tr:hover {background-color: #ddd;}

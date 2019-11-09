@@ -4,7 +4,20 @@
 }
 
 .footer-title {
+    border-top:1px solid ;
     color: #FFF;
+    text-align: center;
+    margin-bottom: 0;
+    border-top:1px solid #C8BFF5;
+    max-width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 2vh;
+}
+
+.footer-items {
+    margin-bottom: 1vh;
+    font-size: 1.2em;
     text-align: center;
 }
 
@@ -14,7 +27,7 @@
 }
 
 .footer-item:hover {
-    color: #6c5ce7;
+    color: #C8BFF5;
     text-decoration: underline;
 }
 
@@ -24,4 +37,10 @@
 
 .navbar .navbar-toggler .icon-bar {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(108,92,231, 1.0)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
-  }
+}
+
+.copyright {
+    font-size: .8em;
+    color: #FFF !important;
+    text-align: center;
+}

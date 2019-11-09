@@ -25,6 +25,7 @@ from dateutil import parser
 import pytz
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
 from django.conf import settings
 import os
 
@@ -207,10 +208,14 @@ class HomeInterviewView(View):
             questions = InterviewQuestion.objects.filter(creator=request.user)
             can_user_make_questions = request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
             can_make_new_questions = request.user.num_questions_made < request.user.subscription.get_max_num_questions()
+            success_message = ""
+            if "success_message" in kwargs:
+                success_message = kwargs["success_message"]
             return render(request, self.template_name, {
                 'interview_questions': questions,
                 'can_user_make_questions': can_user_make_questions,
-                'can_make_new_questions': can_make_new_questions
+                'can_make_new_questions': can_make_new_questions,
+                "success_message": success_message
                 })
         else:
             return render(request, "no_auth.html", {})
@@ -569,7 +574,11 @@ class CreateQuestionInstanceView(View):
             expire_date_field = parser.parse(expire_date_field_str + " " + start_time_zone_str)
             question_instance = InterviewQuestionInstance(interviewee=interviewee, interviewee_email=user_email, creator_email = base_question.creator.email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field, start_time_date_str=start_time_date_str, can_preview=can_preview)
             question_instance.save()
-        return HttpResponseRedirect("/interview_questions/")
+        url = reverse("success_all_interview_questions", kwargs={'success_message': "Your question has successfully been sent!"})
+        return HttpResponseRedirect(url)
+        
+
+
 
 class CreateOpenQuestionInstanceView(View):
     def get(self, request,  *args, **kwargs):
@@ -654,8 +663,24 @@ class SubmissionsQuestionView(View):
             if request.user.is_from_company:
                 question = InterviewQuestion.objects.get(pk=kwargs['pk'])
                 if question.creator == request.user:
-                    submissions = SubmissionResult.objects.filter(interview_question=question)
-                    return render(request, self.template_name, {'submissions': submissions, "question": question})
+
+                    num_results_per_page = 30
+
+                    page = int(request.GET.get('page', 1))
+                    paginator = Paginator(SubmissionResult.objects.filter(interview_question=question), num_results_per_page)
+                    start_count = (page- 1) * num_results_per_page
+
+                    try:
+                        submissions = paginator.page(page)
+                    except PageNotAnInteger:
+                        submissions = paginator.page(1)
+                    except EmptyPage:
+                        submissions = paginator.page(paginator.num_pages)
+
+                    return render(request, self.template_name, { 
+                        'submissions': submissions,
+                         "question": question
+                        })
             else:
                 return render(request, "is_interviewee_account.html", {})
         return render(request, "no_auth.html", {})

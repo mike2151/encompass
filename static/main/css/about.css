@@ -1,6 +1,8 @@
 body {
-    background: #FFF;
-}
+    background-image: url(/static/images/example_background.png);
+    background-repeat: repeat
+  }
+  
 
 hr { 
     background-color: white; 
@@ -12,19 +14,31 @@ hr {
     padding-top: 10vh;
 }
 
+.main-container {
+    background: #FFF;
+    border-radius: 10px;
+    min-width: 80vw;
+    margin-bottom: 5vh;
+    border-radius: 10px;
+}
+
 .section-header {
     color: #6c5ce7;
     font-size: 3em;
-    letter-spacing: .1em;
+    border-bottom: solid 2px #6c5ce7;
+    max-width: 35%;
+    text-align: center;
 }
 
 .mission-header {
+    margin-top: 4vh;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
     color: #6c5ce7;
     font-size: 4em;
-    letter-spacing: .1em;
+    border-bottom: solid 2px #6c5ce7;
+    max-width: 35%;
 }
 
 .mission-body {
@@ -72,6 +86,7 @@ hr {
     margin-right: auto;
     text-align: center;
     content: block;
+    margin-bottom: 7vh;
 }
 
 .centered {
@@ -80,3 +95,35 @@ hr {
     margin-left: auto;
     margin-right: auto;
 } 
+
+.mission-section {
+    background: #eeeeee;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    padding-bottom: 10vh;
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        0 calc(100% - 10vh)
+  );
+}
+
+.team-section {
+    background: #eeeeee;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    padding-bottom: 15vh;
+    padding-top: 15vh;
+    clip-path: polygon(
+        0 0,
+        100% 15%,
+        100% 100%,
+        0 calc(100% - 10vh)
+  );
+}
+.about-section {
+    background: #ffffff;
+    padding-left: 5vw;
+    padding-right: 5vw;
+}

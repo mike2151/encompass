@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('create/', views.CreateInterviewView.as_view()),
     path('', views.HomeInterviewView.as_view()),
+    path('success/<success_message>/', views.HomeInterviewView.as_view(), name="success_all_interview_questions"),
     path('question/<int:pk>/edit/', views.EditQuestionView.as_view()),
     path('question/<int:pk>/submissions/', views.SubmissionsQuestionView.as_view()),
     path('question/<int:pk>/observe_answerers/', views.ObserveAnswerersView.as_view()),

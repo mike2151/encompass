@@ -161,15 +161,9 @@ a:hover {
 }
 
 .open-questions {
-  background: rgb(255, 229, 186);
-  background: rgb(255, 229, 186); 
-  background: -moz-linear-gradient(-45deg,  rgb(255, 229, 186) 0%, rgb(253, 220, 167) 50%, rgb(250, 209, 143) 63%, rgb(255, 222, 170) 100%); 
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgb(255, 229, 186)), color-stop(50%,rgb(253, 220, 167)), color-stop(63%,rgb(250, 209, 143)), color-stop(100%,rgb(255, 222, 170))); 
-  background: -webkit-linear-gradient(-45deg,  rgb(255, 229, 186) 0%,rgb(253, 220, 167) 50%,rgb(250, 209, 143) 63%,rgb(255, 222, 170) 100%); 
-  background: -o-linear-gradient(-45deg,  rgb(255, 229, 186) 0%,rgb(253, 220, 167) 50%,rgb(250, 209, 143) 63%,rgb(255, 222, 170) 100%); 
-  background: -ms-linear-gradient(-45deg,  rgb(255, 229, 186) 0%,rgb(253, 220, 167) 50%,rgb(250, 209, 143) 63%,rgb(255, 222, 170) 100%); 
-  background: linear-gradient(135deg,  rgb(255, 229, 186) 0%,rgb(253, 220, 167) 50%,rgb(250, 209, 143) 63%,rgb(255, 222, 170) 100%); 
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='rgb(255, 229, 186)', endColorstr='rgb(255, 222, 170)',GradientType=1 ); 
+  background-image: url(/static/images/explore-bg.png);
+  background-repeat: repeat
+  padding-bottom: 3vh;
 }
 
 .open-questions-title {

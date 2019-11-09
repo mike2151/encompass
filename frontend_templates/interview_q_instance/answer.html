@@ -35,6 +35,7 @@
         {% if is_preview %}
         {% else %}
           {% if has_expiration %}
+          <br />
             <span id="remaining_time">Remaining Time:</span> 
           {% endif %}
         {% endif %}
@@ -149,13 +150,22 @@
         </center>
         </div>
       
-      <div class="col-md-12">
+      <div class="col-md-12 bottom-padding">
         <center>
           <button type="submit" name="action" value="submit_code" class="btn btn-success btn-lg centered-button" data-intro="When you are ready, submit your code. Once you submit, you cannot return to the question.">Submit Code</button>
-          <button type="button" name="save_code" id="save_code" class="btn btn-info btn-lg" data-intro="You can always save your code and return to the problem later. Note: your code does not auto save.">Save Code</button><br />
-          <p id="code_saved_status"></p>
-          <p>Note: Once you submit your code, you cannot return back to this question.
-              <br/>Be sure to write test cases below before submitting!</p>
+          <button type="button" name="save_code" id="save_code" class="btn btn-info btn-lg" data-intro="You can always save your code and return to the problem later. Note: your code does not auto save.">Save Code</button><br /><br />
+
+          <div class="alert alert-info" id="code-saved-container">
+            <p id="code_saved_status"></p>
+          </div><br />
+
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <p>Note: Once you submit your code, you cannot return back to this question.</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          
         </center>  
       </div>
       {% endif %}
@@ -538,6 +548,8 @@ $('#run_test_case_button').click(function() {
 });
 $('#save_code').click(function() {
     $("#code_saved_status").html("Saving your code...");
+    $("#code-saved-container").show();
+    $("#code-saved-container").addClass('show');
     $("#test_case_results").html("");
     var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
     var data_to_send = {};
@@ -549,13 +561,19 @@ $('#save_code').click(function() {
         data: data_to_send,
         success: function(data) {
             if (data.success == !0) {
-                $("#code_saved_status").html("Code successfully saved!")
+                $("#code-saved-container").removeClass('show');
+                $("#code_saved_status").html("Code successfully saved!");
+                $("#code-saved-container").addClass('show');
             } else {
-                $("#code_saved_status").html("There was a problem saving your code")
+                $("#code-saved-container").removeClass('show');
+                $("#code_saved_status").html("There was a problem saving your code");
+                $("#code-saved-container").addClass('show');
             }
         },
         error: function(data) {
-            $("#code_saved_status").html("There was a problem saving your code")
+            $("#code-saved-container").removeClass('show');
+            $("#code_saved_status").html("There was a problem saving your code");
+            $("#code-saved-container").addClass('show');
         }
     })
 });
@@ -677,6 +695,7 @@ window.onbeforeunload = function(e) {
 };
 
 window.onload = function() {
+    $("#code-saved-container").hide();
     $("#test_case_loading").hide();
     setUpScreen();
     var is_preview = "{{ is_preview|safe }}";
