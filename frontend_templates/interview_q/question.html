@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-sm-12">
                 <div class="py-5 text-center">
-                    <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
+                    
                     <h2 class="page-title">Edit Interview Question: {{ question.name }}</h2>
                 </div>
         </div>
@@ -282,6 +282,7 @@ has_been_created[currentIndex]=!0}}else if(currentIndex===4){if(!has_been_create
 has_been_created[currentIndex]=!0}}else if(currentIndex===5){if(!has_been_created[currentIndex]){if(element_exists("example_body_1")){textarea_edit("example_body_1");switch_code("1","example")}
 has_been_created[currentIndex]=!0}}else if(currentIndex===6){if(!has_been_created[currentIndex]){if(element_exists("test_body_1")){textarea_edit("test_body_1");switch_code("1","test")}
 has_been_created[currentIndex]=!0}}else if(currentIndex===7){if(!has_been_created[currentIndex]){if(element_exists("solution_body_1")){textarea_edit("solution_body_1");switch_code("1","solution")}
-has_been_created[currentIndex]=!0}}}});$('#banned_imports').amsifySuggestags({type:'amsify',});var code_names={{supporting_code_names|safe}};populate_array(code_names,"supporting");code_names={{starter_code_names|safe}};populate_array(code_names,"starter");code_names={{example_code_names|safe}};populate_array(code_names,"example");code_names={{solution_code_names|safe}};populate_array(code_names,"solution");textarea_edit("test_body_1");switch_code("1","test");$(document).on("keydown",":input:not(textarea)",function(event){return event.key!="Enter"});var all_deps="{{already_used_dep | safe}}";var dep_array=all_deps.split(",");$("#dependencies").val(dep_array)
+has_been_created[currentIndex]=!0}}}});$('#banned_imports').amsifySuggestags({type:'amsify',});var code_names={{supporting_code_names|safe}};populate_array(code_names,"supporting");code_names={{starter_code_names|safe}};populate_array(code_names,"starter");code_names={{example_code_names|safe}};populate_array(code_names,"example");code_names={{solution_code_names|safe}};populate_array(code_names,"solution");textarea_edit("test_body_1");switch_code("1","test");$(document).on("keydown",":input:not(textarea)",function(event){return event.key!="Enter"});var all_deps="{{already_used_dep | safe}}";var dep_array=all_deps.split(",");$("#dependencies").val(dep_array);
+function resize_steps() {var w = parseInt(window.innerWidth);if(w <= 900) {for (var i = 0; i < 8; i++) {$("#wizard-t-" + i.toString()).html((i+1).toString());}}}resize_steps();
 </script>
 {% endblock %}

@@ -339,3 +339,18 @@ width: 100%;
 .bottom-padding {
     padding-bottom: 3vh;
 }
+
+@media only screen and (max-width: 900px) {
+    .top-row-left {
+        max-width: 80vw;
+        text-align: center;
+    }
+
+    .select-css {
+        margin-top: 1vh;
+    }
+
+    .submit-content {
+        max-width: 80vw;
+    }
+}

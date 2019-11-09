@@ -18,15 +18,18 @@ body {
   display: flex;
 }
 
-
-
 .checkbox-style {
   box-shadow: none;
 }
 
 .page-title {
-  color: #6c5ce7;
-  font-size: 3em;
+  border-bottom: 2px solid #FEBC4E;
+  color: #000;
+  font-size: 2.7em;
+  max-width: 50%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 label {
@@ -251,4 +254,10 @@ hr {
 
 .btn-light {
   background-color: #FFF; 
+}
+
+@media only screen and (max-width: 600px) {
+  .page-title {
+    max-width: 73%;
+  }
 }

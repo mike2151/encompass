@@ -3,13 +3,11 @@
 {% block css_imports %}
 <link href="{% static 'main/css/enroll.css' %}" rel="stylesheet">
 {% endblock %}
-
-
 {% block content %}
 <center>
 <div class="main-body">
-      <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">BECOME A CREATOR</h1><br />
+      
+      <h1 class="page-title">BECOME A CREATOR</h1><br />
       {% if message %}
         <div class="alert alert-warning alert-dismissible fade show page-message" role="alert">
                 <p class="warning">{{message}}</p>
@@ -106,7 +104,7 @@
         <h3 class="option-header">Option 2: Coupon/Promo Code:</h3><br />
         <input type="text" id="coupon_code" name="coupon_code" class="form-control" placeholder="Coupon Code"><br />
         <br />
-        <button class="btn btn-lg btn-primary btn-block form-block submit-btn" type="submit">Become a Creator</button>
+        <button class="btn btn-lg btn-primary btn-block form-block submit-btn" type="submit">Enter Coupon</button>
     </form>
 </div>
 </center>

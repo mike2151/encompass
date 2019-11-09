@@ -1,47 +1,33 @@
-.onoffswitch {
-    position: relative; width: 90px;
-    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+body {
+	background-image: url(/static/images/example_background.png);
+	background-repeat: repeat
 }
-.onoffswitch-checkbox {
-    display: none;
+
+.main-body {
+	margin-top: 10vh;
+	margin-bottom: 10vh;
+	margin-left: 5vw;
+	margin-right: 5vw;
+	border-radius: 10px;
+	padding-top: 4vh;
+	padding-bottom: 4vh;
+	background: #FFF;
 }
-.onoffswitch-label {
-    display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 20px;
+
+::-webkit-scrollbar {
+    width: 0;
+    background: 0 0
 }
-.onoffswitch-inner {
-    display: block; width: 200%; margin-left: -100%;
-    transition: margin 0.3s ease-in 0s;
-}
-.onoffswitch-inner:before, .onoffswitch-inner:after {
-    display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
-    font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
-    box-sizing: border-box;
-}
-.onoffswitch-inner:before {
-    content: "YES";
-    padding-left: 10px;
-    background-color: #6c5ce7; color: #FFFFFF;
-}
-.onoffswitch-inner:after {
-    content: "NO";
-    padding-right: 10px;
-    background-color: #EEEEEE; color: #999999;
-    text-align: right;
-}
-.onoffswitch-switch {
-    display: block; width: 18px; margin: 6px;
-    background: #FFFFFF;
-    position: absolute; top: 0; bottom: 0;
-    right: 56px;
-    border: 2px solid #999999; border-radius: 20px;
-    transition: all 0.3s ease-in 0s; 
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
-    margin-left: 0;
-}
-.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
-    right: 0px; 
+
+.page-title {
+	color: #000;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 2px solid #FEBC4E;
+    padding-bottom: 1vh;
+	max-width: 35%;
+	font-size: 2.3em;
 }
 
 .btn-primary {
@@ -67,9 +53,6 @@
     text-decoration: none;
 }
 
-.main-body {
-    padding-top: 10vh;
-}
 
 #coupon_code {
     max-width: 30vw;
@@ -477,4 +460,18 @@
 
 .page-message {
 	max-width: 50vw;
+}
+
+@media only screen and (max-width: 600px) {
+    .page-title {
+        max-width: 75vw;
+	}
+	
+	.submit-btn {
+		max-width: 75vw;
+	}
+
+	#coupon_code {
+		max-width: 75vw;
+	}
 }

@@ -209,3 +209,13 @@ form.steps({
 $('#banned_imports').amsifySuggestags({
     type :'amsify',
   });
+
+function resize_steps() {
+    var w = parseInt(window.innerWidth);
+    if(w <= 600) {
+        for (var i = 0; i < 8; i++) {
+            $("#wizard-t-" + i.toString()).html((i+1).toString());
+        }
+    }
+}
+resize_steps();

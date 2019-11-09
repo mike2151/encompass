@@ -6,8 +6,8 @@
     .switch {
     position: relative;
     display: inline-block;
-    width: 7vw;
-    height: 3.4vh;
+    width: 14vw;
+    height: 2em;
     }
     
     .switch input {display:none;}
@@ -27,9 +27,9 @@
     .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
+    height: 1.6em;
+    width: 1.6em;
+    left: .7em;
     bottom: 4px;
     background-color: #000;
     -webkit-transition: .4s;
@@ -42,9 +42,9 @@
   
     
     input:checked + .slider:before {
-    -webkit-transform: translateX(5vw);
-    -ms-transform: translateX(5vw);
-    transform: translateX(5vw);
+    -webkit-transform: translateX(11vw);
+    -ms-transform: translateX(11vw);
+    transform: translateX(11vw);
     }
     
     .on
@@ -75,6 +75,22 @@
     
     .slider.round:before {
     border-radius: 50%;}
+
+    @media only screen and (max-width: 900px) {
+      .switch {
+        width: 30vw;
+      }
+      .slider:before { 
+        height: 1.2em;
+        width: 1.2em;
+      }
+
+      input:checked + .slider:before {
+      -webkit-transform: translateX(23vw);
+      -ms-transform: translateX(23vw);
+      transform: translateX(23vw);
+      }
+    }
 </style>
 {% endblock %}
 {% block content %}
@@ -92,7 +108,7 @@
     {% endif %}
     <form class="form-signin" method="post">
       {% csrf_token %}
-      <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
+      
       <h1 class="h3 mb-3 font-weight-normal">SIGN UP</h1>
       <p class="footer-text" >Already have an account? <a href="/users/login">Login here</a></p>
       <label for="email" class="sr-only">Email address</label>

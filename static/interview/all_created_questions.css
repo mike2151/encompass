@@ -129,5 +129,32 @@ hr { display: block; height: 1px;
     margin-top: 2vh;
 }
 
-  #questions tr:nth-child(even){background-color: #f2f2f2;}
-  #questions tr:hover {background-color: #ddd;}
+#questions tr:nth-child(even){background-color: #f2f2f2;}
+#questions tr:hover {background-color: #ddd;}
+
+@media only screen and (max-width: 600px) {
+    .page-title {
+        max-width: 90vw;
+    }
+
+    .create-section-button {
+        max-width: 90%;
+    }
+
+    .create-section-button:hover {
+        max-width: 90%;
+    }
+    
+    .create-section-button:active:focus {
+        max-width: 90%;
+    }
+
+    .question-card-title {
+        font-size: 1.2em;
+    }
+
+    .question-card-button  {
+        font-size: .9em;
+    }
+
+  }

@@ -38,7 +38,7 @@ p {
   font-weight: 700;
   padding: 2.3vh 4.2vw;
   text-decoration: none;
-  margin-top: 4vh
+  margin-top: 12vh;
 }
 
 .image-button,
@@ -232,7 +232,7 @@ a:hover {
 
 .landing-text {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 70vw
@@ -241,7 +241,7 @@ a:hover {
 .landing-title {
   color: #000;
   font-size: 4.5em;
-  text-align: center
+  text-align: center;
 }
 
 .landing-description {
@@ -310,7 +310,7 @@ a:hover {
 
 .scroll-button {
   position: absolute;
-  top: 50vh;
+  top: 106%;
   left: 50%;
   width: 24px;
   height: 24px;
@@ -346,10 +346,8 @@ a:hover {
   }
 }
 
-
-
-
-@media only screen and (max-width: 600px) {
+/* mobile */
+@media only screen and (max-width: 900px) {
   .open-question-card {
     width: 45vw;
     border: 1px solid #000;
@@ -367,4 +365,34 @@ a:hover {
     padding: 2vh 2vw;
     min-height: 30vh;
   }
+
+  .landing-title {
+    font-size: 2.8em;
+  }
+
+  .landing-description {
+    font-size: 1.4em
+  }
+
+  .landing-text {
+    top: 40%;
+  }
+
+  .image-button {
+    margin-top: 2vh;
+  }
+
+  .example-answer-section {
+    height: 200vh;
+    width: 100vw;
+    margin-left: 0;
+  }
+
+  .question-card-text {
+    font-size: .9em
+  }
+
+  .question-card-title {
+    font-size: 1.2em;
+  }  
 }

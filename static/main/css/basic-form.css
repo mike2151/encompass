@@ -1,5 +1,6 @@
 body {
-    background: #FFF
+    background-image: url(/static/images/background_tile.png);
+    background-repeat: repeat
 }
 
 label {
@@ -58,4 +59,10 @@ label {
 
 .enlarged {
     font-size: 1.25em;
+}
+
+@media only screen and (max-width: 600px) {
+    .form-body {
+        max-width: 90vw;
+    }
 }

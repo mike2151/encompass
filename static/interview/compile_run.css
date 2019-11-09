@@ -100,3 +100,17 @@ body {
     margin-bottom: 2vh;
 }
 
+@media only screen and (max-width: 900px) {
+    .go-back-button {
+        max-width: 80%;
+    }
+    
+    .go-back-button:hover {
+        max-width: 80%;
+    }
+    
+    .go-back-button:active:focus {
+        max-width: 80%;
+    }
+}
+

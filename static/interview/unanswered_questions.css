@@ -52,6 +52,7 @@ body {
     font-size: 1.2em;
     margin-top: 2vh;
     margin-bottom: 3vh;
+    max-width: 100vw;
 }
 
 .question-row-title {
@@ -110,4 +111,10 @@ hr {
 
 .sent-by {
     font-size: .9em;
+}
+
+@media only screen and (max-width: 900px) {
+    .page-title {
+        max-width: 80%;
+    }
 }

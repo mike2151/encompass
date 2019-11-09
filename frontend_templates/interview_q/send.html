@@ -8,7 +8,7 @@
       position: relative;
       display: inline-block;
       width: 16vw;
-      height: 3.7vh;
+      height: 5vh;
       margin-top: 1vh;
     }
     
@@ -29,10 +29,10 @@
     .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 1.6em;
+    width: 1.6em;
     left: 4px;
-    bottom: 4px;
+    bottom: .5vh;
     background-color: #000;
     -webkit-transition: .4s;
     transition: .4s;
@@ -53,24 +53,14 @@
     {
     display: none;
     }
-    
-    .on
-    {
+
+    .off,  .on {
     color: #000;
     position: absolute;
     transform: translate(-50%,-50%);
     top: 50%;
     left: 50%;
-    font-size: 1.1em;
-    font-family: Verdana, sans-serif;
-    }
-
-    .off {
-    color: #000;
-    transform: translate(-50%,-50%);
-    top: 50%;
-    left: 50%;
-    font-size: 1.1em;
+    font-size: .8em;
     font-family: Verdana, sans-serif;
     }
     
@@ -86,6 +76,30 @@
     
     .slider.round:before {
     border-radius: 50%;}
+
+    @media only screen and (max-width: 900px) {
+      .switch {
+        width: 40vw;
+      }
+      .slider:before { 
+        height: 1em;
+        width: 1em;
+      }
+
+      input:checked + .slider:before {
+      -webkit-transform: translateX(32vw);
+      -ms-transform: translateX(32vw);
+      transform: translateX(32vw);
+      }
+
+      .on {
+        font-size: .8em;
+      }
+
+      .off {
+        font-size: .8em;
+      }
+  }
 </style>
 {% endblock %}
 {% block content %}
@@ -94,7 +108,7 @@
 <div class="form-body">
     <form class="form-signin" method="post">
       {% csrf_token %}
-      <img class="d-block mx-auto mb-4" src="{% static 'images/icon.png' %}" alt="" width="72" height="72">
+      
       <h1 class="h3 mb-3 font-weight-normal page-title">Send {{question.name}}</h1>
       <hr />
       <input type="email" id="email" name="email" class="form-control" placeholder="Interviewee Email address" required autofocus><br />

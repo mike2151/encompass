@@ -1,6 +1,7 @@
 
 .page-body {
     min-height: 95vh;
+    width: 100vw;
 }
 
 .footer-title {
@@ -43,4 +44,22 @@
     font-size: .8em;
     color: #FFF !important;
     text-align: center;
+}
+
+.base_navbar {
+    background: #F8F8F8; 
+    max-height: 5vh;
+    width: 100vw;
+}
+
+.navbar-collapse {
+    background: #F8F8F8;
+    padding-left: 3vw;
+    padding-right: 3vw;
+}
+/* mobile */
+@media only screen and (max-width: 1000px) {
+    .base_navbar {
+        max-height: 7vh;
+    }
 }

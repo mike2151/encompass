@@ -33,3 +33,18 @@ table {
     margin-left: 2vw;
     margin-right: 2vw;
 }
+
+@media only screen and (max-width: 900px) {
+    .main-section {
+        max-width: 300vw;
+        width: 200vw;
+    }
+
+    .base_navbar {
+        width: 200vw;
+    }
+
+    .footer {
+        width: 200vw;
+    }
+}
