@@ -234,7 +234,11 @@ select {
 
 .theme-name {
     color: #000;
-    font-size: 1.3em;
+    font-size: .8em;
+}
+
+#theme-site {
+    font-size: .7em;
 }
 
 .file-name {
@@ -341,15 +345,6 @@ width: 100%;
 }
 
 @media only screen and (max-width: 900px) {
-    .top-row-left {
-        max-width: 80vw;
-        text-align: center;
-    }
-
-    .select-css {
-        margin-top: 1vh;
-    }
-
     .submit-content {
         max-width: 80vw;
     }

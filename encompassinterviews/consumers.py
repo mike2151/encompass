@@ -3,7 +3,7 @@ import json
 from interview_q_instance.models import InterviewQuestionInstance
 
 class InterviewConsumer(AsyncWebsocketConsumer):
-    num_users = 0
+    room_name_to_num_users = {}
     async def connect(self):
         self.live_interview_id = self.scope['url_route']['kwargs']['live_interview_id']
         self.instance_id = self.scope['url_route']['kwargs']['instance_id']
@@ -23,18 +23,25 @@ class InterviewConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        InterviewConsumer.num_users += 1
+        if self.interview_session_name not in InterviewConsumer.room_name_to_num_users:
+            InterviewConsumer.room_name_to_num_users[self.interview_session_name] = 1
+        else:
+            InterviewConsumer.room_name_to_num_users[self.interview_session_name] += 1
         await self.accept()
 
     async def disconnect(self, close_code):
-        InterviewConsumer.num_users -= 1
+        if self.interview_session_name in InterviewConsumer.room_name_to_num_users:
+            InterviewConsumer.room_name_to_num_users[self.interview_session_name] -= 1
+            if InterviewConsumer.room_name_to_num_users[self.interview_session_name] == 0:
+                # empty so remove 
+                del InterviewConsumer.room_name_to_num_users[self.interview_session_name]
         await self.channel_layer.group_discard(
             self.interview_session_name,
             self.channel_name
         )
 
     async def receive(self, text_data):
-        if (InterviewConsumer.num_users > 1):
+        if (InterviewConsumer.room_name_to_num_users[self.interview_session_name] > 1):
             update_data_json = json.loads(text_data)
             file_to_update = update_data_json['file']
             new_content = update_data_json['content']
