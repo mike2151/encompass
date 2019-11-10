@@ -43,7 +43,7 @@ var add_code_file = function (class_name) {
     if (!(class_name in curr_code_numbers)) {
         curr_code_numbers[class_name] = get_starting_num(class_name);
     }
-    if (curr_code_numbers[class_name] < 10) {
+    if (curr_code_numbers[class_name] < 30) {
         var added = document.createElement("div");
         added.setAttribute("id", "div_" + class_name + "_code_" + curr_code_numbers[class_name].toString())
         document.getElementById(class_name + "_fields").appendChild(added);
