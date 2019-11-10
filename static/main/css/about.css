@@ -28,6 +28,8 @@ hr {
     border-bottom: solid 2px #6c5ce7;
     max-width: 35%;
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .mission-header {
@@ -126,4 +128,14 @@ hr {
     background: #ffffff;
     padding-left: 5vw;
     padding-right: 5vw;
+}
+
+@media only screen and (max-width: 900px) {
+    .mission-header {
+        max-width: 80%;
+    }
+
+    .section-header {
+        max-width: 80%;
+    }
 }
