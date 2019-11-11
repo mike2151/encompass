@@ -37,14 +37,17 @@ class CreatorSubmissionResult(View):
                 test_results = json.loads(result.results_body)
 
                 # get the files
-                file_contents = {}
+                file_urls = {}
                 base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(result.interview_question.pk))
                 instance_question_dir = os.path.join(base_question_dir, 'instances/{0}'.format(result.question_instance_pk))
 
                 for subdir, dirs, files in os.walk(instance_question_dir):
+                    base_dir = "/code_files" + instance_question_dir.split("code_files")[1]
                     for s_file in files:
-                        file_content = open((os.path.join(instance_question_dir, s_file)), "r").read()
-                        file_contents[str(s_file)] = file_content
+                        file_urls[s_file] = base_dir + "/" + s_file
 
-                return render(request, self.template_name, {'question': result.interview_question, 'test_passed': test_passed, 'test_results': test_results, 'file_contents': file_contents})
+                return render(request, self.template_name, {'question': result.interview_question, 
+                'test_passed': test_passed, 
+                'test_results': test_results,
+                 'file_urls': file_urls})
             return render(request, "no_auth.html", {})

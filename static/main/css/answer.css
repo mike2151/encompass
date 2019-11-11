@@ -266,6 +266,8 @@ select {
 
 .instructions {
     color: #000;
+    margin-left: 4vw;
+    margin-right: 4vw;
 }
 
 .editor_options-left {

@@ -20,19 +20,20 @@ def exists_bad_import(question, user_submission_dir):
     bad_import_list = bad_imports.split(",")
     for submitted_file in os.listdir(user_submission_dir):
         actual_file = os.path.join(user_submission_dir, submitted_file)
-        with open(actual_file, 'r') as read_file:
-            lines = read_file.readlines()
-            read_file.close()
-        for line in lines:
-            if line.startswith("import "):
-                import_name = line.split(" ")[1].strip()
-                if import_name in bad_import_list:
-                    return True
-            elif line.startswith("from "):
-                if "import" in line:
-                    import_name = line.split(" ")[2].strip()
+        if str(actual_file).endswith(".py"):
+            with open(actual_file, 'r') as read_file:
+                lines = read_file.readlines()
+                read_file.close()
+            for line in lines:
+                if line.startswith("import "):
+                    import_name = line.split(" ")[1].strip()
                     if import_name in bad_import_list:
                         return True
+                elif line.startswith("from "):
+                    if "import" in line:
+                        import_name = line.split(" ")[2].strip()
+                        if import_name in bad_import_list:
+                            return True
     return False
 
 def prepend_to_test_file(user_submission_dir, test_case_file_name, language):
@@ -53,13 +54,14 @@ def prepend_to_user_submitted_files(user_submission_dir, support_code_dir, langu
             if file_str_split[1] == "py":
                 prepend_string = prepend_string + "import " + file_str_split[0] + "\n"
         for user_submitted_file_str in os.listdir(user_submission_dir):
-            actual_file = os.path.join(user_submission_dir, user_submitted_file_str)
-            data = ''
-            with open(actual_file, 'r') as read_file:
-                data = read_file.read()
-            with open(actual_file, 'w') as write_file:
-                write_file.write(prepend_string + data)
-                write_file.close()
+            if user_submitted_file_str.endswith(".py"):
+                actual_file = os.path.join(user_submission_dir, user_submitted_file_str)
+                data = ''
+                with open(actual_file, 'r') as read_file:
+                    data = read_file.read()
+                with open(actual_file, 'w') as write_file:
+                    write_file.write(prepend_string + data)
+                    write_file.close()
 
 def generate_network_prepend():
     return "import socket\ndef guard(*args, **kwargs):\n\traise Exception('Network is disabled')\nsocket.socket = guard\n"
@@ -122,6 +124,14 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         copy_folder_contents(solution_code_dir, user_submission_dir)
     else:
         starter_code_objs = StarterCode.objects.filter(interview_question=question)
+        for starter_code_obj in starter_code_objs:
+            filename = starter_code_obj.code_file.name.split("/")[-1]
+            file_contents = request.POST.get("file_" + filename, False)
+            if file_contents and len(file_contents) > 0:
+                file_path = os.path.join(user_submission_dir, filename)
+                f = open(file_path, "w")
+                f.write(file_contents)
+                f.close()
         # see if there is a zip file
         if request.FILES.get("zip_file", False):
             file = request.FILES['zip_file']
@@ -132,19 +142,11 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
                 f.close()
                 # unzip 
                 with zipfile.ZipFile(file_path, 'r') as zip_ref:
-                    zip_ref.extractall(user_submission_dir)
+                    for zip_info in zip_ref.infolist():
+                        if "__MACOSX" not in zip_info.filename:
+                            zip_ref.extract(zip_info, user_submission_dir)
                 # delete file
                 os.remove(file_path)
-        else:
-            # go through each submitted file and create it
-            for starter_code_obj in starter_code_objs:
-                filename = starter_code_obj.code_file.name.split("/")[-1]
-                file_contents = request.POST.get("file_" + filename, False)
-                if file_contents:
-                    file_path = os.path.join(user_submission_dir, filename)
-                    f = open(file_path, "w")
-                    f.write(file_contents)
-                    f.close()
 
     # parse language info
     language_option = question.language.lower()

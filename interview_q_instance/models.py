@@ -5,9 +5,16 @@ import os
 from django.conf import settings
 import shutil
 import uuid
+from random import randint
 
 def make_uuid():
    return str(uuid.uuid4()).replace("-", "_")
+
+def make_pk():
+    num_digits = 16
+    range_start = 10**(num_digits-1)
+    range_end = (10**num_digits)-1
+    return randint(range_start, range_end)
 
 class InterviewQuestionInstance(models.Model):
     base_question = models.ForeignKey('interview_q.InterviewQuestion', on_delete=models.CASCADE)
@@ -25,6 +32,7 @@ class InterviewQuestionInstance(models.Model):
     start_time_date_str = models.CharField(null=True, blank=True, max_length=256)
     can_preview = models.BooleanField(default=False)
     current_working_body = models.TextField(null=True, blank=True)
+    id = models.IntegerField(primary_key=True, default=make_pk)
     live_interview_id = models.CharField(
       editable=False, max_length=36, default=make_uuid
     )

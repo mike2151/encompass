@@ -32,7 +32,7 @@ import os
 
 class CreateInterviewView(View):
     def check_condition(self, request, name, number):
-        cond_one = (len(request.POST.get(name + "_body_name_" + str(number), '')) > 0 and len(request.POST.get(name + "_body_" + str(number), '')) > 0)
+        cond_one = len(request.POST.get(name + "_body_name_" + str(number), '')) > 0
         cond_two = request.FILES.get(name + "_file_" + str(number), False)
         return cond_one or cond_two
 
@@ -119,7 +119,7 @@ class CreateInterviewView(View):
                     # write to file
                     file_name = request.POST.get(name + "_body_name_" + str(number),'')
                     file_contents = request.POST.get(name + "_body_" + str(number),'')
-                    if len(file_name) > 0 and len(file_contents) > 0:
+                    if len(file_name) > 0:
                         new_file = StarterCode(interview_question=question)
                         new_file.code_file.save(file_name, ContentFile(file_contents))
                         new_file.save()    
@@ -244,7 +244,7 @@ class DeleteQuestionView(View):
 
 class EditQuestionView(View):
     def check_condition(self, request, name, number):
-        cond_one = (len(request.POST.get(name + "_body_name_" + str(number), '')) > 0 and len(request.POST.get(name + "_body_" + str(number), '')) > 0)
+        cond_one = len(request.POST.get(name + "_body_name_" + str(number), '')) > 0
         cond_two = request.FILES.get(name + "_file_" + str(number), False)
         return cond_one or cond_two
 
@@ -434,7 +434,7 @@ class EditQuestionView(View):
                     # write to file
                     file_name = request.POST.get(name + "_body_name_" + str(number),'')
                     file_contents = request.POST.get(name + "_body_" + str(number),'')
-                    if len(file_name) > 0 and len(file_contents) > 0:
+                    if len(file_name) > 0:
                         new_file = StarterCode(interview_question=question)
                         new_file.code_file.save(file_name, ContentFile(file_contents))
                         new_file.save()    

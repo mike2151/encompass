@@ -126,7 +126,7 @@ class QuestionAnswerView(View):
 
             is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
-            opt_groups = ["Question (Not Modifiable)", "Stub Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)", "Allowed Imports (Not Modifiable)"]
+            opt_groups = ["Question (Not Modifiable)", "Required Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)", "Allowed Imports (Not Modifiable)"]
 
             expiration_time_in_seconds = 0
             has_expiration = True
@@ -301,7 +301,7 @@ class QuestionObserveView(View):
 
                 is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
-                opt_groups = ["Question (Not Modifiable)", "Stub Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)"]
+                opt_groups = ["Question (Not Modifiable)", "Required Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)"]
 
                 expiration_time_in_seconds = 0
                 has_expiration = True

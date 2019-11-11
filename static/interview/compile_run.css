@@ -100,6 +100,23 @@ body {
     margin-bottom: 2vh;
 }
 
+.user_file_item {
+    font-size: 1.3em;
+}
+
+.download_files_title {
+    color: #000;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2vh;
+    font-size: 1.7em;
+    margin-top: 3vh;
+    border-bottom: 2px solid #FEBC4E;
+    padding-bottom: 1vh;
+    max-width: 80%;
+}
+
 @media only screen and (max-width: 900px) {
     .go-back-button {
         max-width: 80%;

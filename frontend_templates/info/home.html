@@ -34,8 +34,8 @@
                 <optgroup label="Question (Not Modifiable)">
                   <option value="Question Description">Question Description</option>
                 </optgroup>
-                <optgroup label="Stub Files (Modifiable)">
-                  <option value="Stub File">Stub File</option>
+                <optgroup label="Required Files (Modifiable)">
+                  <option value="Required File">Required File</option>
                 </optgroup>
                 <optgroup label="API (Not Modifiable)">
                   <option value="API Description">API Description</option>
@@ -60,8 +60,8 @@
                 <optgroup label="Question (Not Modifiable)">
                   <option value="Question Description">Question Description</option>
                 </optgroup>
-                <optgroup label="Stub Files (Modifiable)">
-                  <option value="Stub File">Stub File</option>
+                <optgroup label="Required Files (Modifiable)">
+                  <option value="Required File">Required File</option>
                 </optgroup>
                 <optgroup label="API (Not Modifiable)">
                   <option value="API Description">API Description</option>
@@ -131,13 +131,13 @@
           We allow you to incorporate your existing code, declare APIs, create example code snippets, 
           specify libraries, and write tests to create programming challenges that cannot be created anywhere else online.
           <br /> This question will give you a better idea of what Encompass Interviews can offer.`;
-          name_to_body["Stub File"] = `import your_code_library\n
+          name_to_body["Required File"] = `import your_code_library\n
 def tell_them_what_encompass_is_all_about():
   description = '''
   Write questions which directly include your 
   code bases and have the interviewer interact with them 
   when answering questions. Have the interviewee fill out as many
-  stub files like this as you would like. 
+  required files like this as you would like. 
   Customize the question to your liking. We offer the ability to ban imports, suppress standard output, and disable network access to keep your code base safe and secure during the whole question answering process.
   '''
 
@@ -169,14 +169,14 @@ def tell_them_what_encompass_is_all_about():
                   code_editor_one.destroy()
               }
               $("#editor_one").html(name_to_body["Allowed Imports"])
-          } else if (opt_group === "Stub Files (Modifiable)") {
+          } else if (opt_group === "Required Files (Modifiable)") {
               if (code_editor_one !== null) {
                   code_editor_one.destroy()
               }
               $("#editor_one").html('')
               code_editor_one = textarea_edit("editor_one");
               code_editor_one.setReadOnly(0);
-              code_editor_one.setValue(name_to_body["Stub File"].toString(), -1)
+              code_editor_one.setValue(name_to_body["Required File"].toString(), -1)
           } else if (opt_group === "API (Not Modifiable)") {
               if (selected.val() === "API Description") {
                   if (code_editor_one !== null) {
@@ -213,14 +213,14 @@ def tell_them_what_encompass_is_all_about():
                       code_editor_two.destroy()
                   }
                   $("#editor_two").html(name_to_body["Allowed Imports"])
-              } else if (opt_group === "Stub Files (Modifiable)") {
+              } else if (opt_group === "Required Files (Modifiable)") {
                   if (code_editor_two !== null) {
                       code_editor_two.destroy()
                   }
                   $("#editor_two").html('')
                   code_editor_two = textarea_edit("editor_two");
                   code_editor_two.setReadOnly(0);
-                  code_editor_two.setValue(name_to_body["Stub File"].toString(), -1)
+                  code_editor_two.setValue(name_to_body["Required File"].toString(), -1)
               } else if (opt_group === "API (Not Modifiable)") {
                   if (selected.val() === "API Description") {
                       if (code_editor_two !== null) {
@@ -246,10 +246,10 @@ def tell_them_what_encompass_is_all_about():
 
           // set init bodies
           $("#editor_one").html(name_to_body["Question Description"]);
-          $('#file_drop_down_two').val("Stub File");
+          $('#file_drop_down_two').val("Required File");
           code_editor_two = textarea_edit("editor_two");
           code_editor_two.setReadOnly(0);
-          code_editor_two.setValue(name_to_body["Stub File"].toString(), -1);
+          code_editor_two.setValue(name_to_body["Required File"].toString(), -1);
 
           $(function() {
             $('#scroll-link').on('click', function(e) {

@@ -21,7 +21,7 @@
             You are being observed
           </div>
           {% endif %}
-        <p class="instructions"><span class="question-title">{{ question.base_question.name }}:</span> Please modify the stub files or upload a zip file and press the Submit Code button when finished.</p>
+        <p class="instructions"><span class="question-title">{{ question.base_question.name }}:</span> Please modify the required files or upload a zip file containing all or some required files and press the Submit Code button when finished.</p>
         {% if not network_enabled %}
               <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <p class="warning">Note that this question has disabled network access so any network related code will fail.</p>
@@ -49,12 +49,12 @@
         <div class="col-md-6 editor-section">
           <div class="top-row-left">
             <div class="editor_options-left">
-              <p class="file-name">View: </p><select class="select-css" id="file-drop-down-one" data-intro='This dropdown has everything you need to answer the question. You can view the question description, the API, example code, allowed libraries and stub files you have to fill out.'>
+              <p class="file-name">View: </p><select class="select-css" id="file-drop-down-one" data-intro='This dropdown has everything you need to answer the question. You can view the question description, the API, example code, allowed libraries and required files you have to fill out.'>
                   {% for opt_group in opt_groups %} 
                     <optgroup label="{{ opt_group }}">
                       {% if opt_group == 'Question (Not Modifiable)' %}
                         <option value="Question Description">Question Description</option>
-                      {% elif opt_group == 'Stub Files (Modifiable)' %}
+                      {% elif opt_group == 'Required Files (Modifiable)' %}
                         {% for filename in files_to_work_on_names %}
                           <option value="{{ filename }}">{{ filename }}</option>
                         {% endfor %}
@@ -76,7 +76,7 @@
         </div>
         <br />
         <div class="col-md-6 editor-holder">
-          <div id="editor_one" class="actual-editor" data-intro="This area displays information and serves as an editor for stub files.">{{question.base_question.starter_code}}</div>
+          <div id="editor_one" class="actual-editor" data-intro="This area displays information and serves as an editor for required files.">{{question.base_question.starter_code}}</div>
           <textarea name="editor_one"></textarea>
         </div>
         <div id="file_contents" type="hidden"></div>
@@ -91,7 +91,7 @@
                     <optgroup label="{{ opt_group }}">
                       {% if opt_group == 'Question (Not Modifiable)' %}
                         <option value="Question Description">Question Description</option>
-                      {% elif opt_group == 'Stub Files (Modifiable)' %}
+                      {% elif opt_group == 'Required Files (Modifiable)' %}
                         {% for filename in files_to_work_on_names %}
                           <option value="{{ filename }}">{{ filename }}</option>
                         {% endfor %}
@@ -143,8 +143,8 @@
         <div class="col-md-12 submit-section">
              <hr />
             <center>
-            <div class="submit-content" data-intro="Rather than editing code, you can also upload a zip file containing the filled out stub files.">
-                <h4 class="or-upload">Or, upload the filled out stub files in a zip file:</h4><br />
+            <div class="submit-content" data-intro="Rather than editing code, you can also upload a zip file containing the filled out required files.">
+                <h4 class="or-upload">Or, upload the some or all required files in a zip file:</h4><br />
 
                 <input type="text" id="file_name_field">
                 <span id="file_span">Select Zip File</span>
@@ -178,7 +178,9 @@
 <script src="https://pagecdn.io/lib/ace/1.4.5/ace.js" integrity="sha256-5Xkhn3k/1rbXB+Q/DX/2RuAtaB4dRRyQvMs83prFjpM="
   crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-language_tools.js" integrity="sha256-5GsAp93HE/XYlhrUPMw4VBAoawG9n3c7+DbQE4tRwW0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-modelist.js" integrity="sha256-Eq83mfVraqpouXYtwjYSEvTt6JM7k1VrhsebwRs06AM=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/intro.js@2.9.3/intro.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.2/jszip.min.js" integrity="sha256-gy5W5/rXWluWXFRvMWFFMVhocfpBe7Tf4SW2WMfjs4E=" crossorigin="anonymous"></script>
 <script type='text/javascript'>
     ace.require("ace/ext/language_tools");
     var themeData = ["textmate", "dreamweaver", "solarized_dark", "twilight"];
@@ -285,10 +287,23 @@ function send_socket_file_content_update(filename, content, is_test_body, is_tes
   }
 };
 
+function getModeByFileExtension(path) {
+    var modelist = ace.require("ace/ext/modelist");
+    return modelist.getModeForPath(path).mode;
+}
+
 function textarea_edit(name) {
+    var mode = "";
+    if (name == "editor_one") {
+        var file_name = $("#file-drop-down-one").val();
+        mode = getModeByFileExtension(file_name);
+    } else if (name == "editor_two") {
+        var file_name = $("#file-drop-down-two").val();
+        mode = getModeByFileExtension(file_name);
+    }
     var editor = ace.edit(name);
     editor.setTheme("ace/theme/textmate");
-    editor.session.setMode("ace/mode/python");
+    editor.session.setMode(mode);
     editor.setOptions({
         "showPrintMargin": !1,
         fontSize: "12pt",
@@ -301,6 +316,14 @@ function textarea_edit(name) {
 }
 
 function textarea_edit_example_code(name) {
+    var mode = "";
+    if (name == "editor_one") {
+        var file_name = $("#file-drop-down-one").val();
+        mode = getModeByFileExtension(file_name);
+    } else if (name == "editor_two") {
+        var file_name = $("#file-drop-down-two").val();
+        mode = getModeByFileExtension(file_name);
+    }
     var editor = ace.edit(name);
     editor.setTheme("ace/theme/textmate");
     editor.session.setMode("ace/mode/python");
@@ -333,8 +356,11 @@ function textarea_edit_test_case(name) {
     var test_case_body = "# this import is needed\nimport unittest\n# You can also import the modules defined in the Allowed Imports section above. \n# these import the required files\n";
     var starter_code_names = {{ files_to_work_on_names | safe }};
     for (var i = 0; i < starter_code_names.length; i++) {
-        var curr_name = starter_code_names[i].split(".")[0];
-        test_case_body = test_case_body + "import " + curr_name + " # access a method with " + curr_name + ".method()\n"
+        var splits = starter_code_names[i].split(".");
+        if (splits[1] === "py") {
+            var curr_name = splits[0];
+            test_case_body = test_case_body + "import " + curr_name + " # access a method with " + curr_name + ".method()\n"
+        }
     }
     test_case_body += "# Write all of your tests in this class\n# Read about unit testing here: docs.python.org/3/library/unittest.html \n# All test methods must have the test_ prefix\nclass TestCases(unittest.TestCase):\n\t# this method represents one test \n\tdef test_example_one(self):\n\t\tself.assertTrue(True)\n\t# this method represents another test \n\tdef test_example_two(self):\n\t\tself.assertFalse(False)";
     editor.setValue(test_case_body, 1);
@@ -429,7 +455,7 @@ $('#file-drop-down-one').change(function() {
             code_editor_one.destroy()
         }
         $("#editor_one").html(name_to_body["Allowed Imports"])
-    } else if (opt_group === "Stub Files (Modifiable)") {
+    } else if (opt_group === "Required Files (Modifiable)") {
         if (code_editor_one !== null) {
             code_editor_one.destroy()
         }
@@ -475,7 +501,7 @@ $('#file-drop-down-two').change(function() {
             code_editor_two.destroy()
         }
         $("#editor_two").html(name_to_body["Allowed Imports"])
-    } else if (opt_group === "Stub Files (Modifiable)") {
+    } else if (opt_group === "Required Files (Modifiable)") {
         if (code_editor_two !== null) {
             code_editor_two.destroy()
         }
@@ -719,6 +745,50 @@ window.onload = function() {
         }
     }
   };
+
+function all_files_submitted(zip_dict) {
+    for (var i = 0; i < starter_code_names.length; i++) {
+        var starter_code_name = starter_code_names[i];
+        if (!(starter_code_name in zip_dict)) {
+            if (name_to_body[starter_code_name].length == 0) {
+                return starter_code_name;
+            }
+        }
+    }
+    return "";
+} 
+
+// validate all the files are submitted
+$('#question_answer').submit(function() {
+    var can_submit = true;
+    var zip_file_names = {};
+    // read content of zip file first
+    if (document.getElementById("zip_file").files.length > 0) {
+        var zip_f = document.getElementById("zip_file").files[0];
+        JSZip.loadAsync(zip_f)                               
+            .then(function(zip) {
+                zip.forEach(function (relativePath, zipEntry) { 
+                    zip_file_names[zipEntry.name] = true;
+                });
+                // now see if all files are submitted
+                var bad_file = all_files_submitted(zip_file_names);
+                var can_submit = bad_file.length == 0;
+                if (!can_submit) {
+                    alert(bad_file + " has not been submitted or has no content");
+                }
+                return can_submit;
+            }, function (e) {
+                alert("There was an error processing your zip file");
+            });
+    } else {
+        var bad_file = all_files_submitted({});
+        var can_submit = bad_file.length == 0;
+        if (!can_submit) {
+            alert(bad_file + " has not been submitted");
+        }
+        return can_submit;
+    }
+});
   
 </script>
 </body>

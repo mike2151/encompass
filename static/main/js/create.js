@@ -1,3 +1,5 @@
+var NUM_FIELDS = 30;
+
 var curr_method_number = 2;
 var curr_code_numbers = {};
 
@@ -43,7 +45,7 @@ var add_code_file = function (class_name) {
     if (!(class_name in curr_code_numbers)) {
         curr_code_numbers[class_name] = get_starting_num(class_name);
     }
-    if (curr_code_numbers[class_name] < 30) {
+    if (curr_code_numbers[class_name] < NUM_FIELDS) {
         var added = document.createElement("div");
         added.setAttribute("id", "div_" + class_name + "_code_" + curr_code_numbers[class_name].toString())
         document.getElementById(class_name + "_fields").appendChild(added);
@@ -133,6 +135,21 @@ $(document).on("keydown", ":input:not(textarea)", function(event) {
 });
 
 // form library things
+var validation_rules = {};
+validation_rules["name"] = "required";
+validation_rules["description"] = "required";
+validation_rules["starter_file_1"] = {required: '#starter_body_name_1:blank'};
+validation_rules["starter_body_name_1"] = {required: '#starter_file_1:blank'};
+
+for (var i = 2; i < NUM_FIELDS+1; i++) {
+    validation_rules["starter_file_" + i.toString()] = {required: '#starter_body_name_' + i.toString() + ':blank'};
+    validation_rules["starter_body_name_" + i.toString()] = {required: '#starter_file_' + i.toString() + ':blank'};
+    validation_rules["example_file_" + i.toString()] = {required: '#example_body_name_' + i.toString() + ':blank'};
+    validation_rules["example_body_name_" + i.toString()] = {required: '#example_file_' + i.toString() + ':blank'};
+    validation_rules["supporting_file_" + i.toString()] = {required: '#supporting_body_name_' + i.toString() + ':blank'};
+    validation_rules["supporting_body_name_" + i.toString()] = {required: '#supporting_file_' + i.toString() + ':blank'};    
+}
+
 var has_been_created = {};
 has_been_created[2] = false;
 has_been_created[4] = false;
@@ -142,17 +159,7 @@ has_been_created[7] = false;
 var form = $("#wizard");
 form.validate({
     errorPlacement: function errorPlacement(error, element) { element.before(error); },
-    rules: {
-        name: "required",
-        description: "required",
-        // starter
-        starter_file_1: {
-            required: '#starter_body_name_1:blank'
-        },
-        starter_body_name_1: {
-            required: '#starter_file_1:blank'
-        }
-    }
+    rules: validation_rules
 });
 form.steps({
     headerTag: "h2",

@@ -36,8 +36,19 @@
                        
                     </div>
                     <div class="row">
-                        <div id="files" class="user_files">
-
+                        <div class="col-md-12">
+                            <h3 class="download_files_title">Download User Submitted Files</h3><br>
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <p>Note that these files will be removed from our servers in 30 days so download them now!</p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                            </div><br/>
+                            <div id="files" class="user_files list-group">
+                                {% for key, value in file_urls.items %}
+                                    <a href="{{value}}" class="list-group-item list-group-item-action user_file_item" download>{{key}}</a>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -45,34 +56,6 @@
                     </div>
                     </div>
                 </div>
-                <script>
-                    var file_content_dict = {{ file_contents | safe}};
-                    for (var key in file_content_dict){
-
-                        var code_div = document.createElement("div");
-                        var file_name = "file_" + key;
-                        code_div.setAttribute("id", file_name);
-                        code_div.setAttribute("name", file_name);
-                        code_div.setAttribute("class", "file_snippet");
-
-                        var code_label = document.createElement("p");
-                        code_label.setAttribute("class", "file_snippet_label");
-                        code_label.innerHTML = "File: " + key;
-
-                        var all_div = document.createElement("div");
-                        all_div.append(code_label);
-                        all_div.append(code_div);
-                        
-                        document.getElementById("files").appendChild(all_div);
-
-
-                        var editor = ace.edit(file_name);
-                        editor.setTheme("ace/theme/chrome");
-                        editor.session.setMode("ace/mode/python");
-                        editor.setValue(file_content_dict[key], 1);
-                        editor.setReadOnly(true);
-                    }
-                </script>
             {% else %}
                 {% include "no_auth.html" %}
             {% endif %} 

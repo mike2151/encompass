@@ -1,4 +1,15 @@
 from django.db import models
+from random import randint
+
+def make_uuid():
+    pass
+
+def make_pk():
+    num_digits = 16
+    range_start = 10**(num_digits-1)
+    range_end = (10**num_digits)-1
+    return randint(range_start, range_end)
+    
 
 class InterviewQuestion(models.Model):
     def upload_path_handler(question, filename):
@@ -16,7 +27,7 @@ class InterviewQuestion(models.Model):
     dependencies = models.TextField()
     banned_imports = models.TextField()
 
-    id = models.AutoField(primary_key=True)
+    id = models.IntegerField(primary_key=True, default=make_pk)
     is_open = models.BooleanField(default=False)
 
     def __str__(self):
