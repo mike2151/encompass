@@ -9,7 +9,7 @@ from submission_result.models import SubmissionResult
 from starter_code.models import StarterCode
 import json
 from api_q.models import InterviewAPI
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.conf import settings
 from django.http import JsonResponse
 import pytz
@@ -206,7 +206,8 @@ class QuestionAnswerView(View):
                         visability_body=json.dumps(test_visability),
                         interview_question=question_instance.base_question, 
                         question_instance_pk=question_instance.pk,
-                        user = request.user
+                        user = request.user,
+                        expire_time = datetime.now(timezone.utc) + timedelta(days=30)
                         )
                     submission_result.save()
                     question_instance.submission_result = submission_result
@@ -236,7 +237,8 @@ class QuestionAnswerView(View):
                     visability_body=json.dumps(test_visability),
                     interview_question=question_instance.base_question, 
                     question_instance_pk=question_instance.pk,
-                    user = request.user
+                    user = request.user, 
+                    expire_time = datetime.now(timezone.utc) + timedelta(days=30)
                     )
                 submission_result.save()
                 question_instance.submission_result = submission_result
