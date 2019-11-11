@@ -75,6 +75,10 @@ label {
     font-size: 1.1em;
 }
 
+.signing-up {
+    font-size: .9em;
+}
+
 @media only screen and (max-width: 900px) {
     .form-body {
         max-width: 80vw;

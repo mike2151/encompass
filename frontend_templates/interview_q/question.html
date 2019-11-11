@@ -51,7 +51,10 @@
                                 <label htmlFor="description">Description of Question (Visible to users)</label>
                                 <textarea class="form-control" id="description" name="description" rows=11 placeholder="Write your description here. Markdown is supported.">{{ question.description }}</textarea><br/>
 
-                                <label for="question_language">Question Language (Visible to users) </label>
+                                <label for="question_language">Question Programming Language (Visible to users) </label>
+                                <p class="sub-question">This field determines the language that test cases are run in. You can have any programming language in your question but the languages below
+                                    are the only ones supported by our testing framework.
+                                </p>
                                 <select class="form-control" id="question_language" name="question_language">
                                     <option {% if question.language == 'Python3.6' %}selected{% endif %}>Python3.6</option>
                                 </select> <br/>

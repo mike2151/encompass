@@ -256,6 +256,10 @@ hr {
   background-color: #FFF; 
 }
 
+.sub-question {
+  font-size: .8em;
+}
+
 @media only screen and (max-width: 600px) {
   .page-title {
     max-width: 73%;
