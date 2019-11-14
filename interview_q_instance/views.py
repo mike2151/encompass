@@ -60,11 +60,14 @@ class UserTestCaseView(View):
 class SaveCodeView(View):
     def post(self, request, *args, **kwargs):
         file_contents_json = request.POST.get("json_file_contents", '')
+        new_files_contents_json = request.POST.get("new_files", '')
         successful_save = False
         if len(file_contents_json) > 0:
             question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
             if question_instance.interviewee_email == request.user.email:
                 question_instance.current_working_body = file_contents_json
+                if question_instance.base_question.allow_new_files:
+                    question_instance.new_files_body = new_files_contents_json
                 question_instance.save()
                 successful_save = True
         return JsonResponse({
@@ -100,9 +103,9 @@ class QuestionAnswerView(View):
 
             for file_obj in files_to_work_on:
                 filename = file_obj.code_file.name.split("/")[-1]
-                if "file_" + filename in previous_work:
+                if "wfile_" + filename in previous_work:
                     files_to_work_on_names.append(filename)
-                    files_to_work_on_bodies.append(previous_work["file_" + filename])
+                    files_to_work_on_bodies.append(previous_work["wfile_" + filename])
                 else:
                     files_to_work_on_names.append(filename)
                     f = file_obj.code_file
@@ -110,6 +113,17 @@ class QuestionAnswerView(View):
                     content = f.read()
                     f.close()
                     files_to_work_on_bodies.append(content)
+
+            new_files_names_to_bodies = {}
+            if question.base_question.allow_new_files:
+                previous_work = {}
+                try:
+                    previous_work = json.loads(question.new_files_body)
+                except:
+                    previous_work = {}
+
+                for key, value in previous_work.items():
+                    new_files_names_to_bodies[key] = value
 
 
             example_file_objs = ExampleCode.objects.filter(interview_question=question.base_question)
@@ -127,6 +141,8 @@ class QuestionAnswerView(View):
             is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
             opt_groups = ["Question (Not Modifiable)", "Required Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)", "Allowed Imports (Not Modifiable)"]
+            if question.base_question.allow_new_files:
+                opt_groups.insert(2, "New Files (Modifiable)")
 
             expiration_time_in_seconds = 0
             has_expiration = True
@@ -175,6 +191,7 @@ class QuestionAnswerView(View):
                 'example_files_names': example_files_names,
                 'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
                 'files_to_work_on_names': files_to_work_on_names,
+                'new_files_names_to_bodies': new_files_names_to_bodies,
                 'imports_body': imports_body,
                 'is_preview': is_preview,
                 "opt_groups": opt_groups,
@@ -277,9 +294,9 @@ class QuestionObserveView(View):
 
                 for file_obj in files_to_work_on:
                     filename = file_obj.code_file.name.split("/")[-1]
-                    if "file_" + filename in previous_work:
+                    if "wfile_" + filename in previous_work:
                         files_to_work_on_names.append(filename)
-                        files_to_work_on_bodies.append(previous_work["file_" + filename])
+                        files_to_work_on_bodies.append(previous_work["wfile_" + filename])
                     else:
                         files_to_work_on_names.append(filename)
                         f = file_obj.code_file
@@ -287,6 +304,17 @@ class QuestionObserveView(View):
                         content = f.read()
                         f.close()
                         files_to_work_on_bodies.append(content)
+
+                new_files_names_to_bodies = {}
+                if question.base_question.allow_new_files:
+                    previous_work = {}
+                    try:
+                        previous_work = json.loads(question.new_files_body)
+                    except:
+                        previous_work = {}
+
+                    for key, value in previous_work.items():
+                        new_files_names_to_bodies[key] = value
 
 
                 example_file_objs = ExampleCode.objects.filter(interview_question=question.base_question)
@@ -304,6 +332,8 @@ class QuestionObserveView(View):
                 is_preview = (question.start_time.date() > datetime.now().date()) and question.can_preview
 
                 opt_groups = ["Question (Not Modifiable)", "Required Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)"]
+                if question.base_question.allow_new_files:
+                    opt_groups.insert(2, "New Files (Modifiable)")
 
                 expiration_time_in_seconds = 0
                 has_expiration = True
@@ -340,6 +370,7 @@ class QuestionObserveView(View):
                     'api_description': api_description,
                     'example_files_bodies': json.dumps(example_files_bodies),
                     'example_files_names': example_files_names,
+                    'new_files_names_to_bodies': new_files_names_to_bodies,
                     'files_to_work_on_bodies': json.dumps(files_to_work_on_bodies),
                     'files_to_work_on_names': files_to_work_on_names,
                     'is_preview': is_preview,

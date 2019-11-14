@@ -22,6 +22,7 @@ class InterviewQuestion(models.Model):
     language = models.CharField(max_length=128, default="Python3")
     network_enabled = models.BooleanField(default=False)
     allow_stdout = models.BooleanField(default=False)
+    allow_new_files = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     dependencies = models.TextField()

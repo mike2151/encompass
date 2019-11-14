@@ -123,15 +123,15 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         solution_code_dir = os.path.join(base_question_dir, 'solution_code_files')
         copy_folder_contents(solution_code_dir, user_submission_dir)
     else:
-        starter_code_objs = StarterCode.objects.filter(interview_question=question)
-        for starter_code_obj in starter_code_objs:
-            filename = starter_code_obj.code_file.name.split("/")[-1]
-            file_contents = request.POST.get("file_" + filename, False)
-            if file_contents and len(file_contents) > 0:
-                file_path = os.path.join(user_submission_dir, filename)
-                f = open(file_path, "w")
-                f.write(file_contents)
-                f.close()
+        for key in request.POST:
+            if key.startswith("wfile_"):
+                filename = key.split("wfile_")[1]
+                file_contents = request.POST.get("wfile_" + filename, False)
+                if file_contents and len(file_contents) > 0:
+                    file_path = os.path.join(user_submission_dir, filename)
+                    f = open(file_path, "w")
+                    f.write(file_contents)
+                    f.close()
         # see if there is a zip file
         if request.FILES.get("zip_file", False):
             file = request.FILES['zip_file']

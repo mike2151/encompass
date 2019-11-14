@@ -7,6 +7,8 @@
 {% endblock %}
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.min.css" integrity="sha256-/oZ7h/Jkj6AfibN/zTWrCoba0L+QhP9Tf/ZSgyZJCnY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/css/vex.css" integrity="sha256-/eaLySG/rPCowjMWyStmTPGtaU79NKiqodgU2X/PJ/g=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/css/vex-theme-os.min.css" integrity="sha256-JYiue8IdviZLZRYXRaDAMn/N0H50KoP7jCX/IXvKm34=" crossorigin="anonymous" />
 {% if user.is_authenticated %}
 <div class="main_container">
   <form method="post" action="{{ request.path }}" class="row" enctype="multipart/form-data" id="question_answer">
@@ -51,13 +53,15 @@
             <div class="editor_options-left">
               <p class="file-name">View: </p><select class="select-css" id="file-drop-down-one" data-intro='This dropdown has everything you need to answer the question. You can view the question description, the API, example code, allowed libraries and required files you have to fill out.'>
                   {% for opt_group in opt_groups %} 
-                    <optgroup label="{{ opt_group }}">
+                    <optgroup label="{{ opt_group }}" id="one_optgroup_{{forloop.counter}}">
                       {% if opt_group == 'Question (Not Modifiable)' %}
                         <option value="Question Description">Question Description</option>
                       {% elif opt_group == 'Required Files (Modifiable)' %}
                         {% for filename in files_to_work_on_names %}
                           <option value="{{ filename }}">{{ filename }}</option>
                         {% endfor %}
+                      {% elif opt_group == 'New Files (Modifiable)' %}
+                        <option value="Add New File">Add New File</option>
                       {% elif opt_group == 'API (Not Modifiable)' %}
                         <option value="API Description">API Description</option>
                         <option value="API Methods">API Methods</option>
@@ -88,13 +92,15 @@
             <div class="editor_options-right">
               <p class="file-name">View: </p><select class="select-css" id="file-drop-down-two">
                   {% for opt_group in opt_groups %} 
-                    <optgroup label="{{ opt_group }}">
+                    <optgroup label="{{ opt_group }}" id="two_optgroup_{{forloop.counter}}">
                       {% if opt_group == 'Question (Not Modifiable)' %}
                         <option value="Question Description">Question Description</option>
                       {% elif opt_group == 'Required Files (Modifiable)' %}
                         {% for filename in files_to_work_on_names %}
                           <option value="{{ filename }}">{{ filename }}</option>
                         {% endfor %}
+                      {% elif opt_group == 'New Files (Modifiable)' %}
+                        <option value="Add New File">Add New File</option>
                       {% elif opt_group == 'API (Not Modifiable)' %}
                         <option value="API Description">API Description</option>
                         <option value="API Methods">API Methods</option>
@@ -181,7 +187,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ext-modelist.js" integrity="sha256-Eq83mfVraqpouXYtwjYSEvTt6JM7k1VrhsebwRs06AM=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/intro.js@2.9.3/intro.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.2/jszip.min.js" integrity="sha256-gy5W5/rXWluWXFRvMWFFMVhocfpBe7Tf4SW2WMfjs4E=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/js/vex.combined.min.js" integrity="sha256-qObWTmBVvSj8Kh/R02uSsIcrO5B2Bow7/taqyDFHqXc=" crossorigin="anonymous"></script>
 <script type='text/javascript'>
+    vex.defaultOptions.className = 'vex-theme-os';
     ace.require("ace/ext/language_tools");
     var themeData = ["textmate", "dreamweaver", "solarized_dark", "twilight"];
 $.each(themeData, function(i, item) {
@@ -225,6 +233,18 @@ var last_sent = "";
 var last_received = "";
 var time_last_action = new Date().getTime();
 
+var newly_added_files = {};
+var newly_added_files_dict = {{new_files_names_to_bodies | safe}};
+for (key in newly_added_files_dict) {
+    var value = newly_added_files_dict[key];
+    newly_added_files[key] = true;
+    name_to_body[key] = value;
+    var optgroup_to_add = document.querySelector("#one_optgroup_3");
+    $("<option>").attr("value", key).text(key).appendTo(optgroup_to_add);
+    optgroup_to_add = document.querySelector("#two_optgroup_3");
+    $("<option>").attr("value", key).text(key).appendTo(optgroup_to_add);
+}
+
 function initSetUpStarterFiles() {
     var starter_index = 0;
     $("#file-drop-down-one option").each(function() {
@@ -232,8 +252,8 @@ function initSetUpStarterFiles() {
             name_to_body[this.text] = starter_code_bodies[starter_index];
             var input = document.createElement("input");
             input.setAttribute("type", "hidden");
-            input.setAttribute("name", "file_" + this.text);
-            input.setAttribute("id", "file_" + this.text);
+            input.setAttribute("name", "wfile_" + this.text);
+            input.setAttribute("id", "wfile_" + this.text);
             input.setAttribute("value", starter_code_bodies[starter_index]);
             document.getElementById("file_contents").appendChild(input);
             starter_index = starter_index + 1
@@ -376,7 +396,7 @@ function setUpOnChangeForEditorOne() {
         var textarea = $("#editor_one");
         textarea.val(curr_val);
         name_to_body[currently_selected_file_one] = curr_val;
-        var element = document.getElementById('file_' + currently_selected_file_one);
+        var element = document.getElementById('wfile_' + currently_selected_file_one);
         var element_exists = (typeof(element) != 'undefined' && element != null);
         if (element_exists) {
             element.value = curr_val;
@@ -399,7 +419,7 @@ function setUpOnChangeForEditorTwo() {
         var textarea = $("#editor_two");
         textarea.val(curr_val);
         name_to_body[currently_selected_file_two] = curr_val;
-        var element = document.getElementById('file_' + currently_selected_file_two);
+        var element = document.getElementById('wfile_' + currently_selected_file_two);
         var element_exists = (typeof(element) != 'undefined' && element != null);
         if (element_exists) {
             element.value = curr_val;
@@ -465,6 +485,51 @@ $('#file-drop-down-one').change(function() {
         code_editor_one.setReadOnly(!1);
         currently_selected_file_one = $("#file-drop-down-one option:selected").text();
         code_editor_one.setValue(name_to_body[currently_selected_file_one].toString(), -1)
+    } else if (opt_group === "New Files (Modifiable)") {
+        if (selected.val() !== "Add New File") {
+            if (code_editor_one !== null) {
+                code_editor_one.destroy()
+            }
+            $("#editor_one").html('')
+            code_editor_one = textarea_edit("editor_one");
+            setUpOnChangeForEditorOne();
+            code_editor_one.setReadOnly(!1);
+            currently_selected_file_one = $("#file-drop-down-one option:selected").text();
+            code_editor_one.setValue(name_to_body[currently_selected_file_one].toString(), -1);
+        } else {
+            vex.dialog.prompt({
+            message: 'What is the name (and extension) of your new file?',
+            placeholder: 'file_name.py',
+            buttons: [
+                $.extend({}, vex.dialog.buttons.YES, { text: 'Create' }),
+                $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+            ],
+            callback: function (value) {
+                    if (value in name_to_body) {
+                        vex.dialog.alert("Error: File already exists.");
+                    } else if (Object.keys(name_to_body).length > 30) {
+                        vex.dialog.alert("Error: You have reached the maximum file limit.");
+                    }
+                    else {
+                        var optgroup_to_add = document.querySelector("#one_optgroup_3");
+                        $("<option>").attr("value", value).text(value).appendTo(optgroup_to_add);
+                        optgroup_to_add = document.querySelector("#two_optgroup_3");
+                        $("<option>").attr("value", value).text(value).appendTo(optgroup_to_add);
+                        name_to_body[value] = "";
+                        newly_added_files[value] = true;
+
+                        var input = document.createElement("input");
+                        input.setAttribute("type", "hidden");
+                        input.setAttribute("name", "wfile_" + value);
+                        input.setAttribute("id", "wfile_" + value);
+                        input.setAttribute("value", "");
+                        document.getElementById("file_contents").appendChild(input);
+
+                        $("#file-drop-down-one").val(value).trigger('change');
+                    }
+                }
+            });
+        }
     } else if (opt_group === "API (Not Modifiable)") {
         if (selected.val() === "API Description") {
             if (code_editor_one !== null) {
@@ -511,6 +576,51 @@ $('#file-drop-down-two').change(function() {
         code_editor_two.setReadOnly(!1);
         currently_selected_file_two = $("#file-drop-down-two option:selected").text();
         code_editor_two.setValue(name_to_body[currently_selected_file_two].toString(), -1)
+    } else if (opt_group === "New Files (Modifiable)") {
+        if (selected.val() !== "Add New File") {
+            if (code_editor_two !== null) {
+                code_editor_two.destroy()
+            }
+            $("#editor_two").html('')
+            code_editor_two = textarea_edit("editor_two");
+            setUpOnChangeForEditorTwo();
+            code_editor_two.setReadOnly(!1);
+            currently_selected_file_two = $("#file-drop-down-two option:selected").text();
+            code_editor_two.setValue(name_to_body[currently_selected_file_two].toString(), -1);
+        } else {
+            vex.dialog.prompt({
+            message: 'What is the name (and extension) of your new file?',
+            placeholder: 'file_name.py',
+            buttons: [
+                $.extend({}, vex.dialog.buttons.YES, { text: 'Create' }),
+                $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+            ],
+            callback: function (value) {
+                    if (value in name_to_body) {
+                        vex.dialog.alert("Error: File already exists.");
+                    } else if (Object.keys(name_to_body).length > 30) {
+                        vex.dialog.alert("Error: You have reached the maximum file limit.");
+                    }
+                    else {
+                        var optgroup_to_add = document.querySelector("#two_optgroup_3");
+                        $("<option>").attr("value", value).text(value).appendTo(optgroup_to_add);
+                        optgroup_to_add = document.querySelector("#one_optgroup_3");
+                        $("<option>").attr("value", value).text(value).appendTo(optgroup_to_add);
+                        name_to_body[value] = "";
+                        newly_added_files[value] = true;
+
+                        var input = document.createElement("input");
+                        input.setAttribute("type", "hidden");
+                        input.setAttribute("name", "wfile_" + value);
+                        input.setAttribute("id", "wfile_" + value);
+                        input.setAttribute("value", "");
+                        document.getElementById("file_contents").appendChild(input);
+
+                        $("#file-drop-down-two").val(value).trigger('change');
+                    }
+                }
+            });
+        }
     } else if (opt_group === "API (Not Modifiable)") {
         if (selected.val() === "API Description") {
             if (code_editor_two !== null) {
@@ -537,15 +647,29 @@ $('#file-drop-down-two').change(function() {
 
 function get_all_code_fields() {
     var return_dict = {};
-    var all_file_fields = $('*[id^="file_"]');
+    var all_file_fields = $('*[id^="wfile_"]');
     for (var i = 0; i < all_file_fields.length; i++) {
         var curr_element = all_file_fields[i];
-        if (curr_element.id != "file_contents") {
-            return_dict[curr_element.id] = curr_element.value
+        if (!(curr_element.id in newly_added_files)) {
+            return_dict[curr_element.id] = curr_element.value;
         }
     }
-    return return_dict
+    return return_dict;
 }
+
+function get_all_new_file_fields() {
+    var return_dict = {};
+    var all_file_fields = $('*[id^="wfile_"]');
+    for (var i = 0; i < all_file_fields.length; i++) {
+        var curr_element = all_file_fields[i];
+        var name_to_add = curr_element.id.replace("wfile_", "");
+        if (name_to_add in newly_added_files) {
+            return_dict[name_to_add] = curr_element.value;
+        }
+    }
+    return return_dict;
+}
+
 $('#run_test_case_button').click(function() {
     $("#test_case_loading").show();
     $("#test_case_results").html("");
@@ -575,7 +699,7 @@ $('#run_test_case_button').click(function() {
             send_socket_file_content_update('', JSON.stringify(results_json), false, true);
         },
         error: function(data) {
-            alert("There was a problem running the test case.")
+            vex.dialog.alert("There was a problem running the test case.");
         }
     })
 });
@@ -587,6 +711,7 @@ $('#save_code').click(function() {
     var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
     var data_to_send = {};
     data_to_send.json_file_contents = JSON.stringify(get_all_code_fields());
+    data_to_send.new_files = JSON.stringify(get_all_new_file_fields());
     data_to_send.csrfmiddlewaretoken = CSRFtoken;
     $.ajax({
         type: "POST",
@@ -724,7 +849,7 @@ interviewSocket.onmessage = function(e) {
 };
 
 interviewSocket.onclose = function(e) {
-  alert("Live Interview Session Stopped Working Unexpectedly");
+  vex.dialog.alert("Live Interview Session Stopped Working Unexpectedly");
 };
 
 window.onbeforeunload = function(e) {
@@ -774,17 +899,17 @@ $('#question_answer').submit(function() {
                 var bad_file = all_files_submitted(zip_file_names);
                 var can_submit = bad_file.length == 0;
                 if (!can_submit) {
-                    alert(bad_file + " has not been submitted or has no content");
+                    vex.dialog.alert(bad_file + " has not been submitted or has no content");
                 }
                 return can_submit;
             }, function (e) {
-                alert("There was an error processing your zip file");
+                vex.dialog.alert("There was an error processing your zip file");
             });
     } else {
         var bad_file = all_files_submitted({});
         var can_submit = bad_file.length == 0;
         if (!can_submit) {
-            alert(bad_file + " has not been submitted");
+            vex.dialog.alert(bad_file + " has not been submitted");
         }
         return can_submit;
     }

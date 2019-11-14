@@ -164,6 +164,12 @@ class RequireClassThatTheUserCanFillOut:
                                         <textarea name="starter_body_1"></textarea>
                                     </div>
                                 </div>
+                                <div class="form-check">
+                                    <input class="form-check-input checkbox-style" type="checkbox" id="allow_new_files" name="allow_new_files" checked>
+                                    <label class="form-check-label checkbox-label" for="allow_new_files">
+                                        Allow interviewees to create files not defined on this page <br /></label>
+                                </div>
+                                <p class="checkbox-label-description">Deselect this box if you want the user to restrict their answer to the files defined on this page.</p>  
                                 <hr/>
                                 <button type="button" class="btn btn-light" onclick="add_code_file('starter')">Add File</button>
                                 <button type="button" class="btn btn-light" onclick="remove_code_file('starter')">Remove File</button>

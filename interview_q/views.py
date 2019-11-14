@@ -56,6 +56,7 @@ class CreateInterviewView(View):
             banned_imports = self.request.POST.get('banned_imports', '')
             network_enabled = self.request.POST.get('network_enabled', '') == 'on'
             allow_stdout = self.request.POST.get('allow_stdout', '') == 'on'
+            allow_new_files = self.request.POST.get('allow_new_files', '') == 'on'
             question_language = self.request.POST.get('question_language', '')
             dependencies_list = self.request.POST.getlist('dependencies')
             dependencies = ",".join(dependencies_list)
@@ -63,7 +64,7 @@ class CreateInterviewView(View):
                 return render(request, self.template_name, {"error_message": "name field not filled out"})
             if len(description) == 0:
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
-            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled, allow_stdout=allow_stdout, banned_imports=banned_imports, dependencies=dependencies)
+            question = InterviewQuestion(name=name, description=description, creator=self.request.user, language=question_language, network_enabled=network_enabled, allow_stdout=allow_stdout, allow_new_files=allow_new_files, banned_imports=banned_imports, dependencies=dependencies)
             question.save()
 
             question_id = question.id
@@ -345,6 +346,7 @@ class EditQuestionView(View):
             question_language = self.request.POST.get('question_language', '')
             network_enabled = self.request.POST.get('network_enabled', '') == 'on'
             allow_stdout = self.request.POST.get('allow_stdout', '') == 'on'
+            allow_new_files = self.request.POST.get('allow_new_files', '') == 'on'
             dependencies_list = self.request.POST.getlist('dependencies')
             dependencies = ",".join(dependencies_list)
             if len(name) == 0:
@@ -363,6 +365,7 @@ class EditQuestionView(View):
             question.language = question_language
             question.network_enabled = network_enabled
             question.allow_stdout = allow_stdout
+            question.allow_new_files = allow_new_files
             question.dependencies = dependencies
 
             question.save()
