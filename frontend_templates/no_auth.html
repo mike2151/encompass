@@ -1,10 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'main/css/signup.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
 <div style="color: white; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-<h1 style="font-size: 3em; text-align: center;">You are not logged in or do not have the appropriate permissions to access this page.</h1><br />
-<center><a style="color: white; font-size: 1.7em" href="/users/login">Log in here</a></center>
-</div>
-<script>
-function changeBackground(color) {
-   document.body.style.background = color;
-}
-window.addEventListener("load",function() { changeBackground('#8D8DFF') });
-</script>
+   <h1 style="font-size: 3em; text-align: center;">You are not logged in or do not have the appropriate permissions to access this page.</h1><br />
+   <center><p style="color: white; font-size: 1.7em"><a style="color: white; text-decoration: underline;" href="/users/login">Log in here</a><br />or<br/><a style="color: white; text-decoration: underline;" href="/users/signup">Create an account</a></p></center>
+   </div>
+   <script>
+   function changeBackground(color) {
+      document.body.style.background = color;
+   }
+   window.addEventListener("load",function() { changeBackground('#8D8DFF') });
+   </script>
+{% endblock %}

@@ -565,9 +565,9 @@ class CreateQuestionInstanceView(View):
             question_instance.save()
 
             name_of_question = question_instance.base_question.name
-            question_url = get_current_site(request) + "/questions/answer/" + str(question_instance.pk)
-            mail_subject = "An Interview Question Has Been Sent To You"
-            message = "Hello ,\n You have been asked to complete the following interview question: {0}. You can complete it by navigating here: {1}. \n Best of luck! \n The Encompass Team.".format(name_of_question, question_url)
+            question_url = str(get_current_site(request)) + "/questions/answer/" + str(question_instance.pk)
+            mail_subject = "An Encompass Interview Question Has Been Sent To You"
+            message = "Hello ,\n You have been asked to complete the following interview question: {0}. You can complete it by navigating here: {1}. Note: you need an account to answer the question. \n Best of luck! \n The Encompass Team.".format(name_of_question, question_url)
             email_obj = EmailMessage(
                 mail_subject, message, to=[user_email]
             )
@@ -577,6 +577,15 @@ class CreateQuestionInstanceView(View):
             expire_date_field = parser.parse(expire_date_field_str + " " + start_time_zone_str)
             question_instance = InterviewQuestionInstance(interviewee=interviewee, interviewee_email=user_email, creator_email = base_question.creator.email, base_question=base_question, start_time=start_date_field, expire_time=expire_date_field, start_time_date_str=start_time_date_str, can_preview=can_preview)
             question_instance.save()
+
+            name_of_question = question_instance.base_question.name
+            question_url = str(get_current_site(request)) + "/questions/answer/" + str(question_instance.pk)
+            mail_subject = "An Encompass Interview Question Has Been Sent To You"
+            message = "Hello ,\n You have been asked to complete the following interview question: {0}. You can complete it by navigating here: {1}. Note: you need an account to answer the question. \n Best of luck! \n The Encompass Team.".format(name_of_question, question_url)
+            email_obj = EmailMessage(
+                mail_subject, message, to=[user_email]
+            )
+            email_obj.send()
         url = reverse("success_all_interview_questions", kwargs={'success_message': "Your question has successfully been sent!"})
         return HttpResponseRedirect(url)
         

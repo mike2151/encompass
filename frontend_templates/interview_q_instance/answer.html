@@ -80,7 +80,7 @@
         </div>
         <br />
         <div class="col-md-6 editor-holder">
-          <div id="editor_one" class="actual-editor" data-intro="This area displays information and serves as an editor for required files.">{{question.base_question.starter_code}}</div>
+          <div id="editor_one" class="actual-editor" data-intro="This area displays information and serves as an editor for required files. Under the required files section, you can fill out the files to answer the question. Here you can also import the question code base and other libraries as defined in the Allowed Imports section.">{{question.base_question.starter_code}}</div>
           <textarea name="editor_one"></textarea>
         </div>
         <div id="file_contents" type="hidden"></div>
@@ -281,7 +281,7 @@ function initAllowedImportsSetup() {
 
 function initAPISetup() {
     name_to_body["API Description"] = `{{ api_description | markdown  | safe}}`;
-    name_to_body["API Methods"] = `{{ api_methods | safe}}`
+    name_to_body["API Methods"] = `{{ api_methods | markdown  |  safe}}`
 }
 initSetUpStarterFiles();
 initAllowedImportsSetup();
@@ -505,29 +505,33 @@ $('#file-drop-down-one').change(function() {
                 $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
             ],
             callback: function (value) {
+                if (value.length > 0) {
                     if (value in name_to_body) {
                         vex.dialog.alert("Error: File already exists.");
                     } else if (Object.keys(name_to_body).length > 30) {
                         vex.dialog.alert("Error: You have reached the maximum file limit.");
                     }
                     else {
-                        var optgroup_to_add = document.querySelector("#one_optgroup_3");
-                        $("<option>").attr("value", value).text(value).appendTo(optgroup_to_add);
-                        optgroup_to_add = document.querySelector("#two_optgroup_3");
-                        $("<option>").attr("value", value).text(value).appendTo(optgroup_to_add);
-                        name_to_body[value] = "";
-                        newly_added_files[value] = true;
+                            var optgroup_to_add = document.querySelector("#one_optgroup_3");
+                            $("<option>").attr("value", value).text(value).appendTo(optgroup_to_add);
+                            optgroup_to_add = document.querySelector("#two_optgroup_3");
+                            $("<option>").attr("value", value).text(value).appendTo(optgroup_to_add);
+                            name_to_body[value] = "";
+                            newly_added_files[value] = true;
 
-                        var input = document.createElement("input");
-                        input.setAttribute("type", "hidden");
-                        input.setAttribute("name", "wfile_" + value);
-                        input.setAttribute("id", "wfile_" + value);
-                        input.setAttribute("value", "");
-                        document.getElementById("file_contents").appendChild(input);
+                            var input = document.createElement("input");
+                            input.setAttribute("type", "hidden");
+                            input.setAttribute("name", "wfile_" + value);
+                            input.setAttribute("id", "wfile_" + value);
+                            input.setAttribute("value", "");
+                            document.getElementById("file_contents").appendChild(input);
 
-                        $("#file-drop-down-one").val(value).trigger('change');
-                    }
+                            $("#file-drop-down-one").val(value).trigger('change');
+                        }
+                }  else {
+                    $("#file-drop-down-one").val($("#file-drop-down-one option:first").val()).trigger('change');
                 }
+            }
             });
         }
     } else if (opt_group === "API (Not Modifiable)") {
@@ -596,6 +600,7 @@ $('#file-drop-down-two').change(function() {
                 $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
             ],
             callback: function (value) {
+                if (value.length > 0) {
                     if (value in name_to_body) {
                         vex.dialog.alert("Error: File already exists.");
                     } else if (Object.keys(name_to_body).length > 30) {
@@ -618,6 +623,9 @@ $('#file-drop-down-two').change(function() {
 
                         $("#file-drop-down-two").val(value).trigger('change');
                     }
+                } else {
+                    $("#file-drop-down-two").val($("#file-drop-down-two option:first").val()).trigger('change');
+                }
                 }
             });
         }

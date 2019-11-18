@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .models import InterviewQuestionInstance
 from method_signature.models import MethodSignature
 from example_code.models import ExampleCode
+from interview_code_file.models import SupportCode
 from .util import create_and_run_submission
 from django.http import HttpResponseRedirect
 from submission_result.models import SubmissionResult
@@ -79,7 +80,7 @@ class QuestionAnswerView(View):
     template_name = "interview_q_instance/answer.html"
     def get(self, request, *args, **kwargs):
         question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
-        if question.interviewee_email == request.user.email:
+        if request.user.is_authenticated and question.interviewee_email == request.user.email:
             if question.has_completed and (not question.base_question.is_open):
                 return HttpResponseRedirect("/questions/answer")
             files_to_work_on = StarterCode.objects.filter(interview_question=question.base_question)
@@ -174,11 +175,18 @@ class QuestionAnswerView(View):
                     question.save()
 
                 # imports
-                allowed_imports = str(question.base_question.dependencies).replace(",", "<br />")
-                allowed_imports = "Allowed Imports: <br />" + allowed_imports if len(allowed_imports) > 0 else ""
+                external_allowed_imports = str(question.base_question.dependencies).replace(",", "<br />")
+                external_allowed_imports = "External Allowed Imports: <br />" + external_allowed_imports if len(external_allowed_imports) > 0 else ""
+                support_code_objs = SupportCode.objects.filter(interview_question=question.base_question)
+                code_base_files = []
+                for support_code_obj in support_code_objs:
+                    code_base_files.append(support_code_obj.code_file.name.split("/")[-1].split(".")[0])
+                code_base_files_str = ",".join(code_base_files)
+                code_base_allowed = "Provided Code Base Files You Can Import:<br /> " + code_base_files_str + "<br><br>"
+                allowed_imports = "Allowed Imports: <br><br>All standard libraries are allowed except for the ones detailed below.<br><br>" + code_base_allowed + external_allowed_imports
 
                 not_allowed_imports = str(question.base_question.banned_imports).replace(",", "<br />")
-                not_allowed_imports = "Imports Not Allowed: <br />" + not_allowed_imports if len(not_allowed_imports) > 0 else ""
+                not_allowed_imports = "<br />Imports Not Allowed: <br />" + not_allowed_imports if len(not_allowed_imports) > 0 else ""
                 imports_body = allowed_imports + "<br />" + not_allowed_imports
 
             return render(request, self.template_name, {

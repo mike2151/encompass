@@ -144,8 +144,7 @@
                         <div class="col-md-12">
                             <p class="step-description">Detail the names and contents of the files that the user has to submit. For every file that has to be submitted, 
                                     a starter code file needs to be declared. You can optionally fill in some parts of the file 
-                                    to get the interviewee started. For non-programming files, just declare the name and toggle the Code switch and leave the body blank. We automatically import 
-                                    all of the supporting code files for each starter file when the user submits or runs test cases. <br />An example is below in the "Code" option of the toggle.
+                                    to get the interviewee started. For non-programming files, just declare the name and toggle the Code switch and leave the body blank. Note that this code will be in the same directory as your starter code. <br />An example is below in the "Code" option of the toggle.
                             </p>
                             <hr />
                             <div class="form-group, step">
@@ -155,7 +154,8 @@
                                         <div class="centered">File <label class="switch"><input type="checkbox" name="starter_switch_1" id="starter_switch_1"><span class="slider round"></span></label> Code</div>
                                         <div class="centered"><input class="inputfile" type="file" id="starter_file_1" name="starter_file_1"></div>
                                         <div><input class="form-control name-of-file" id="starter_body_name_1" maxlength="128" name="starter_body_name_1" placeholder="name of file (include extension)"></input></div>                                     
-<div id="starter_body_1" class="code-editor">def example_required_file_method_the_user_can_implement():
+<div id="starter_body_1" class="code-editor">import your_supporting_code_file
+def example_required_file_method_the_user_can_implement():
     pass
 
 class RequireClassThatTheUserCanFillOut:
@@ -164,6 +164,7 @@ class RequireClassThatTheUserCanFillOut:
                                         <textarea name="starter_body_1"></textarea>
                                     </div>
                                 </div>
+                                <br />
                                 <div class="form-check">
                                     <input class="form-check-input checkbox-style" type="checkbox" id="allow_new_files" name="allow_new_files" checked>
                                     <label class="form-check-label checkbox-label" for="allow_new_files">

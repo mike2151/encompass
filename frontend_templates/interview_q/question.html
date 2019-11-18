@@ -152,8 +152,7 @@
                         <div class="col-md-12">
                             <p class="step-description">Detail the names and contents of the files that the user has to submit. For every file that has to be submitted, 
                                 a starter code file needs to be declared. You can optionally fill in some parts of the file 
-                                to get the interviewee started. For non-programming files, just declare the name and toggle the Code switch and leave the body blank. We automatically import 
-                                all of the supporting code files for each starter file when the user submits or runs test cases. <br />An example is below in the "Code" option of the toggle.
+                                to get the interviewee started. For non-programming files, just declare the name and toggle the Code switch and leave the body blank. Note that this code will be in the same directory as your starter code. <br />An example is below in the "Code" option of the toggle.
                             </p>
                             <hr />
                             <div class="form-group, step">
@@ -169,6 +168,7 @@
                                         </div>
                                     {% endfor %}
                                 </div>
+                                <br />
                                 <div class="form-check">
                                     <input class="form-check-input checkbox-style" type="checkbox" id="allow_new_files" name="allow_new_files" {% if question.allow_new_files %}checked{% endif %}>
                                     <label class="form-check-label checkbox-label" for="allow_new_files">
@@ -294,6 +294,6 @@ has_been_created[currentIndex]=!0}}else if(currentIndex===5){if(!has_been_create
 has_been_created[currentIndex]=!0}}else if(currentIndex===6){if(!has_been_created[currentIndex]){if(element_exists("test_body_1")){textarea_edit("test_body_1");switch_code("1","test")}
 has_been_created[currentIndex]=!0}}else if(currentIndex===7){if(!has_been_created[currentIndex]){if(element_exists("solution_body_1")){textarea_edit("solution_body_1");switch_code("1","solution")}
 has_been_created[currentIndex]=!0}}}});$('#banned_imports').amsifySuggestags({type:'amsify',});var code_names={{supporting_code_names|safe}};populate_array(code_names,"supporting");code_names={{starter_code_names|safe}};populate_array(code_names,"starter");code_names={{example_code_names|safe}};populate_array(code_names,"example");code_names={{solution_code_names|safe}};populate_array(code_names,"solution");textarea_edit("test_body_1");switch_code("1","test");$(document).on("keydown",":input:not(textarea)",function(event){return event.key!="Enter"});var all_deps="{{already_used_dep | safe}}";var dep_array=all_deps.split(",");$("#dependencies").val(dep_array);
-function resize_steps() {var w = parseInt(window.innerWidth);if(w <= 900) {for (var i = 0; i < 8; i++) {$("#wizard-t-" + i.toString()).html((i+1).toString());}}}resize_steps();
+function resize_steps() {var w = parseInt(window.innerWidth);if(w <= 900) {for (var i = 0; i < 8; i++) {$("#wizard-t-" + i.toString()).html((i+1).toString());}}}resize_steps();window.onbeforeunload = function(e) {return "Are you sure you want to leave this page?";};
 </script>
 {% endblock %}
