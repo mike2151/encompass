@@ -46,7 +46,7 @@
                             </p><hr />
                             <div class="form-group, step">
                                 <label htmlFor="name">Name of Question (Visible to users)</label>
-                                <input class="form-control" id="name" maxlength="128" name="name" type="text" value="{{ question.name }}"/><br />
+                                <input class="form-control" id="name" maxlength="512" name="name" type="text" value="{{ question.name }}"/><br />
 
                                 <label htmlFor="description">Description of Question (Visible to users)</label>
                                 <textarea class="form-control" id="description" name="description" rows=11 placeholder="Write your description here. Markdown is supported.">{{ question.description }}</textarea><br/>
