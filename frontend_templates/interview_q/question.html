@@ -103,7 +103,7 @@
                             <div>
                                 {% for support_code_name in supporting_code_names %}
                                     <div id="div_supporting_code_{{ forloop.counter }}">
-                                        <div class="centered">File <label class="switch"><input type="checkbox" name="supporting_switch_{{ forloop.counter }}" id="supporting_switch_{{ forloop.counter }}" checked disabled><span class="slider round"></span></label> Code</div>
+                                        <div class="centered">File <label class="switch"><input type="checkbox" name="supporting_switch_{{ forloop.counter }}" id="supporting_switch_{{ forloop.counter }}" checked><span class="slider round"></span></label> Code</div>
                                         <div class="centered"><input class="inputfile" type="file" id="supporting_file_{{ forloop.counter }}" name="supporting_file_{{ forloop.counter }}"></div>
                                         <div><input class="form-control name-of-file" id="supporting_body_name_{{ forloop.counter }}" maxlength="128" name="supporting_body_name_{{ forloop.counter }}" placeholder="Name of file" value="{{ support_code_name }}"></input></div>
                                         <div id="supporting_body_{{ forloop.counter }}" class="code-editor">{{ supporting_code_contents|index:forloop.counter0 }}</div>
@@ -160,7 +160,7 @@
                                 <div id="starter_fields">
                                     {% for starter_code_name in starter_code_names %}
                                         <div id="div_starter_code_{{ forloop.counter }}">
-                                        <div class="centered">File <label class="switch"><input type="checkbox" name="starter_switch_{{ forloop.counter }}" id="starter_switch_{{ forloop.counter }}" checked disabled><span class="slider round"></span></label>  Code</div>
+                                        <div class="centered">File <label class="switch"><input type="checkbox" name="starter_switch_{{ forloop.counter }}" id="starter_switch_{{ forloop.counter }}" checked><span class="slider round"></span></label>  Code</div>
                                         <div class="centered"><input class="inputfile" type="file" id="starter_file_{{ forloop.counter }}" name="starter_file_{{ forloop.counter }}"></div>
                                         <div><input class="form-control name-of-file" id="starter_body_name_{{ forloop.counter }}" maxlength="128" name="starter_body_name_{{ forloop.counter }}" placeholder="Name of file" value="{{ starter_code_name }}"></input></div>
                                         <div id="starter_body_{{ forloop.counter }}" class="code-editor">{{ starter_code_contents|index:forloop.counter0 }}</div>
@@ -195,7 +195,7 @@
                                 <div id="example_fields">
                                     {% for example_code_name in example_code_names %}
                                         <div id="div_example_code_{{ forloop.counter }}">
-                                        <div class="centered">File <label class="switch"><input type="checkbox" name="example_switch_{{ forloop.counter }}" id="example_switch_{{ forloop.counter }}" checked disabled><span class="slider round"></span></label>  Code</div>
+                                        <div class="centered">File <label class="switch"><input type="checkbox" name="example_switch_{{ forloop.counter }}" id="example_switch_{{ forloop.counter }}" checked><span class="slider round"></span></label>  Code</div>
                                         <div class="centered"><input class="inputfile" type="file" id="example_file_{{ forloop.counter }}" name="example_file_{{ forloop.counter }}"></div>
                                         <div><input class="form-control name-of-file" id="example_body_name_{{ forloop.counter }}" maxlength="128" name="example_body_name_{{ forloop.counter }}" placeholder="Name of file" value="{{ example_code_name }}"></input></div>
                                         <div id="example_body_{{ forloop.counter }}" class="code-editor">{{ example_code_contents|index:forloop.counter0 }}</div>
@@ -217,7 +217,7 @@
                                 <p class="step-description">Provide test cases. An example is below in the "Code" option of the toggle.</p>
                             <div class="form-group, step">
                                 <label class="code-label">Test Case Code (Not visible to users)</label> <br />
-                                <div class="centered">File <label class="switch"><input type="checkbox" name="test_switch_1" id="test_switch_1" checked disabled><span class="slider round"></span></label> Code</div>
+                                <div class="centered">File <label class="switch"><input type="checkbox" name="test_switch_1" id="test_switch_1" checked><span class="slider round"></span></label> Code</div>
                                 <div class="centered"><input class="inputfile" type="file" id="test_file_1" name="test_file_1"></div>
                                 <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="name of file (include extension)" value="{{ test_case_name }}"></input></div>
                                 <div id="test_body_1" class="code-editor">{{ test_case_code_contents }}</div>
@@ -240,7 +240,7 @@
                                 <div id="solution_fields">
                                     {% for solution_code_name in solution_code_names %}
                                         <div id="div_solution_code_{{ forloop.counter }}">
-                                            <div class="centered">File <label class="switch"><input type="checkbox" name="solution_switch_{{ forloop.counter }}" id="solution_switch_{{ forloop.counter }}" checked disabled><span class="slider round"></span></label> Code</div>
+                                            <div class="centered">File <label class="switch"><input type="checkbox" name="solution_switch_{{ forloop.counter }}" id="solution_switch_{{ forloop.counter }}" checked><span class="slider round"></span></label> Code</div>
                                             <div class="centered"><input class="inputfile" type="file" id="solution_file_{{ forloop.counter }}" name="solution_file_{{ forloop.counter }}"></div>
                                             <div><input class="form-control name-of-file" id="solution_body_name_{{ forloop.counter }}" maxlength="128" name="solution_body_name_{{ forloop.counter }}" placeholder="Name of file" value="{{ solution_code_name }}"></input></div>
                                             <div id="solution_body_{{ forloop.counter }}" class="code-editor">{{ solution_code_contents|index:forloop.counter0 }}</div>
@@ -285,7 +285,7 @@ function switch_code(number,name){if($("#"+name+"_switch_"+number).is(':checked'
 $("#"+name+"_switch_"+number).change(function(){if(this.checked){$("#"+name+"_body_"+number).show();$("#"+name+"_body_name_"+number).show();$("#"+name+"_file_"+number).hide()}else{$("#"+name+"_body_name_"+number).hide();$("#"+name+"_body_"+number).hide();$("#"+name+"_file_"+number).show()}})};
 var validation_rules = {};validation_rules["name"] = "required";validation_rules["description"] = "required";validation_rules["starter_file_1"] = {required: '#starter_body_name_1:blank'};validation_rules["starter_body_name_1"] = {required: '#starter_file_1:blank'};
 for (var i = 2; i < NUM_FIELDS+1; i++) {validation_rules["starter_file_" + i.toString()] = {required: '#starter_body_name_' + i.toString() + ':blank'};validation_rules["starter_body_name_" + i.toString()] = {required: '#starter_file_' + i.toString() + ':blank'};validation_rules["example_file_" + i.toString()] = {required: '#example_body_name_' + i.toString() + ':blank'};validation_rules["example_body_name_" + i.toString()] = {required: '#example_file_' + i.toString() + ':blank'};validation_rules["supporting_file_" + i.toString()] = {required: '#supporting_body_name_' + i.toString() + ':blank'};validation_rules["supporting_body_name_" + i.toString()] = {required: '#supporting_file_' + i.toString() + ':blank'};}
-$(document).on("keydown",":input:not(textarea)",function(event){return event.key!="Enter"});var has_been_created={};has_been_created[2]=!1;has_been_created[4]=!1;has_been_created[5]=!1;has_been_created[6]=!1;has_been_created[7]=!1;var form=$("#wizard");form.validate({errorPlacement:function errorPlacement(error,element){element.before(error)},rules:validation_rules});form.steps({headerTag:"h2",bodyTag:"section",transitionEffect:"slideLeft",autoFocus:!0,enableFinishButton:!1,onStepChanging:function(event,currentIndex,newIndex)
+$(document).on("keydown",":input:not(textarea)",function(event){return event.key!="Enter"});var has_been_created={};has_been_created[2]=!1;has_been_created[4]=!1;has_been_created[5]=!1;has_been_created[6]=!1;has_been_created[7]=!1;var form=$("#wizard");form.validate({errorPlacement:function errorPlacement(error,element){element.before(error)},rules:validation_rules});form.steps({headerTag:"h2",bodyTag:"section",transitionEffect:"slideLeft",autoFocus:!0,enableFinishButton:!1,enableAllSteps: true,onStepChanging:function(event,currentIndex,newIndex)
 {form.validate().settings.ignore=":disabled,:hidden";return form.valid()},onFinishing:function(event,currentIndex)
 {form.validate().settings.ignore=":disabled";return form.valid()},onStepChanged:function(event,currentIndex,newIndex)
 {if(currentIndex===2){if(!has_been_created[currentIndex]){if(element_exists("supporting_body_1")){textarea_edit("supporting_body_1");switch_code("1","supporting")}

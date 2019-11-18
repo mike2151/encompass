@@ -73,7 +73,7 @@ class CreateInterviewView(View):
             name = "supporting"
             number = 1
             while self.check_condition(request, name, number):
-                if not request.POST.get(name + "_switch_" + str(number), True):
+                if not request.POST.get(name + "_switch_" + str(number), False):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = SupportCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
@@ -382,7 +382,7 @@ class EditQuestionView(View):
             InterviewTestCase.objects.filter(interview_question=question).delete()
             SolutionCode.objects.filter(interview_question=question).delete()
             StarterCode.objects.filter(interview_question=question).delete()
- 
+
  
             # repeat code above in create
 
@@ -390,7 +390,7 @@ class EditQuestionView(View):
             name = "supporting"
             number = 1
             while self.check_condition(request, name, number):
-                if not request.POST.get(name + "_switch_" + str(number), True):
+                if not request.POST.get(name + "_switch_" + str(number), False):
                     # file
                     if request.FILES.get(name + "_file_" + str(number), False):
                         new_file = SupportCode(code_file=request.FILES[name + "_file_" + str(number)], interview_question=question)
