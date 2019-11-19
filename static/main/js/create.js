@@ -10,6 +10,7 @@ var add_api_field = function () {
 
     var textarea = document.createElement("textarea");
     textarea.setAttribute("id", name);
+    textarea.setAttribute("rows", 5);
     textarea.setAttribute("name", name);
     textarea.setAttribute("placeholder", "Method Name: description, args, return type");
     textarea.setAttribute("class", "form-control small-margin-top");

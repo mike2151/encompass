@@ -136,7 +136,7 @@
                                     {% for api_method in api_methods %}
                                         <div>
                                             <label htmlFor="api_method_{{ forloop.counter }}">Method:</label><br/>
-                                            <textarea class="form-control" id="api_method_{{ forloop.counter }}" name="api_method_{{ forloop.counter }}" >{{ api_method }}</textarea><br />
+                                            <textarea class="form-control" rows=5 id="api_method_{{ forloop.counter }}" name="api_method_{{ forloop.counter }}" >{{ api_method }}</textarea><br />
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -288,7 +288,7 @@ class TestCases(unittest.TestCase):
 <script src="{% static 'interview/creation/jquery.amsify.suggestags.js' %}"></script>
 <script>
 var NUM_FIELDS = 30;function populate_array(array,string_name){for(var i=1;i<array.length+1;i++){textarea_edit(string_name+"_body_"+i.toString());switch_code(i.toString(),string_name)}}
-var curr_method_number=get_starting_method_number();var curr_code_numbers={};var add_api_field=function(){var added=document.createElement("div");document.getElementById("api_fields").appendChild(added);var name="api_method_"+curr_method_number.toString();var textarea=document.createElement("textarea");textarea.setAttribute("id",name);textarea.setAttribute("name",name);textarea.setAttribute("placeholder","Method Name: description, args, return type");textarea.setAttribute("class","form-control small-margin-top");added.appendChild(textarea);curr_method_number=curr_method_number+1};var remove_api_field=function(){if(curr_method_number>2){document.getElementById("api_method_"+(curr_method_number-1).toString()).remove();curr_method_number=curr_method_number-1}}
+var curr_method_number=get_starting_method_number();var curr_code_numbers={};var add_api_field=function(){var added=document.createElement("div");document.getElementById("api_fields").appendChild(added);var name="api_method_"+curr_method_number.toString();var textarea=document.createElement("textarea");textarea.setAttribute("id",name);textarea.setAttribute("name",name);textarea.setAttribute("rows", 5);textarea.setAttribute("placeholder","Method Name: description, args, return type");textarea.setAttribute("class","form-control small-margin-top");added.appendChild(textarea);curr_method_number=curr_method_number+1};var remove_api_field=function(){if(curr_method_number>2){document.getElementById("api_method_"+(curr_method_number-1).toString()).remove();curr_method_number=curr_method_number-1}}
 function element_exists(string_id){var element=document.getElementById(string_id);return(typeof(element)!='undefined'&&element!=null)}
 function get_starting_method_number(class_name){var curr_num=1;var string_name="api_method_"+curr_num.toString();while(element_exists(string_name)){curr_num=curr_num+1;string_name="api_method_"+curr_num.toString()}
 return curr_num}

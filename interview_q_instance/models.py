@@ -33,7 +33,7 @@ class InterviewQuestionInstance(models.Model):
     can_preview = models.BooleanField(default=False)
     current_working_body = models.TextField(null=True, blank=True)
     new_files_body = models.TextField(null=True, blank=True)
-    id = models.IntegerField(primary_key=True, default=make_pk)
+    id = models.BigIntegerField(primary_key=True, default=make_pk)
     live_interview_id = models.CharField(
       editable=False, max_length=36, default=make_uuid
     )
