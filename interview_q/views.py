@@ -679,7 +679,7 @@ class SubmissionsQuestionView(View):
                     num_results_per_page = 30
 
                     page = int(request.GET.get('page', 1))
-                    paginator = Paginator(SubmissionResult.objects.filter(interview_question=question), num_results_per_page)
+                    paginator = Paginator(SubmissionResult.objects.filter(interview_question=question).order_by('-submission_time'), num_results_per_page)
                     start_count = (page- 1) * num_results_per_page
 
                     try:

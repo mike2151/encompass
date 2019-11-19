@@ -50,15 +50,29 @@ class InterviewQuestionInstance(models.Model):
     def delete_all_but_submission_files(self):
         base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(self.base_question.pk))
         
-        starter_dir = os.path.join(base_question_dir, 'starter_code_files')
-        instance_question_dir = os.path.join(base_question_dir, 'instances/{0}'.format(self.pk))
+        
+        files_to_delete = ["__init__.py", "runner.py"]
 
-        starter_files = []
-        for subdir, dirs, files in os.walk(starter_dir):
+        working_dir = os.path.join(base_question_dir, 'example_code_files')
+        for subdir, dirs, files in os.walk(working_dir):
             for s_file in files:
-                starter_files.append(str(s_file))
+                files_to_delete.append(str(s_file))
 
+        working_dir = os.path.join(base_question_dir, 'supporting_code_files')
+        for subdir, dirs, files in os.walk(working_dir):
+            for s_file in files:
+                files_to_delete.append(str(s_file))
+
+        working_dir = os.path.join(base_question_dir, 'test_code_files')
+        for subdir, dirs, files in os.walk(working_dir):
+            for s_file in files:
+                files_to_delete.append(str(s_file))
+
+        
+        instance_question_dir = os.path.join(base_question_dir, 'instances/{0}'.format(self.pk))
         for subdir, dirs, files in os.walk(instance_question_dir):
             for i_file in files:
-                if not (str(i_file) in starter_files):
-                    os.remove(os.path.join(instance_question_dir, i_file))
+                if i_file in files_to_delete:
+                    p = os.path.join(instance_question_dir, i_file)
+                    if os.path.exists(p):
+                        os.remove(p)

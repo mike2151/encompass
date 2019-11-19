@@ -146,17 +146,17 @@
                         </div>
                     </div>
                 </section>
-                <h2 class="step-title">Starter Code</h2>
+                <h2 class="step-title">Starter/Required Files</h2>
                 <section>
                     <div class="row">
                         <div class="col-md-12">
                             <p class="step-description">Detail the names and contents of the files that the user has to submit. For every file that has to be submitted, 
-                                a starter code file needs to be declared. You can optionally fill in some parts of the file 
-                                to get the interviewee started. For non-programming files, just declare the name and toggle the Code switch and leave the body blank. Note that this code will be in the same directory as your starter code. <br />An example is below in the "Code" option of the toggle.
+                                a file below needs to be declared. You can optionally fill in some parts of the file 
+                                to get the interviewee started. For non-programming files, just declare the name and toggle the Code switch and leave the body blank. Note that this code will be in the same directory as your supporting code. <br />An example is below in the "Code" option of the toggle.
                             </p>
                             <hr />
                             <div class="form-group, step">
-                                <label class="code-label">Starter Code (visible to users)</label> <br />
+                                <label class="code-label">Starter/Required Files (visible to users)</label> <br />
                                 <div id="starter_fields">
                                     {% for starter_code_name in starter_code_names %}
                                         <div id="div_starter_code_{{ forloop.counter }}">
@@ -220,23 +220,43 @@
                                 <div class="centered">File <label class="switch"><input type="checkbox" name="test_switch_1" id="test_switch_1" checked><span class="slider round"></span></label> Code</div>
                                 <div class="centered"><input class="inputfile" type="file" id="test_file_1" name="test_file_1"></div>
                                 <div><input class="form-control name-of-file" id="test_body_name_1" maxlength="128" name="test_body_name_1" placeholder="name of file (include extension)" value="{{ test_case_name }}"></input></div>
-                                <div id="test_body_1" class="code-editor">{{ test_case_code_contents }}</div>
+                                {% if test_case_code_contents|length > 0 %}
+                                    <div id="test_body_1" class="code-editor">{{ test_case_code_contents }}</div>
+                                {% else %}
+<div id="test_body_1" class="code-editor"># this unittest import is needed
+import unittest
+# replace with your support file name here
+import user_submitted_file
+# indicate the visibility of your test 
+# to the user with a @visible @not_visible annotation
+
+# all test cases should be written in this class
+# all test methods must begin with the prefix test_
+class TestCases(unittest.TestCase):
+    @visible
+    def test_user_submitted_file(self):
+        assert user_submitted_file.custom_function() == 5
+
+    @not_visible
+    def test_user_submitted_file_two(self):
+        assert user_submitted_file.custom_function() != 5</div>
+                                {% endif %}
                                 <textarea name="test_body_1">
                                 </textarea>
                             </div>
                         </div>
                     </div>
                 </section>
-                <h2 class="step-title">Solution</h2>
+                <h2 class="step-title">Sample Submission</h2>
                 <section>
                     <div class="row">
                         <div class="col-md-12">
-                            <p class="step-description">Provide a solution to ensure the code compiles. The solution files should correspond to the starter files. If you do not provide this, then the only way to validate behavior is to try out the question.
-                                    If you submit solution files, we will run your solution and the problem after you create this question to ensure everything is running smoothly. <br />An example is below in the "Code" option of the toggle.
+                            <p class="step-description">Provide a sample submission to ensure the code compiles. The submission files should correspond to the required files. If you do not provide this, then the only way to validate behavior is to try out the question.
+                                    If you submit a sample submission, the site will run your submission to ensure everything is running smoothly. <br />An example is below in the "Code" option of the toggle.
                                 </p>
                                 <hr />
                             <div class="form-group, step">
-                                <label class="code-label">Optional Solution Code (Not visible to users)</label> <br />
+                                <label class="code-label">Optional Submission Code (Not visible to users)</label> <br />
                                 <div id="solution_fields">
                                     {% for solution_code_name in solution_code_names %}
                                         <div id="div_solution_code_{{ forloop.counter }}">

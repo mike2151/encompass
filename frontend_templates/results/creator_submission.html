@@ -13,26 +13,32 @@
                 <h1 class="page-title">Submission Result For {{ question.name }}</h1>
                 <div class="container">
                     <div class="row">
-                        {% for test_name, test_p in test_passed.items %}
-                           <div class="col-md-4">
-                                {% if test_p %}
-                                <div class="card mb-4 box-shadow result-card-passed">
-                                    <div class="card-body">
-                                        <p class="card-text question-card-title">Passed: {{ test_name }}</p>
+                        {% if test_passed|length > 0%}
+                            {% for test_name, test_p in test_passed.items %}
+                            <div class="col-md-4">
+                                    {% if test_p %}
+                                    <div class="card mb-4 box-shadow result-card-passed">
+                                        <div class="card-body">
+                                            <p class="card-text question-card-title">Passed: {{ test_name }}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                {% else %}
-                                <div class="card mb-4 box-shadow result-card-failed">
-                                    <div class="card-body">
-                                        <p class="card-text question-card-title">Failed: {{ test_name }}</p>
-                                        {% if test_results|get_item_len:test_name > 0 %}
-                                            <p class="output"><br /> {{ test_results|get_item:test_name }}</p>
-                                        {% endif %}
+                                    {% else %}
+                                    <div class="card mb-4 box-shadow result-card-failed">
+                                        <div class="card-body">
+                                            <p class="card-text question-card-title">Failed: {{ test_name }}</p>
+                                            {% if test_results|get_item_len:test_name > 0 %}
+                                                <p class="output"><br /> {{ test_results|get_item:test_name }}</p>
+                                            {% endif %}
+                                        </div>
                                     </div>
+                                    {% endif %}
                                 </div>
-                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-info" role="alert" style="margin-left: auto; margin-right: auto;">
+                                <p>There we no test cases run</p>
                             </div>
-                        {% endfor %}
+                        {% endif %}
                        
                     </div>
                     <div class="row">

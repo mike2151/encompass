@@ -23,7 +23,7 @@
             You are being observed
           </div>
           {% endif %}
-        <p class="instructions"><span class="question-title">{{ question.base_question.name }}:</span> Please modify the required files or upload a zip file containing all or some required files and press the Submit Code button when finished.</p>
+        <p class="instructions"><span class="question-title">{{ question.base_question.name }}:</span> Please modify the required files or upload a zip file containing the required files and press the Submit Code button when finished.</p>
         {% if not network_enabled %}
               <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <p class="warning">Note that this question has disabled network access so any network related code will fail.</p>
@@ -150,7 +150,7 @@
              <hr />
             <center>
             <div class="submit-content" data-intro="Rather than editing code, you can also upload a zip file containing the filled out required files.">
-                <h4 class="or-upload">Or, upload the some or all required files in a zip file:</h4><br />
+                <h4 class="or-upload">Or, upload the some or all required/additional files in a zip file:</h4><br />
 
                 <input type="text" id="file_name_field">
                 <span id="file_span">Select Zip File</span>
@@ -162,8 +162,8 @@
       
       <div class="col-md-12 bottom-padding">
         <center>
-          <button type="submit" name="action" value="submit_code" class="btn btn-success btn-lg centered-button" data-intro="When you are ready, submit your code. Once you submit, you cannot return to the question.">Submit Code</button>
-          <button type="button" name="save_code" id="save_code" class="btn btn-info btn-lg" data-intro="You can always save your code and return to the problem later. Note: your code does not auto save.">Save Code</button><br /><br />
+          <button type="submit" name="action" id="submit_code" value="submit_code" class="btn btn-success btn-lg centered-button" data-intro="When you are ready, submit your code. Once you submit, you cannot return to this page.">Submit Code</button>
+          <button type="button" name="save_code" id="save_code" class="btn btn-info btn-lg" data-intro="You can always save your code and return to the problem later. This will only save the code written. The zip file uploaded will not be saved. Note: your code does not auto save.">Save Code</button><br /><br />
 
           <div class="alert alert-info" id="code-saved-container">
             <p id="code_saved_status"></p>
@@ -707,6 +707,7 @@ $('#run_test_case_button').click(function() {
             send_socket_file_content_update('', JSON.stringify(results_json), false, true);
         },
         error: function(data) {
+            $("#test_case_loading").hide();
             vex.dialog.alert("There was a problem running the test case.");
         }
     })
@@ -892,7 +893,8 @@ function all_files_submitted(zip_dict) {
 } 
 
 // validate all the files are submitted
-$('#question_answer').submit(function() {
+$('#submit_code').on('click', function(e) {
+    e.preventDefault();
     var can_submit = true;
     var zip_file_names = {};
     // read content of zip file first
@@ -908,18 +910,23 @@ $('#question_answer').submit(function() {
                 var can_submit = bad_file.length == 0;
                 if (!can_submit) {
                     vex.dialog.alert(bad_file + " has not been submitted or has no content");
+                    return false;
+                } else {
+                    $("#question_answer").submit();
                 }
-                return can_submit;
             }, function (e) {
                 vex.dialog.alert("There was an error processing your zip file");
+                return false;
             });
     } else {
         var bad_file = all_files_submitted({});
         var can_submit = bad_file.length == 0;
         if (!can_submit) {
-            vex.dialog.alert(bad_file + " has not been submitted");
+            vex.dialog.alert(bad_file + " has not been submitted or has no content");
+            return false;
+        } else {
+            $("#question_answer").submit();
         }
-        return can_submit;
     }
 });
   

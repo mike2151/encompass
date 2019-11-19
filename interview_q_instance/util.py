@@ -47,21 +47,22 @@ def prepend_to_test_file(user_submission_dir, test_case_file_name, language):
             write_file.close()
 
 def prepend_to_user_submitted_files(user_submission_dir, support_code_dir, language):
-    if language == "python":
-        prepend_string = ""
-        for support_file in os.listdir(support_code_dir):
-            file_str_split = str(support_file).split(".")
-            if file_str_split[1] == "py":
-                prepend_string = prepend_string + "import " + file_str_split[0] + "\n"
-        for user_submitted_file_str in os.listdir(user_submission_dir):
-            if user_submitted_file_str.endswith(".py"):
-                actual_file = os.path.join(user_submission_dir, user_submitted_file_str)
-                data = ''
-                with open(actual_file, 'r') as read_file:
-                    data = read_file.read()
-                with open(actual_file, 'w') as write_file:
-                    write_file.write(prepend_string + data)
-                    write_file.close()
+    if (os.path.exists(support_code_dir)):
+        if language == "python":
+            prepend_string = ""
+            for support_file in os.listdir(support_code_dir):
+                file_str_split = str(support_file).split(".")
+                if file_str_split[1] == "py":
+                    prepend_string = prepend_string + "import " + file_str_split[0] + "\n"
+            for user_submitted_file_str in os.listdir(user_submission_dir):
+                if user_submitted_file_str.endswith(".py"):
+                    actual_file = os.path.join(user_submission_dir, user_submitted_file_str)
+                    data = ''
+                    with open(actual_file, 'r') as read_file:
+                        data = read_file.read()
+                    with open(actual_file, 'w') as write_file:
+                        write_file.write(prepend_string + data)
+                        write_file.close()
 
 def generate_network_prepend():
     return "import socket\ndef guard(*args, **kwargs):\n\traise Exception('Network is disabled')\nsocket.socket = guard\n"
@@ -96,13 +97,14 @@ def get_not_visible_test_cases(test_file_path):
     is_not_visible_line = False
     with open(test_file_path, "r") as read_file:
         for line in read_file:
-            if "@not_visible" in line:
+            if "@not_visible" in line and not (line.startswith("#")):
                 is_not_visible_line = True
             else:
                 if is_not_visible_line:
-                    test_case_name = (line.split("def")[1]).split("(")[0].replace(" ", "")
-                    not_visible_test_cases[test_case_name] = True
-                    is_not_visible_line = False
+                    if "def" in line:
+                        test_case_name = (line.split("def")[1]).split("(")[0].replace(" ", "")
+                        not_visible_test_cases[test_case_name] = True
+                        is_not_visible_line = False
     return not_visible_test_cases.copy()
 
 # creates the file to run for tests
@@ -117,6 +119,12 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
     if os.path.exists(user_submission_dir):
         shutil.rmtree(user_submission_dir)
     os.makedirs(user_submission_dir)
+
+    starter_code_names = []
+    if (not question.allow_new_files):
+        starter_code_objects = StarterCode.objects.filter(interview_question=question)
+        for starter_code_obj in starter_code_objects:
+            starter_code_names.append(str(starter_code_obj.code_file.name.split("/")[-1]))
 
     if creator_run:
         # copy over solution
@@ -144,7 +152,12 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
                 with zipfile.ZipFile(file_path, 'r') as zip_ref:
                     for zip_info in zip_ref.infolist():
                         if "__MACOSX" not in zip_info.filename:
-                            zip_ref.extract(zip_info, user_submission_dir)
+                            if (not question.allow_new_files):
+                                z_name = zip_info.filename.split("/")[-1]
+                                if z_name in starter_code_names:
+                                    zip_ref.extract(zip_info, user_submission_dir)
+                            else:
+                                zip_ref.extract(zip_info, user_submission_dir)
                 # delete file
                 os.remove(file_path)
 

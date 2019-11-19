@@ -25,8 +25,8 @@ class InterviewQuestion(models.Model):
     allow_new_files = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    dependencies = models.TextField()
-    banned_imports = models.TextField()
+    dependencies = models.TextField(null=True, blank=True)
+    banned_imports = models.TextField(null=True, blank=True)
 
     id = models.IntegerField(primary_key=True, default=make_pk)
     is_open = models.BooleanField(default=False)

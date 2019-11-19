@@ -87,6 +87,7 @@ class QuestionAnswerView(View):
 
             api_methods = ""
             api = InterviewAPI.objects.filter(interview_question=question.base_question).first()
+            api_description = ""
             if api is not None:
                 api_description = api.description
                 api_methods_objs = MethodSignature.objects.filter(interview_question_api=api)
@@ -144,6 +145,12 @@ class QuestionAnswerView(View):
             opt_groups = ["Question (Not Modifiable)", "Required Files (Modifiable)", "API (Not Modifiable)", "Example Code (Not Modifiable)", "Allowed Imports (Not Modifiable)"]
             if question.base_question.allow_new_files:
                 opt_groups.insert(2, "New Files (Modifiable)")
+            # see if there is api
+            if len(api_description) == 0 and len(api_methods) == 0:
+                opt_groups.remove("API (Not Modifiable)")
+            # see if there is example files
+            if len(example_files_names) == 0:
+                opt_groups.remove("Example Code (Not Modifiable)")
 
             expiration_time_in_seconds = 0
             has_expiration = True
@@ -176,17 +183,24 @@ class QuestionAnswerView(View):
 
                 # imports
                 external_allowed_imports = str(question.base_question.dependencies).replace(",", "<br />")
-                external_allowed_imports = "External Allowed Imports: <br />" + external_allowed_imports if len(external_allowed_imports) > 0 else ""
+                external_allowed_imports = "External Allowed Imports: <br><br /><code>" + external_allowed_imports + "</code>" if len(external_allowed_imports) > 0 else ""
                 support_code_objs = SupportCode.objects.filter(interview_question=question.base_question)
                 code_base_files = []
                 for support_code_obj in support_code_objs:
-                    code_base_files.append(support_code_obj.code_file.name.split("/")[-1].split(".")[0])
-                code_base_files_str = ",".join(code_base_files)
+                    if ".py" in support_code_obj.code_file.name:
+                        code_base_files.append(support_code_obj.code_file.name.split("/")[-1].split(".")[0])
+                code_base_files_str = ""
+                for code_base_file in code_base_files:
+                    code_base_files_str = code_base_files_str + "<br><code>" + code_base_file + "</code>"
                 code_base_allowed = "Provided Code Base Files You Can Import:<br /> " + code_base_files_str + "<br><br>"
-                allowed_imports = "Allowed Imports: <br><br>All standard libraries are allowed except for the ones detailed below.<br><br>" + code_base_allowed + external_allowed_imports
+                if len(code_base_files) == 0:
+                    code_base_allowed = ""
+                allowed_imports = "Allowed Imports: <br><br>All Python standard libraries are allowed except for the ones detailed in the banned section.<br><br>" + code_base_allowed + external_allowed_imports
 
                 not_allowed_imports = str(question.base_question.banned_imports).replace(",", "<br />")
-                not_allowed_imports = "<br />Imports Not Allowed: <br />" + not_allowed_imports if len(not_allowed_imports) > 0 else ""
+                not_allowed_imports = "<br />Imports Not Allowed: <br /><br><code>" + not_allowed_imports + "</code>" if len(not_allowed_imports) > 0 else ""
+                if len(not_allowed_imports) == 0:
+                    allowed_imports = allowed_imports.replace("except for the ones detailed in the banned section.", "")
                 imports_body = allowed_imports + "<br />" + not_allowed_imports
 
             return render(request, self.template_name, {
@@ -285,6 +299,7 @@ class QuestionObserveView(View):
 
                 api_methods = ""
                 api = InterviewAPI.objects.filter(interview_question=question.base_question).first()
+                api_description  
                 if api is not None:
                     api_description = api.description
                     api_methods_objs = MethodSignature.objects.filter(interview_question_api=api)
