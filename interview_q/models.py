@@ -28,7 +28,7 @@ class InterviewQuestion(models.Model):
     dependencies = models.TextField(null=True, blank=True)
     banned_imports = models.TextField(null=True, blank=True)
 
-    id = models.IntegerField(primary_key=True, default=make_pk)
+    id = models.BigIntegerField(primary_key=True, default=make_pk)
     is_open = models.BooleanField(default=False)
 
     def __str__(self):
