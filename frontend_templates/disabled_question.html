@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css_imports %}
+<link href="{% static 'main/css/signup.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div style="color: white; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+   <h1 style="font-size: 3em; text-align: center;">This question has been disabled. The owner of this question needs to be a paid creator account plan that supports this question.</h1><br />
+   </div>
+   <script>
+   function changeBackground(color) {
+      document.body.style.background = color;
+   }
+   window.addEventListener("load",function() { changeBackground('#8D8DFF') });
+   </script>
+{% endblock %}

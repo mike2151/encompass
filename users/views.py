@@ -12,9 +12,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
 from datetime import datetime, timedelta, timezone
-from .plans import get_paid_plans, get_plan_by_price
+from .plans import get_paid_plans, get_plan_by_price, get_max_questions
 from django.conf import settings 
 import math
+from interview_q.models import InterviewQuestion
 
 import stripe
 
@@ -134,6 +135,14 @@ def activate(request, uidb64, token):
         return HttpResponseRedirect("/users/login/?status=invalid_activation")
 
 class EnrollView(View):
+    def reactivate_questions(self, user):
+        num_questions_reactivate = get_max_questions(user.subscription.plan_type)
+        user_questions = InterviewQuestion.objects.filter(creator=user)[:num_questions_reactivate]
+        if len(user_questions) > 0:
+            for user_question in user_questions:
+                user_question.is_disabled = False
+                user_question.save()
+        
     template_name = 'registration/enroll.html'   
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -165,6 +174,8 @@ class EnrollView(View):
                     subscription.save()
                     coupon.curr_redeems = coupon.curr_redeems + 1
                     coupon.save()
+                    # reactivate questions if needeed
+                    self.reactivate_questions(user)
                     return render(request, self.template_name, {
                         "plans": plans, 
                         "col_length": col_length,
@@ -234,6 +245,8 @@ def make_payment(request):
                 subscription.terminated_on = end_date
                 subscription.save()
                 user.save()
+                # reactivate questions if needeed
+                self.reactivate_questions(user)
                 return render(request, template_name, {
                             "plans": plans, 
                             "col_length": col_length,
@@ -256,6 +269,8 @@ def make_payment(request):
                 subscription.terminated_on = end_date
                 subscription.save()
                 user.save()
+                # reactivate questions if needeed
+                self.reactivate_questions(user)
                 return render(request, template_name, {
                             "plans": plans, 
                             "col_length": col_length,

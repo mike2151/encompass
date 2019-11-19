@@ -24,6 +24,8 @@ class InterviewQuestion(models.Model):
     allow_stdout = models.BooleanField(default=False)
     allow_new_files = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    # for whether or not a user has expired and so the question should not be served.
+    is_disabled = models.BooleanField(default=False)
 
     dependencies = models.TextField(null=True, blank=True)
     banned_imports = models.TextField(null=True, blank=True)

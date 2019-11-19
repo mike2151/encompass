@@ -27,6 +27,7 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.conf import settings
+from users.plans import get_max_questions
 import os
 
 
@@ -207,12 +208,18 @@ class HomeInterviewView(View):
         questions = []
         if request.user.is_authenticated:
             questions = InterviewQuestion.objects.filter(creator=request.user)
+            has_disabled_status = False 
+            for question in questions:
+                if question.is_disabled:
+                    has_disabled_status = True
+                    break
             can_user_make_questions = request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
             can_make_new_questions = request.user.num_questions_made < request.user.subscription.get_max_num_questions()
             success_message = ""
             if "success_message" in kwargs:
                 success_message = kwargs["success_message"]
             return render(request, self.template_name, {
+                'has_disabled_status': has_disabled_status,
                 'interview_questions': questions,
                 'can_user_make_questions': can_user_make_questions,
                 'can_make_new_questions': can_make_new_questions,
@@ -222,6 +229,13 @@ class HomeInterviewView(View):
             return render(request, "no_auth.html", {})
 
 class DeleteQuestionView(View):
+    def reactivate_questions(self, user):
+        num_questions_reactivate = get_max_questions(user.subscription.plan_type)
+        user_questions = InterviewQuestion.objects.filter(creator=user)[:num_questions_reactivate]
+        if len(user_questions) > 0:
+            for user_question in user_questions:
+                user_question.is_disabled = False
+                user_question.save()
     template_name = 'interview_q/delete.html'
     def get(self, request, *args, **kwargs):
         question = None
@@ -241,6 +255,8 @@ class DeleteQuestionView(View):
                 # decrease count
                 request.user.num_questions_made -= 1
                 request.user.save()
+                self.reactivate_questions(request.user)
+
         return HttpResponseRedirect("/interview_questions/")
 
 class EditQuestionView(View):
@@ -258,6 +274,8 @@ class EditQuestionView(View):
         question = InterviewQuestion.objects.get(pk=self.kwargs.get('pk'))
         if question.creator != request.user:
             return render(request, "no_auth.html", {})
+        if question.is_disabled:
+            return render(request, "disabled_question.html", {})
 
         supporting_code = SupportCode.objects.filter(interview_question=question)
         supporting_code_names = []
@@ -355,7 +373,7 @@ class EditQuestionView(View):
                 return render(request, self.template_name, {"error_message": "description field not filled out"})
             question_id = kwargs['pk']
             question = InterviewQuestion.objects.get(pk=question_id)
-            if question.creator != request.user:
+            if question.creator != request.user or question.is_disabled:
                 return HttpResponseRedirect("/interview_questions/")
             
             # replace basic fields
@@ -601,6 +619,8 @@ class CreateOpenQuestionInstanceView(View):
             except SiteUser.DoesNotExist:
                 interviewee = None
             base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+            if base_question.is_disabled:
+                return render(request, "disabled_question.html", {})
             # see if the user already attempted the question
             user_question_instance = InterviewQuestionInstance.objects.filter(base_question=base_question, interviewee_email=user_email, creator_email = base_question.creator.email,)
             question_instance = None
@@ -628,6 +648,8 @@ class ValidateQuestionView(View):
         if request.user.is_authenticated:
             if request.user.is_from_company:
                 question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+                if question.is_disabled:
+                    return render(request, "disabled_question.html", {})
                 if request.user == question.creator:
                     try:
                         interviewee = SiteUser.objects.get(email=user_email)
@@ -652,7 +674,7 @@ class OpenQuestionView(View):
             num_results_per_page = 30
 
             page = int(request.GET.get('page', 1))
-            paginator = Paginator(InterviewQuestion.objects.filter(is_open=True), num_results_per_page)
+            paginator = Paginator(InterviewQuestion.objects.filter(is_open=True, is_disabled=False), num_results_per_page)
             start_count = (page- 1) * num_results_per_page
 
             try:

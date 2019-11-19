@@ -80,6 +80,8 @@ class QuestionAnswerView(View):
     template_name = "interview_q_instance/answer.html"
     def get(self, request, *args, **kwargs):
         question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
+        if question.base_question.is_disabled:
+            return render(request, "disabled_question.html", {})
         if request.user.is_authenticated and question.interviewee_email == request.user.email:
             if question.has_completed and (not question.base_question.is_open):
                 return HttpResponseRedirect("/questions/answer")
@@ -226,6 +228,8 @@ class QuestionAnswerView(View):
 
     def post(self, request, *args, **kwargs):
         question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
+        if question.base_question.is_disabled:
+            return render(request, "disabled_question.html", {})
         if question_instance.interviewee_email == request.user.email:
             has_expiration = (not question_instance.expire_time) and (question_instance.how_many_minutes != 0)
             if has_expiration:
@@ -292,6 +296,8 @@ class QuestionObserveView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
+            if question.base_question.is_disabled:
+                return render(request, "disabled_question.html", {})
             if question.base_question.creator.email == request.user.email:
                 if question.has_completed and (not question.base_question.is_open):
                     return HttpResponseRedirect("/questions/answer")

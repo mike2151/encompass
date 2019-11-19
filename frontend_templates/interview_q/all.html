@@ -24,17 +24,32 @@
                     <div class="container-questions">
                         <div class="row">    
                             <table id="questions">
+                            {% if has_disabled_status %}
+                            <div class="alert alert-danger alert-dismissible fade show alert-message" role="alert" style="margin-left: auto; margin-right: auto">
+                                <p style="text-align: center;">You have disabled questions because your number of questions exceeds the number your subscription allows for.</p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                            </div><br>
+                            {% endif %}
                             {% for interview_q in interview_questions %}
                                 <tr>
-                                    <td class="question-card-title">{{ forloop.counter }}. {{ interview_q.name }}</p></td>
-                                    <td>
-                                        <a href="/interview_questions/question/{{interview_q.id}}/send/" class="btn btn-outline-primary question-card-button">Send</a>
-                                        <a href="/interview_questions/question/{{interview_q.id}}/submissions/" class="btn btn-outline-primary question-card-button">View Submissions</a>
-                                        <a href="/interview_questions/question/{{interview_q.id}}/observe_answerers/" class="btn btn-outline-primary question-card-button">Observe Answerers</a>
-                                        <a href="/interview_questions/question/{{interview_q.id}}/try/" class="btn btn-outline-primary question-card-button">Try</a>
-                                        <a href="/interview_questions/question/{{interview_q.id}}/edit/" class="btn btn-outline-primary question-card-button">Edit</a>
-                                        <a href="/interview_questions/question/{{interview_q.id}}/delete/" class="btn btn-outline-primary question-card-button">Delete</a>
-                                    </td>
+                                    {% if interview_q.is_disabled %}
+                                        <td class="question-card-title"><span style="color: red">[Disabled] </span>{{ forloop.counter }}. {{ interview_q.name }}</p></td>
+                                        <td>
+                                            <a href="/interview_questions/question/{{interview_q.id}}/delete/" class="btn btn-outline-primary question-card-button">Delete</a>
+                                        </td>
+                                    {% else %}
+                                        <td class="question-card-title">{{ forloop.counter }}. {{ interview_q.name }}</p></td>
+                                        <td>
+                                            <a href="/interview_questions/question/{{interview_q.id}}/send/" class="btn btn-outline-primary question-card-button">Send</a>
+                                            <a href="/interview_questions/question/{{interview_q.id}}/submissions/" class="btn btn-outline-primary question-card-button">View Submissions</a>
+                                            <a href="/interview_questions/question/{{interview_q.id}}/observe_answerers/" class="btn btn-outline-primary question-card-button">Observe Answerers</a>
+                                            <a href="/interview_questions/question/{{interview_q.id}}/try/" class="btn btn-outline-primary question-card-button">Try</a>
+                                            <a href="/interview_questions/question/{{interview_q.id}}/edit/" class="btn btn-outline-primary question-card-button">Edit</a>
+                                            <a href="/interview_questions/question/{{interview_q.id}}/delete/" class="btn btn-outline-primary question-card-button">Delete</a>
+                                        </td>
+                                    {% endif %}
                                 </tr>   
                             {% endfor %}
                             </table>
