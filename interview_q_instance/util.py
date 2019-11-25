@@ -15,6 +15,22 @@ def copy_folder_contents(src, dest):
     if os.path.exists(src) and os.path.exists(dest):
         copy_tree(src, dest)
 
+def file_exists_bad_import(question, file_content):
+    bad_imports = question.banned_imports
+    bad_import_list = bad_imports.split(",")
+    lines = file_content.split("\n")
+    for line in lines:
+        if line.startswith("import "):
+            import_name = line.split(" ")[1].strip()
+            if import_name in bad_import_list:
+                return True
+        elif line.startswith("from "):
+            if "import" in line:
+                import_name = line.split(" ")[1].strip()
+                if import_name in bad_import_list:
+                    return True
+    return False
+
 def exists_bad_import(question, user_submission_dir):
     bad_imports = question.banned_imports
     bad_import_list = bad_imports.split(",")
@@ -31,7 +47,7 @@ def exists_bad_import(question, user_submission_dir):
                         return True
                 elif line.startswith("from "):
                     if "import" in line:
-                        import_name = line.split(" ")[2].strip()
+                        import_name = line.split(" ")[1].strip()
                         if import_name in bad_import_list:
                             return True
     return False
@@ -192,8 +208,12 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
 
     # if user test case
     if len(user_test_case) > 0:
+        # see if file contains bad imports
+        test_does_bad_import_exist = file_exists_bad_import(question, user_test_case)
+        if test_does_bad_import_exist:
+            return {"Compilation_Output": False}, {"Compilation_Output": "You are using a banned import"}, {"Compilation_Output": True}
         # create the test file
-        user_test_case_dir = os.path.join(base_question_dir, 'user_test_cases')
+        user_test_case_dir = os.path.join(user_submission_dir, 'user_test_cases')
         if os.path.exists(user_test_case_dir):
             shutil.rmtree(user_test_case_dir)
         os.makedirs(user_test_case_dir)

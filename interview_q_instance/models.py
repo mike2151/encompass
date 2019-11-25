@@ -6,6 +6,7 @@ from django.conf import settings
 import shutil
 import uuid
 from random import randint
+import shutil
 
 def make_uuid():
    return str(uuid.uuid4()).replace("-", "_")
@@ -49,7 +50,12 @@ class InterviewQuestionInstance(models.Model):
 
     def delete_all_but_submission_files(self):
         base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(self.base_question.pk))
+        instance_question_dir = os.path.join(base_question_dir, 'instances/{0}'.format(self.pk))
         
+        # delete user test folder if exists
+        user_test_cases_dir = os.path.join(instance_question_dir, "user_test_cases")
+        if os.path.exists(user_test_cases_dir):
+            shutil.rmtree(user_test_cases_dir) 
         
         files_to_delete = ["__init__.py", "runner.py"]
 
@@ -68,8 +74,6 @@ class InterviewQuestionInstance(models.Model):
             for s_file in files:
                 files_to_delete.append(str(s_file))
 
-        
-        instance_question_dir = os.path.join(base_question_dir, 'instances/{0}'.format(self.pk))
         for subdir, dirs, files in os.walk(instance_question_dir):
             for i_file in files:
                 if i_file in files_to_delete:
