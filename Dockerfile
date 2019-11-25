@@ -19,4 +19,4 @@ RUN rm -rf /var/lib/apt/lists/*
 COPY docker-python-dep.txt /data/requirements.txt
 WORKDIR /data
 RUN pip3 install -r requirements.txt
-COPY . /data
+RUN rm requirements.txt
