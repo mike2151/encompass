@@ -228,7 +228,7 @@ class QuestionAnswerView(View):
 
     def post(self, request, *args, **kwargs):
         question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
-        if question.base_question.is_disabled:
+        if question_instance.base_question.is_disabled:
             return render(request, "disabled_question.html", {})
         if question_instance.interviewee_email == request.user.email:
             has_expiration = (not question_instance.expire_time) and (question_instance.how_many_minutes != 0)
