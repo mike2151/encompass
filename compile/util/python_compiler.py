@@ -6,7 +6,7 @@ from config import DOCKER_IMAGE, MEMORY_LIMIT, AUTO_REMOVE, FILE_OPEN_MODE, LOCA
 def python_runner(client, file_name, container_name, command, return_dict, run_folder):
     try:
         local_directory = LOCAL_DIR + '/' + str(run_folder) + '/' + str(file_name)
-        container_directory = CONTAINER_DIR + '/' + str(run_folder) + '/' + str(file_name)
+        container_directory = str(file_name)
         python_run_command = command + ' ' + str(container_directory)
 
         if not os.path.exists(local_directory):
@@ -15,10 +15,14 @@ def python_runner(client, file_name, container_name, command, return_dict, run_f
         docker_local_dir = LOCAL_DIR + '/' + str(run_folder)
         docker_container_dir = CONTAINER_DIR + '/' + str(run_folder)
 
-        result = client.containers.run(DOCKER_IMAGE, python_run_command,
-                                       remove=AUTO_REMOVE, mem_limit=MEMORY_LIMIT,
+        result = client.containers.run(DOCKER_IMAGE, 
+                                       python_run_command,
+                                       remove=AUTO_REMOVE, 
+                                       mem_limit=MEMORY_LIMIT,
                                        name=container_name,
-                                       stdout=True, stderr=True,
+                                       stdout=True, 
+                                       stderr=True,
+                                       working_dir=docker_container_dir,
                                        volumes={docker_local_dir : {
                                                 'bind': docker_container_dir,
                                                 'mode': FILE_OPEN_MODE}
