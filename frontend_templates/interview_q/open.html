@@ -26,7 +26,7 @@
                             {% for question in questions %}
                                 <tr>
                                 <th scope="row">{{start_count|add:forloop.counter}}</th>
-                                <td><a href="/interview_questions/question/{{question.pk}}/try/">{{question.name}}</a></td>
+                                <td><a href="/interview_questions/question/{{question.display_id}}/try/">{{question.name}}</a></td>
                                 <td>{{ question.description|markdown|striptags|truncatechars:200}}</td>
                                 </tr>
                             {% endfor %}

@@ -618,7 +618,7 @@ class CreateOpenQuestionInstanceView(View):
                 interviewee = SiteUser.objects.get(email=user_email)
             except SiteUser.DoesNotExist:
                 interviewee = None
-            base_question = InterviewQuestion.objects.get(pk=kwargs['pk'])
+            base_question = InterviewQuestion.objects.get(display_id=kwargs['pk'])
             if base_question.is_disabled:
                 return render(request, "disabled_question.html", {})
             # see if the user already attempted the question
