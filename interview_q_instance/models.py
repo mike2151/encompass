@@ -76,7 +76,7 @@ class InterviewQuestionInstance(models.Model):
 
         for subdir, dirs, files in os.walk(instance_question_dir):
             for i_file in files:
-                if i_file in files_to_delete:
+                if i_file in files_to_delete or str(i_file).endswith(".pye"):
                     p = os.path.join(instance_question_dir, i_file)
                     if os.path.exists(p):
                         os.remove(p)

@@ -2,6 +2,7 @@ from interview_code_file.models import SupportCode
 import textwrap
 from interview_test_case.models import InterviewTestCase
 import os
+import subprocess
 import shutil
 from django.conf import settings
 from starter_code.models import StarterCode
@@ -229,7 +230,7 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
 
     # if python add __init__.py
     if language == 'python':
-        runner_file_name = "runner.py"
+        runner_file_name = "runner.pye"
         file_path = os.path.join(user_submission_dir, '__init__.py')
         f = open(file_path, "w")
         f.close()         
@@ -255,6 +256,18 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         # create the runner file
         create_runner_file(user_submission_dir, test_case_file_name, language, question, question.dependencies, question.network_enabled)
 
+        # encrypt the files
+        p = subprocess.Popen(["pyconcrete-admin.py", "compile", "--source=.", "--pye"], cwd=user_submission_dir)
+        p.wait()    
+        # delete all .py files that are supporting
+        supporting_file_names = []
+        for support_file in os.listdir(supporting_code_dir):
+            if support_file.endswith(".py"):
+                supporting_file_names.append(support_file.split("/")[-1])
+        for filename in os.listdir(user_submission_dir):
+            if filename.endswith(".py") and (filename.split("/")[-1]) in supporting_file_names:
+                os.remove(os.path.join(user_submission_dir, filename))
+
         run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version)
         all_unit_tests_results = run_submission_result['result']
         all_unit_tests_results_str = all_unit_tests_results
@@ -265,6 +278,13 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
 
         # get list of not visible
         not_visible_test_cases = get_not_visible_test_cases(test_file_path)
+
+        if (all_unit_tests_results_str.startswith("Exception ignored in")):
+            # inform that the code did not compile for all test cases
+            return_test_passed["Code Compilation"] = False
+            return_test_output["Code Compilation"] = "Code did not compile and no test cases were able to be run"
+            return_test_visibility["Code Compilation"] = True
+            return return_test_passed.copy(), return_test_output.copy(), return_test_visibility.copy()
 
         curr_failure_output = ""
         is_tracking_failure = False

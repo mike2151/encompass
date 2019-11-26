@@ -678,6 +678,20 @@ function get_all_new_file_fields() {
     return return_dict;
 }
 
+function get_all_test_names_from_test_body(content) {
+    var test_names = [];
+    var lines = content.split("\n");
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (line.indexOf("def test_") !== -1 && line.indexOf("#") === -1) {
+            var after_def = line.split("def ")[1];
+            var before_paren = after_def.split("(")[0];
+            test_names.push(before_paren);
+        }
+    }
+    return test_names;
+}
+
 $('#run_test_case_button').click(function() {
     $("#test_case_loading").show();
     $("#test_case_results").html("");
@@ -694,6 +708,14 @@ $('#run_test_case_button').click(function() {
             $("#test_case_loading").hide();
             var test_case_results = data.test_passed;
             var test_case_output = data.test_results;
+            if (Object.keys(test_case_results).length == 0 && editor_data.indexOf("def test_") !== -1) {
+                var test_case_names = get_all_test_names_from_test_body(editor_data);
+                for (var i = 0; i < test_case_names.length; i++) {
+                    var test_case_name = test_case_names[i];
+                    var row = $('<li class="list-group-item list-group-item-danger">' + test_case_name + ': Failed<br />Code did not compile</li>');
+                    $("#test_case_results").append(row)
+                }
+            }
             for (key in test_case_results) {
                 if (test_case_results[key]) {
                     var row = $('<li class="list-group-item list-group-item-success">' + key + ': Passed</li>');
@@ -708,7 +730,7 @@ $('#run_test_case_button').click(function() {
         },
         error: function(data) {
             $("#test_case_loading").hide();
-            vex.dialog.alert("There was a problem running the test case.");
+            vex.dialog.alert("There was a problem running the test case(s).");
         }
     })
 });

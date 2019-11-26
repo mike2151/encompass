@@ -20,3 +20,15 @@ COPY docker-python-dep.txt /data/requirements.txt
 WORKDIR /data
 RUN pip3 install -r requirements.txt
 RUN rm requirements.txt
+
+# install pycreate
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y git
+
+WORKDIR /
+RUN git clone https://github.com/Falldog/pyconcrete.git
+WORKDIR /pyconcrete
+RUN printf "encompassisking786254\nencompassisking786254\n" | python3 setup.py install
+WORKDIR /
+RUN rm -rf pyconcrete

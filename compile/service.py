@@ -4,7 +4,7 @@ from compile.util.java_compiler import java_runner
 commands = {
     'python': {
         2: 'python',
-        3.6: 'python3'
+        3.6: 'pyconcrete'
     },
     'java': {
         8: 'javac'
