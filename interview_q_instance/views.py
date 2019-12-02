@@ -205,10 +205,12 @@ class QuestionAnswerView(View):
                     allowed_imports = allowed_imports.replace("except for the ones detailed in the banned section.", "")
                 imports_body = allowed_imports + "<br />" + not_allowed_imports
 
+            prepend_title = "## Question: " + question.base_question.name + "<br><br>\n Instructions: Please modify the required files or upload a zip file containing the required files and press the Submit Code button when finished.<br><br>\n"
+            question_description = prepend_title + question.base_question.description
             return render(request, self.template_name, {
                 'question': question,
                 'network_enabled': question.base_question.network_enabled,
-                'question_description': question.base_question.description,
+                'question_description': question_description,
                 'api_methods': api_methods,
                 'api_description': api_description,
                 'example_files_bodies': json.dumps(example_files_bodies),

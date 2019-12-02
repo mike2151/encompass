@@ -51,8 +51,6 @@ select {
 
 .editor-holder {
     max-width: 100%; 
-    margin-left: .5vw; 
-    margin-right: .5vw;
 }
 
 .submit-section {
@@ -62,7 +60,7 @@ select {
 
 .submit-content {
     border: 2px solid #6c5ce7;
-    max-width: 40vw;
+    max-width: 55vw;
     padding: 1vw 1vh;
     margin-bottom: 1vh;
 }
@@ -76,29 +74,31 @@ select {
 .test-case-header { 
     text-align: center;
     color: #6c5ce7;
+    font-size: 2.5em;
 }
 
 .test-case-description {
     text-align: center;
     color: #000;
+    font-size: 1.4em;
 }
 
 .test-case-button {
-    margin-top: 1vh;
+    margin-top: 2vh;
     background-color: #6c5ce7;
     color: #FFF; 
     border: 1px solid #6c5ce7;
 }
 
 .test-case-button:hover {
-    margin-top: 1vh;
+    margin-top: 2vh;
     background-color: #FFF;
     color: #6c5ce7;
     border: 1px solid #6c5ce7;
 }
 
 .test-case-button:active:focus {
-    margin-top: 1vh !important;
+    margin-top: 2vh !important;
     background-color: #FFF !important;
     color: #6c5ce7 !important;
     border: 1px solid #FFF !important;
@@ -213,8 +213,8 @@ select {
 }
 
 .test-case-editor {
-    height: 35vh;
-    width: 80%;
+    height: 40vh;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
     border: 2px solid #6c5ce7;
@@ -246,7 +246,9 @@ select {
 
 .theme-name {
     color: #000;
-    font-size: .8em;
+    font-size: 1em;
+    max-width: 20vw;
+    border: 1px solid #000;
 }
 
 #theme-site {
@@ -274,12 +276,6 @@ select {
 
 .question-title {
     color: #6c5ce7;
-}
-
-.instructions {
-    color: #000;
-    margin-left: 4vw;
-    margin-right: 4vw;
 }
 
 .editor_options-left {
@@ -314,14 +310,18 @@ cursor: pointer;
 }
 
 #zip_file {
+text-align: center;
+margin-left: auto;
+margin-right: auto;
 position: absolute;
-top: 0;
+top: 5vh;
 bottom: 0;
 left: 0;
 right: 0;
 opacity: 0;
 cursor: pointer;
-width: 100%;
+width: 55%;
+height:75%;
 }
 
 .user_test_case_results {
@@ -349,13 +349,24 @@ width: 100%;
 .alert {display:inline-block;}
 
 #walk_through {
-    font-size: .7em;
     text-decoration: underline;
     cursor: pointer;
 }
 
 .bottom-padding {
     padding-bottom: 3vh;
+}
+
+.toolbar {
+    margin-top: 3vh;
+    font-size: 1.4em;
+}
+
+.toolbar-items {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    content:block;
 }
 
 @media only screen and (max-width: 900px) {

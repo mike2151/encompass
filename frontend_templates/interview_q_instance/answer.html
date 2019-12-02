@@ -23,21 +23,29 @@
             You are being observed
           </div>
           {% endif %}
-        <p class="instructions"><span class="question-title">{{ question.base_question.name }}:</span> Please modify the required files or upload a zip file containing the required files and press the Submit Code button when finished.</p>
-        {% if not network_enabled %}
+       {% if not network_enabled %}
               <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <p class="warning">Note that this question has disabled network access so any network related code will fail.</p>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
-              </div><br/>
+              </div>
         {% endif %}
         <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <p class="warning">Not sure what to do? <p id="walk_through">Walk through the interface.</p></p>
+            <p class="warning">Not sure what to do? <span id="walk_through">Walk through the interface.</span></p>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
         </div>
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            <p class="warning">Theme: <select id="theme-site" class="select-css" onchange="onSelectNewThemeSite()"> </select></p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+
+
+        
         {% if is_preview %}
         {% else %}
           {% if has_expiration %}
@@ -45,7 +53,6 @@
             <span id="remaining_time">Remaining Time:</span> 
           {% endif %}
         {% endif %}
-        <p class="theme-name">Theme: <select id="theme-site" class="select-css" onchange="onSelectNewThemeSite()"> </select></p>
       </div>
       <div class="col-md-6 answer-section-one" id="content-one">
         <div class="col-md-6 editor-section">
@@ -125,7 +132,7 @@
         <div id="file_contents" type="hidden"></div>
       </div>
       <div class="col-md-12 test-case-section">
-        <hr />
+        <hr /><br>
         <h3 class="test-case-header" data-intro="Use this section to write test cases to validate your code.">Write Test Cases</h3>
         {% if question.base_question.allow_stdout %}
         <p class="test-case-description">You can debug a failing test cases by using the print() method</p>
@@ -137,7 +144,7 @@
         </div>
         <textarea name="test_case_editor" id="test_case_editor_textarea"></textarea>
         {% if not is_observer %}
-        <center><button type="button" class="btn btn-info test-case-button" id="run_test_case_button">Run Test
+        <center><button type="button" class="btn btn-info btn-lg test-case-button" id="run_test_case_button">Run Test
             Case</button></center>
         {% endif %}
         <div class="spinner-border" role="status" id="test_case_loading">
@@ -191,7 +198,7 @@
 <script type='text/javascript'>
     vex.defaultOptions.className = 'vex-theme-os';
     ace.require("ace/ext/language_tools");
-    var themeData = ["textmate", "dreamweaver", "solarized_dark", "twilight"];
+    var themeData = [ "solarized_dark", "twilight", "textmate", "dreamweaver"];
 $.each(themeData, function(i, item) {
     $('#theme-site').append($('<option>', {
         value: item,
@@ -322,7 +329,7 @@ function textarea_edit(name) {
         mode = getModeByFileExtension(file_name);
     }
     var editor = ace.edit(name);
-    editor.setTheme("ace/theme/textmate");
+    editor.setTheme("ace/theme/solarized_dark");
     editor.session.setMode(mode);
     editor.setOptions({
         "showPrintMargin": !1,
@@ -345,7 +352,7 @@ function textarea_edit_example_code(name) {
         mode = getModeByFileExtension(file_name);
     }
     var editor = ace.edit(name);
-    editor.setTheme("ace/theme/textmate");
+    editor.setTheme("ace/theme/solarized_dark");
     editor.session.setMode("ace/mode/python");
     editor.setOptions({
         "showPrintMargin": !1,
@@ -358,7 +365,7 @@ function textarea_edit_example_code(name) {
 
 function textarea_edit_test_case(name) {
     var editor = ace.edit(name);
-    editor.setTheme("ace/theme/textmate");
+    editor.setTheme("ace/theme/solarized_dark");
     editor.session.setMode("ace/mode/python");
     editor.setOptions({
         "showPrintMargin": !1,
@@ -441,7 +448,7 @@ var example_code_snippets = document.getElementsByClassName('example_code_view')
 for (var i = 0; i < example_code_snippets.length; ++i) {
     var example_code = example_code_snippets[i];
     var editor = ace.edit(example_code.id);
-    editor.setTheme("ace/theme/textmate");
+    editor.setTheme("ace/theme/solarized_dark");
     editor.session.setMode("ace/mode/python");
     editor.setOptions({
         "showPrintMargin": !1,
