@@ -72,7 +72,8 @@ INSTALLED_APPS = [
     'ratelimit',
     'axes',
     'compressor',
-    'channels'
+    'channels',
+    'blog'
 ]
 
 AUTHENTICATION_BACKENDS = [

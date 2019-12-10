@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% load markdown_extras %}
+{% block css_imports %}
+<link href="{% static 'main/css/blog.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container page-container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="page-title">{{blog.title}}</h1>
+                <div class="blog-post">
+                    <p class="centered published">Published: {{blog.published}}</p><br>
+                    <p class="blog-content">{{blog.content | markdown  | safe}}</p><br>
+                    <a href="/blog" class="btn btn-outline-primary read-more-button">Go Back</a>
+                    <hr>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -21,6 +21,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
+    path('blog/', include('blog.urls')),
     path('users/', include('django.contrib.auth.urls')),
     path('interview_questions/', include('interview_q.urls')),
     path('questions/answer', include('interview_q_instance.urls')),
