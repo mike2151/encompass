@@ -257,8 +257,10 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         create_runner_file(user_submission_dir, test_case_file_name, language, question, question.dependencies, question.network_enabled)
 
         # encrypt the files
-        p = subprocess.Popen(["pyconcrete-admin.py", "compile", "--source=.", "--pye"], cwd=user_submission_dir)
-        p.wait()    
+        p = subprocess.Popen(["pyconcrete-admin.py", "compile", "--source=.", "--pye"], cwd=user_submission_dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, error = p.communicate()
+        error_str = error.decode("utf-8") 
+
         # delete all .py files that are supporting
         supporting_file_names = []
         for support_file in os.listdir(supporting_code_dir):
@@ -267,6 +269,13 @@ def create_and_run_submission(request, question, instance, creator_run, user_tes
         for filename in os.listdir(user_submission_dir):
             if filename.endswith(".py") and (filename.split("/")[-1]) in supporting_file_names:
                 os.remove(os.path.join(user_submission_dir, filename))
+
+        # if compilation error from encryption
+        if len(error_str) > 0:
+            return_test_passed["Code Compilation"] = False
+            return_test_output["Code Compilation"] = "Code did not compile and no test cases were able to be run. Output:<br><br>" + error_str
+            return_test_visibility["Code Compilation"] = True
+            return return_test_passed.copy(), return_test_output.copy(), return_test_visibility.copy()
 
         run_submission_result = run_submission_file(runner_file_name, user_submission_dir, language, version)
         all_unit_tests_results = run_submission_result['result']
