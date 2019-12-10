@@ -1,9 +1,9 @@
 # (NAME, DESCRIPTION, PRICE PER MONTH, NUM QUESTIONS)
 plans = [
     ('SHY', 'Free Plan', 0, 0),
-    ('ASKER', 'Basic Plan', 35, 1),
-    ('INQUISITOR', 'Pro Plan', 150, 5),
-    ('INTERROGATOR', 'Premium Plan', 600, 25),
+    ('ASKER', 'Basic Plan', 20, 1),
+    ('INQUISITOR', 'Pro Plan', 80, 5),
+    ('INTERROGATOR', 'Premium Plan', 400, 25),
 ]
 # name and description
 plans_names =  [(p[0], p[1]) for p in plans]
