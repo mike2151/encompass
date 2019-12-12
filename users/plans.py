@@ -1,8 +1,8 @@
 # (NAME, DESCRIPTION, PRICE PER MONTH, NUM QUESTIONS)
 plans = [
     ('SHY', 'Free Plan', 0, 0),
-    ('ASKER', 'Basic Plan', 20, 1),
-    ('INQUISITOR', 'Pro Plan', 80, 5),
+    ('ASKER', 'Basic Plan', 25, 1),
+    ('INQUISITOR', 'Pro Plan', 100, 5),
     ('INTERROGATOR', 'Premium Plan', 400, 25),
 ]
 # name and description
