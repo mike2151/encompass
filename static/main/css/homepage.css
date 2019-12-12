@@ -111,8 +111,6 @@ a:hover {
   padding-top: 3vh
 }
 
-.appeal-section {}
-
 .offer-title {
   font-size: 1.9em;
   color: #000;
@@ -227,28 +225,46 @@ a:hover {
 .landing-section {
   height: 100vh;
   background-image: url(/static/images/background_tile.png);
-  background-repeat: repeat
+  background-repeat: repeat;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.landing-text {
+.floating-icon {
   position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 70vw
+  top: 25%;
+  left: 11%;
+  animation: float 2s ease-in-out infinite;
+  z-index: 100;
 }
+
+.floating-icon-bg {
+  position: absolute;
+  top: 28%;
+  left: 13%;
+  animation: float 2s ease-in-out infinite;
+}
+
+.actions-section {
+  margin-top: 7vh;
+}
+
 
 .landing-title {
   color: #000;
   font-size: 4.5em;
   text-align: center;
+  margin-top: 10vh;
 }
 
 .landing-description {
-  margin-top: 3vh;
+  margin-top: 10vh;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
   color: #646464; 
   text-align: center;
-  font-size: 2em
+  font-size: 2em;
+  max-width: 80%;
 }
 
 /* EDITOR CSS */
@@ -347,6 +363,59 @@ a:hover {
   }
 }
 
+@media only screen and (max-height: 800px) { 
+  .landing-title {
+    margin-top: 5vh;
+  }
+
+  .landing-description {
+    margin-top: 3vh;
+  }
+
+  .floating-icon {
+    top: 12%;
+  }
+  .floating-icon-bg {
+    top: 14%;
+  }
+
+  .actions-section {
+    margin-top: 2vh;
+  }
+
+  .image-button {
+    margin-top: 2vh;
+  }
+}
+
+
+@media only screen and (min-width: 1200px) { 
+  .landing-description {
+    font-size: 2.4em;
+  }
+}
+
+@media only screen and (max-width: 1200px) { 
+  .landing-description {
+    width: 70%;
+    margin-left: 10vw;
+    margin-right: 1vw;
+  }
+
+  .floating-icon {
+    left: 2%;
+  }
+  .floating-icon-bg {
+    left: 4%;
+  }
+}
+
+@media only screen and (max-width: 992px) { 
+  #landing-images {
+    display: none; 
+  }
+}
+
 /* mobile */
 @media only screen and (max-width: 900px) {
   .open-question-card {
@@ -372,7 +441,7 @@ a:hover {
   }
 
   .landing-description {
-    font-size: 1.4em
+    font-size: 1.6em
   }
 
   .landing-text {

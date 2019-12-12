@@ -12,6 +12,7 @@
             <h1 class="page-title">{{blog.title}}</h1>
                 <div class="blog-post">
                     <p class="centered published">Published: {{blog.published}}</p><br>
+                    <hr>
                     <p class="blog-content">{{blog.content | markdown  | safe}}</p><br>
                     <a href="/blog" class="btn btn-outline-primary read-more-button">Go Back</a>
                     <hr>

@@ -9,22 +9,34 @@
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <div class="container homepage-container">
     <div class="col-lg-12 mb-12 landing-section">
-      <div class="landing-text">
-        <h1 class="landing-title">Join the Interview Question Revolution</h1>
-        <p class="landing-description">Encompass Interviews provides interviewers with tools to evaluate potential hires based on real world and unique programming challenges.
-        </p>
-        {% if user.is_authenticated %}
-          {% if user.is_from_company %}
-            <center><a class="image-button" href="/interview_questions">Manage Questions &#8594;</a></center>
-          {% else %}
-           <center><a class="image-button" href="/questions/answer">Answer Questions &#8594;</a></center>
-          {% endif %}
-        {% else %}
-          <center><a class="image-button" href="/users/signup">Sign Up</a><br />
-          <a href="#demo-section" id="scroll-link"><span class="scroll-button"></span></a>
-        </center>
-        {% endif %}
-      </div>
+        <div class="col-md-12">
+          <h1 class="landing-title" data-aos="fade-right" data-aos-duration="500" data-aos-once="true">Join the Interview Question Revolution</h1>
+        </div>
+        <div class="row">
+          <div id="landing-images" class="col-lg-6 col-md-0">
+              <img class="floating-icon" src="/static/images/sample_screen.png">
+              <img class="floating-icon-bg" src="/static/images/sample_screen_bg.png">
+          </div>
+          <div class="col-lg-6 col-md-12">
+              <p class="landing-description" data-aos="fade-left" data-aos-duration="1500" data-aos-once="true">Encompass Interviews provides interviewers with tools to evaluate potential hires based on real world and unique programming challenges.
+              </p>
+          </div>
+        </div>
+        <div class="col-md-12 actions-section">
+            <div id="action-button-section" data-aos="fade-up" data-aos-duration="2000" data-aos-once="true">
+                {% if user.is_authenticated %}
+                  {% if user.is_from_company %}
+                    <center><a class="image-button" href="/interview_questions">Manage Questions &#8594;</a></center>
+                  {% else %}
+                  <center><a class="image-button" href="/questions/answer">Answer Questions &#8594;</a></center>
+                  {% endif %}
+                {% else %}
+                  <center><a class="image-button" href="/users/signup">Sign Up</a><br />
+                  <a href="#demo-section" id="scroll-link"><span class="scroll-button"></span></a>
+                </center>
+                {% endif %}
+              </div>
+        </div>
     </div>
     <div id="demo-section" class="row example-answer-section" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
       <div class="col-md-6">
