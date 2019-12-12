@@ -82,7 +82,7 @@
     </div>
     {% if questions|length > 0 %}
     <div class="open-questions" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
-        <h2 class="open-questions-title">Explore more questions...</h2><br />
+        <h2 class="open-questions-title">Explore Some Questions</h2><br />
         <div class="row">
             {% for question in questions %}
           <div class="col-lg-3 mb-3" data-aos="fade-up" data-aos-duration="1500" data-aos-once="true">
@@ -136,9 +136,14 @@ def tell_them_what_encompass_is_all_about():
   description = '''
   Write questions which directly include your 
   code bases and have the interviewer interact with them 
-  when answering questions. Have the interviewee fill out as many
-  required files like this as you would like. 
-  Customize the question to your liking. We offer the ability to ban imports, suppress standard output, and disable network access to keep your code base safe and secure during the whole question answering process.
+  when answering questions. Have the interviewee
+  fill out as many required files like this 
+  as you would like. 
+  Customize the question to your liking. 
+  We offer the ability to ban imports,
+  suppress standard output, and disable network access to 
+  keep your code base safe and secure during the 
+  whole question answering process.
   '''
 
   message = your_code_library.yourMethod(description)
@@ -146,9 +151,9 @@ def tell_them_what_encompass_is_all_about():
           name_to_body["API Description"] = `Because Encompass automatically encrypts your code base and offers tools to prevent the interviewee from seeing your other files, describe 
           what the interviewee can interact with in this API description!`;
           name_to_body["API Methods"] = '<code>yourMethod(message)</code>: Sets the message attribute of the class. One argument: message (String). Returns a string';
-          name_to_body["Example Code"] = `# Give the interviewee examples of how your code is used\nunique_function_return = your_code_library.UniqueMethod(342, "yes")`;
-          name_to_body["Allowed Imports"] = `Allowed Imports:<br />
-          numpy<br />pandas<br />scipy<br /><br />Imports Not Allowed:<br />csv<br />os<br />logging`;
+          name_to_body["Example Code"] = `# Give the interviewee examples of how your code is used\nfunction_return = your_code_library.UniqueMethod(342, "yes")`;
+          name_to_body["Allowed Imports"] = `<u><b>Allowed Imports:</b></u><br /><code>
+          numpy<br />pandas<br />scipy<br /><br /></code><u><b>Imports Not Allowed:</b></u><code><br />csv<br />os<br />logging</code>`;
         }
 
         // calling of functions

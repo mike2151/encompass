@@ -170,8 +170,11 @@ form.steps({
     enableFinishButton: false,
     onStepChanging: function (event, currentIndex, newIndex)
     {
-        form.validate().settings.ignore = ":disabled,:hidden";
-        return form.valid();
+        if (newIndex > currentIndex) {
+            form.validate().settings.ignore = ":disabled,:hidden";
+            return form.valid();
+        }
+        return true;
     },
     onFinishing: function (event, currentIndex)
     {

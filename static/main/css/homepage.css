@@ -254,19 +254,20 @@ a:hover {
 /* EDITOR CSS */
 
 .editor-holder-one {
-  margin-top: 19vh;
+  margin-top: 5vh;
   float:right; 
 }
 .editor-holder-two {
-  margin-top: 19vh;
+  margin-top: 5vh;
   float:left; 
 }
 
 .actual-editor {
-  height: 60vh; 
+  height: 85vh; 
   width: 100%;
   border: 1px solid #6c5ce7;
   padding: 1em;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .example-answer-section {

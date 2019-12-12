@@ -197,11 +197,11 @@ class QuestionAnswerView(View):
                 code_base_allowed = "Provided Code Base Files You Can Import:<br /> " + code_base_files_str + "<br><br>"
                 if len(code_base_files) == 0:
                     code_base_allowed = ""
-                allowed_imports = "Allowed Imports: <br><br>All Python standard libraries are allowed except for the ones detailed in the banned section.<br><br>" + code_base_allowed + external_allowed_imports
+                allowed_imports = "<u><b>Allowed Imports:</b></u> <br><br>All Python standard libraries are allowed except for the ones detailed in the banned section.<br><br>" + code_base_allowed + external_allowed_imports
 
                 not_allowed_imports = str(question.base_question.banned_imports).replace(",", "<br />")
                 network_banned =  "<b>Note that this question has disabled network access so any network related code will fail.</b><br><br>" if not question.base_question.network_enabled else "" 
-                not_allowed_imports = "<br />Imports Not Allowed: <br><br>" + network_banned + "<code>" + not_allowed_imports + "</code>" if len(not_allowed_imports) > 0 else ""
+                not_allowed_imports = "<br /><u><b>Imports Not Allowed:</b></u> <br><br>" + network_banned + "<code>" + not_allowed_imports + "</code>" if len(not_allowed_imports) > 0 else ""
                 if len(not_allowed_imports) == 0:
                     allowed_imports = allowed_imports.replace("except for the ones detailed in the banned section.", "")
                 imports_body = allowed_imports + "<br />" + not_allowed_imports
