@@ -47,13 +47,13 @@
 }
 
 .base_navbar {
-    background: #F8F8F8; 
-    max-height: 5vh;
+    background: rgb(240, 240, 240); 
+    max-height: 7vh;
     width: 100vw;
 }
 
 .navbar-collapse {
-    background: #F8F8F8;
+    background: rgb(240, 240, 240);
     padding-left: 3vw;
     padding-right: 3vw;
 }

@@ -1,5 +1,5 @@
 body {
-    background: #FFF;
+    background: #00323f;
     overflow-x: hidden;
 }
 
@@ -11,6 +11,11 @@ select {
     width: 0px; 
     background: transparent; 
 }
+
+.gutter {background-color: transparent;background-repeat: no-repeat;background-position: 50%;}
+.gutter.gutter-horizontal {cursor: col-resize;background-image:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg=='); }
+.gutter.gutter-vertical {cursor: row-resize;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII='); }
+.split.split-horizontal, .gutter.gutter-horizontal { height: 100%;float: left;}
 
 .main_container {
     margin-top: 6vh;
@@ -71,15 +76,15 @@ select {
     margin-bottom: 2vh;
 }
 
-.test-case-header { 
+#test_case_title { 
     text-align: center;
-    color: #6c5ce7;
+    color: #FFF;
     font-size: 2.5em;
 }
 
 .test-case-description {
     text-align: center;
-    color: #000;
+    color: #FFF;
     font-size: 1.4em;
 }
 
@@ -104,17 +109,10 @@ select {
     border: 1px solid #FFF !important;
 }
 
-.top-row-right {
-    white-space: nowrap;
-    float: right;
-}
-.top-row-right * {
-    display: inline;
-}
-
 .top-row-left {
-    float: left;
-    margin-left: 1vw;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
     margin-bottom: 1vh;
 }
 .top-row-left * {
@@ -188,10 +186,14 @@ select {
 }
 
 .editor-section {
-    background-color: #DCDCDC; 
     max-width: 100%; 
     margin-top: 1vh;
 } 
+
+.editors {
+    display: flex;
+    flex-direction: row;
+}
 
 .actual-editor {
     height: 70vh; 
@@ -221,28 +223,9 @@ select {
 }
 
 .or-upload {
-    color: #000;
+    color: #FFF;
     font-size: 1.3em;
 }
-
-.toggle-button {
-    background: #FFF;
-    color: rgb(141, 141, 255);
-    padding-top: .27em;
-    padding-bottom: .27em;
-    margin-top: -.4vh;
-}
-
-.toggle-button:hover {
-    background: #FFF;
-    color: rgb(141, 141, 255);
-}
-
-.toggle-button:active:focus {
-    background: #FFF !important;
-    color: rgb(141, 141, 255) !important;
-}
-
 
 .theme-name {
     color: #000;
@@ -253,11 +236,6 @@ select {
 
 #theme-site {
     font-size: .7em;
-}
-
-.file-name {
-    color: #000;
-    font-size: 1.3em;
 }
 
 .time-section {
@@ -278,13 +256,6 @@ select {
     color: #6c5ce7;
 }
 
-.editor_options-left {
-    margin-left: 1vw;
-}
-
-.editor_options-right {
-    margin-left: 1vw;
-}
 
 input[type='file']{
     color:#6c5ce7;

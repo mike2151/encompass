@@ -200,7 +200,8 @@ class QuestionAnswerView(View):
                 allowed_imports = "Allowed Imports: <br><br>All Python standard libraries are allowed except for the ones detailed in the banned section.<br><br>" + code_base_allowed + external_allowed_imports
 
                 not_allowed_imports = str(question.base_question.banned_imports).replace(",", "<br />")
-                not_allowed_imports = "<br />Imports Not Allowed: <br /><br><code>" + not_allowed_imports + "</code>" if len(not_allowed_imports) > 0 else ""
+                network_banned =  "<b>Note that this question has disabled network access so any network related code will fail.</b><br><br>" if not question.base_question.network_enabled else "" 
+                not_allowed_imports = "<br />Imports Not Allowed: <br><br>" + network_banned + "<code>" + not_allowed_imports + "</code>" if len(not_allowed_imports) > 0 else ""
                 if len(not_allowed_imports) == 0:
                     allowed_imports = allowed_imports.replace("except for the ones detailed in the banned section.", "")
                 imports_body = allowed_imports + "<br />" + not_allowed_imports
