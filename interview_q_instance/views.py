@@ -46,7 +46,7 @@ class UserTestCaseView(View):
         public_test_results = {}
         if len(test_case_body) > 0:
             question_instance = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
-            if question_instance.interviewee_email == request.user.email:
+            if (question_instance.base_question.is_open and question_instance.is_anon_user) or (question_instance.interviewee_email == request.user.email):
                 test_passed, test_results, test_visability = create_and_run_submission(request, question_instance.base_question, question_instance, False, test_case_body)
 
                 for k,v in test_passed.items():
@@ -82,7 +82,7 @@ class QuestionAnswerView(View):
         question = InterviewQuestionInstance.objects.get(pk=self.kwargs.get('pk'))
         if question.base_question.is_disabled:
             return render(request, "disabled_question.html", {})
-        if request.user.is_authenticated and question.interviewee_email == request.user.email:
+        if (request.user.is_authenticated and question.interviewee_email == request.user.email) or (question.base_question.is_open and question.is_anon_user):
             if question.has_completed and (not question.base_question.is_open):
                 return HttpResponseRedirect("/questions/answer")
             files_to_work_on = StarterCode.objects.filter(interview_question=question.base_question)
@@ -225,7 +225,9 @@ class QuestionAnswerView(View):
                 "expiration_time": expiration_time_in_seconds,
                 'has_expiration': has_expiration,
                 "live_interview_id": question.live_interview_id,
-                "is_observer": False
+                "is_observer": False,
+                "is_anon_user": question.is_anon_user,
+                "is_open": question.base_question.is_open
                 })
         return render(request, "no_auth.html", {})
 
@@ -265,7 +267,7 @@ class QuestionAnswerView(View):
                     name_of_question = question_instance.base_question.name
                     name_of_user = request.user.first_name + request.user.last_name
                     results_url = get_current_site(request) + "/results/submissions/" + str(submission_result.pk)
-                    if not question_instance.base_question.is_open:
+                    if not question_instance.base_question.is_open and not question_instance.is_anon_user:
                         mail_subject = "An Interview Question Has Been Submitted"
                         message = "Hello ,\n\n {0} has submitted {1}. You can view the submission here: {2}. \n\n Best, \n The Encompass Team".format(name_of_user, name_of_question, results_url)
                         email_obj = EmailMessage(
@@ -308,7 +310,7 @@ class QuestionObserveView(View):
 
                 api_methods = ""
                 api = InterviewAPI.objects.filter(interview_question=question.base_question).first()
-                api_description  
+                api_description  = ""
                 if api is not None:
                     api_description = api.description
                     api_methods_objs = MethodSignature.objects.filter(interview_question_api=api)
@@ -410,6 +412,8 @@ class QuestionObserveView(View):
                     "expiration_time": expiration_time_in_seconds,
                     'has_expiration': has_expiration,
                     "live_interview_id": question.live_interview_id,
-                    "is_observer": True
+                    "is_observer": True,
+                    "is_anon_user": question.is_anon_user,
+                    "is_open": question.base_question.is_open
                     })
         return render(request, "no_auth.html", {})

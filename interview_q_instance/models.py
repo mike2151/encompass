@@ -20,7 +20,9 @@ def make_pk():
 class InterviewQuestionInstance(models.Model):
     base_question = models.ForeignKey('interview_q.InterviewQuestion', on_delete=models.CASCADE)
     submission_result = models.ForeignKey(SubmissionResult, on_delete=models.CASCADE, null=True)
-    interviewee = models.ForeignKey(SiteUser, on_delete=models.CASCADE, null=True)
+    interviewee = models.ForeignKey(SiteUser, on_delete=models.CASCADE, null=True),
+    is_anon_user = models.BooleanField(default=False)
+    ip_addr = models.CharField(max_length=128, default="")
     interviewee_email = models.CharField(max_length=128)
     creator_email = models.CharField(max_length=128)
     has_completed = models.BooleanField(default=False)
@@ -46,7 +48,8 @@ class InterviewQuestionInstance(models.Model):
     def delete_folder(self):
         base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(self.base_question.pk))
         instance_question_dir = os.path.join(base_question_dir, 'instances/{0}'.format(self.pk))
-        shutil.rmtree(instance_question_dir)
+        if os.path.exists(instance_question_dir):
+            shutil.rmtree(instance_question_dir)
 
     def delete_all_but_submission_files(self):
         base_question_dir = os.path.join(settings.MEDIA_ROOT, '{0}'.format(self.base_question.pk))

@@ -18,7 +18,8 @@ class Command(BaseCommand):
             # disable questions
             user_questions = InterviewQuestion.objects.filter(creator=expired_user)
             for question in user_questions:
-                question.is_disabled = True
-                question.save()
+                if not question.is_open:
+                    question.is_disabled = True
+                    question.save()
             
 

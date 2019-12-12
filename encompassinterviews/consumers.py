@@ -10,7 +10,7 @@ class InterviewConsumer(AsyncWebsocketConsumer):
         self.interview_session_name = 'interview_' + str(self.instance_id) + "_" + str(self.live_interview_id)
 
         connecting_user = self.scope["user"]
-        if not connecting_user.is_authenticated:
+        if not connecting_user or not connecting_user.is_authenticated:
             self.close()
 
         connecting_user_email = connecting_user.email

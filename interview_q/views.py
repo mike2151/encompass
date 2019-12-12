@@ -611,9 +611,18 @@ class CreateQuestionInstanceView(View):
 
 
 class CreateOpenQuestionInstanceView(View):
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
     def get(self, request,  *args, **kwargs):
         if request.user.is_authenticated:
             user_email = self.request.user.email
+            interviewee = None
             try:
                 interviewee = SiteUser.objects.get(email=user_email)
             except SiteUser.DoesNotExist:
@@ -638,7 +647,30 @@ class CreateOpenQuestionInstanceView(View):
                 question_instance.save()
             return HttpResponseRedirect("/questions/answer/" + str(question_instance.id) + "/")
         else:
-             return HttpResponseRedirect("/users/login/")
+            base_question = InterviewQuestion.objects.get(display_id=kwargs['pk'])
+            if base_question.is_open:
+                question_instance = None
+                curr_ip_addr = self.get_client_ip(request)
+                if len(curr_ip_addr) > 0:
+                    user_question_instance = InterviewQuestionInstance.objects.filter(base_question=base_question, ip_addr=curr_ip_addr, creator_email = base_question.creator.email,)
+                    if len(user_question_instance) > 0:
+                        if user_question_instance[0].has_completed:
+                            user_question_instance[0].delete_folder()
+                            user_question_instance[0].delete()
+                            question_instance = InterviewQuestionInstance(interviewee_email="", base_question=base_question, creator_email = base_question.creator.email,  start_time=datetime.now(), is_anon_user=True, ip_addr=curr_ip_addr)
+                            question_instance.save()
+                        else:    
+                            question_instance = user_question_instance[0]
+                    else:
+                        question_instance = InterviewQuestionInstance(interviewee_email="", base_question=base_question, creator_email = base_question.creator.email,  start_time=datetime.now(), is_anon_user=True, ip_addr=curr_ip_addr)
+                        question_instance.save()
+                else:
+                    # empty ip
+                    question_instance = InterviewQuestionInstance(interviewee_email="", base_question=base_question, creator_email = base_question.creator.email,  start_time=datetime.now(), is_anon_user=True)
+                    question_instance.save()
+                return HttpResponseRedirect("/questions/answer/" + str(question_instance.id) + "/")    
+            else:
+                return HttpResponseRedirect("/users/login/")
 
 
 class ValidateQuestionView(View):

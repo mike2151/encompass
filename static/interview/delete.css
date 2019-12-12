@@ -1,0 +1,35 @@
+body {
+    background-image: url(/static/images/example_background.png);
+    background-repeat: repeat
+  }
+
+  .page-container {
+    max-width: 90vw;
+    min-height: 40vh;
+    margin-top: 10vh;
+    background: #FFF;
+    border-radius: 10px;
+}
+
+.main-section {
+    color: #000;
+    text-align: center; 
+    position: fixed; 
+    top: 30%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+}
+
+@media only screen and (max-width: 600px) {
+
+    .page-container {
+        min-height: 70vh;
+        margin-top: 20vh;
+    }
+    .title {
+        font-size: 2em;
+    }
+    .main-section {
+        top: 50%;
+    }
+}

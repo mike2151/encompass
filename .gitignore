@@ -91,7 +91,6 @@ db.sqlite3
 code_files/*
 
 staticfiles
-static
 
 logfile*
 
