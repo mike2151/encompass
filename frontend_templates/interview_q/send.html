@@ -21,7 +21,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #FFF;
+    background-color: rgb(236, 236, 236);;
     -webkit-transition: .4s;
     transition: .4s;
     }
@@ -109,9 +109,10 @@
     <form class="form-signin" method="post">
       {% csrf_token %}
       
-      <h1 class="h3 mb-3 font-weight-normal page-title">Send {{question.name}}</h1>
+      <h1 class="page-title">Send {{question.name}}</h1>
       <hr />
-      <input type="email" id="email" name="email" class="form-control" placeholder="Interviewee Email address" required autofocus><br />
+      <label for="start_date">Interviewee Email Address</label>
+      <input type="email" id="email" name="email" class="form-control" placeholder="Interviewee Email Address" required autofocus><br />
       <label for="start_date">Time When Interviewee Can Start Question:</label>
       <input class="form-control" type="datetime-local" name="start_date" id="start_date">
       <label for="start_time_tz">Timezone For Interviewee:</label>
@@ -149,7 +150,7 @@
           </div>
         </label>
       <br/><br/>
-      <button class="btn btn-lg btn-primary btn-block form-block" type="submit">Send Interview Question</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Send Interview Question</button>
     </form>
 </div>
 </center>

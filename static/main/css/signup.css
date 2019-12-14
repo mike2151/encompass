@@ -1,6 +1,6 @@
 body {
-    background-image: url(/static/images/background_tile.png);
-    background-repeat: repeat
+    background-image: url(/static/images/example_background.png);
+    background-repeat: repeat;
 }
 
 ::-webkit-scrollbar {
@@ -37,15 +37,20 @@ body {
 
 
 .form-signin {
-    background: #C4BFFF;
+    background: #FFF;
     padding: 3em;
     border-radius: 10px;
 }
 
 .page-title {
     color: #000;
-    font-size: 2em;
-    margin-bottom: 4vh !important;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 2px solid #FEBC4E;
+    max-width: 45%;
+    font-size: 2.3em;
+    margin-bottom: 2vh;
 }
 
 .footer-text {
@@ -67,16 +72,17 @@ body {
 
 .form-body {
     padding-top: 10vh; 
-    max-width: 35vw;
+    max-width: 45vw;
     padding-bottom: 10vh;
 }
 
 label {
-    font-size: 1.1em;
+    font-size: 1.2em;
+    margin-top: 1vh;
 }
 
 .signing-up {
-    font-size: .9em;
+    font-size: 1.2em;
 }
 
 @media only screen and (max-width: 900px) {

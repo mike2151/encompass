@@ -11,7 +11,7 @@
     <form class="form-signin" method="post">
       {% csrf_token %}
       
-      <h1 class="h3 mb-3 font-weight-normal">YOUR ACCOUNT</h1>
+      <h1 class="page-title">YOUR ACCOUNT</h1>
       <div class="form-group">
         <label for="first_name">First Name</label>
         <input type="text" id="first_name" name="first_name" class="form-control" value="{{ user.first_name }}"><br />
