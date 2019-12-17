@@ -62,6 +62,15 @@ body {
     max-width: 30vw;
 }
 
+#payment_form {
+	width: 70%
+}
+
+#plan_info {
+	width: 80%;
+	font-size: 1.2em;
+}
+
 /* ======================== */
 /*   Pricing Comparison Table   	*/
 /* ========================	*/
@@ -461,6 +470,162 @@ body {
 .page-message {
 	max-width: 50vw;
 }
+
+.renew-btn {
+	width: 50%;
+	margin-top: 1vh;
+}
+
+
+/**
+** PAYMENT FORM
+**/
+  
+  .card-payment * {
+	font-family: Inter UI, Open Sans, Segoe UI, sans-serif;
+	font-size: 16px;
+	font-weight: 500;
+  }
+  
+  .card-payment form {
+	max-width: 496px !important;
+	padding: 0 15px;
+  }
+  
+  .card-payment form > * + * {
+	margin-top: 20px;
+  }
+  
+  .card-payment .container {
+	background-color: #fff;
+	box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+	border-radius: 4px;
+	padding: 3px;
+  }
+  
+  .card-payment fieldset {
+	border-style: none;
+	padding: 5px;
+	margin-left: -5px;
+	margin-right: -5px;
+	background: rgba(18, 91, 152, 0.05);
+	border-radius: 8px;
+  }
+  
+  .card-payment fieldset legend {
+	float: left;
+	width: 100%;
+	text-align: center;
+	font-size: 1.2em;
+	color: #8898aa;
+	padding: 3px 10px 7px;
+  }
+  
+  .card-payment .card-only {
+	display: block;
+  }
+  .card-payment .payment-request-available {
+	display: none;
+  }
+  
+  .card-payment fieldset legend + * {
+	clear: both;
+  }
+  
+  .card-payment input, .card-payment button {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	outline: none;
+	border-style: none;
+	color: #fff;
+  }
+  
+  .card-payment input:-webkit-autofill {
+	transition: background-color 100000000s;
+	-webkit-animation: 1ms void-animation-out;
+  }
+  
+  .card-payment #example-card {
+	padding: 10px;
+	margin-bottom: 2px;
+  }
+  
+  .card-payment input {
+	-webkit-animation: 1ms void-animation-out;
+  }
+  
+  .card-payment input::-webkit-input-placeholder {
+	color: #9bacc8;
+  }
+  
+  .card-payment input::-moz-placeholder {
+	color: #9bacc8;
+  }
+  
+  .card-payment input:-ms-input-placeholder {
+	color: #9bacc8;
+  }
+  
+  .card-payment button {
+	display: block;
+	width: 100%;
+	height: 37px;
+	background-color: #6c5ce7;
+	border-radius: 2px;
+	color: #fff;
+	cursor: pointer;
+  }
+  
+  .card-payment button:active {
+	background-color: #FFF;
+	color: #6c5ce7;
+  }
+
+  .error {
+	  margin-top: 2vh;
+  }
+  
+  .card-payment .error svg .base {
+	fill: #e25950;
+  }
+  
+  .card-payment .error svg .glyph {
+	fill: #f6f9fc;
+  }
+  
+  .card-payment .error .message {
+	color: #e25950;
+	font-size: 1.1em;
+  }
+
+  .success {
+	  margin-top: 2vh;
+  }
+  
+  .card-payment .success .icon .border {
+	stroke: #6c5ce7;
+  }
+  
+  .card-payment .success .icon .checkmark {
+	stroke: #6c5ce7;
+  }
+  
+  .card-payment .success .title {
+	margin-top: 1vh;
+	color: #252525;
+	font-size: 1.3em;
+  }
+  
+  .card-payment .success .message {
+	color: #474747;
+	margin-top: 1vh;
+	font-size: 1.1em;
+  }
+  
+  .card-payment .success .reset path {
+	fill: #6c5ce7;
+  }
 
 @media only screen and (max-width: 600px) {
     .page-title {

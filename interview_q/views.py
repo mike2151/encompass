@@ -234,8 +234,9 @@ class DeleteQuestionView(View):
         user_questions = InterviewQuestion.objects.filter(creator=user)[:num_questions_reactivate]
         if len(user_questions) > 0:
             for user_question in user_questions:
-                user_question.is_disabled = False
-                user_question.save()
+                if user_question.is_disabled:
+                    user_question.is_disabled = False
+                    user_question.save()
     template_name = 'interview_q/delete.html'
     def get(self, request, *args, **kwargs):
         question = None

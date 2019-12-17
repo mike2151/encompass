@@ -12,10 +12,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
 from datetime import datetime, timedelta, timezone
-from .plans import get_paid_plans, get_plan_by_price, get_max_questions
+from .plans import get_paid_plans, get_plan_by_price, get_max_questions, get_num_questions_plans, get_plan_by_num_questions
 from django.conf import settings 
 import math
+import json
 from interview_q.models import InterviewQuestion
+from django.http import JsonResponse
 
 import stripe
 
@@ -140,19 +142,21 @@ class EnrollView(View):
         user_questions = InterviewQuestion.objects.filter(creator=user)[:num_questions_reactivate]
         if len(user_questions) > 0:
             for user_question in user_questions:
-                user_question.is_disabled = False
-                user_question.save()
+                if user_question.is_disabled:
+                    user_question.is_disabled = False
+                    user_question.save()
         
     template_name = 'registration/enroll.html'   
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             plans = get_paid_plans()
             col_length = math.floor(12.0 / len(plans))
-            is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
+            is_active_member = request.user.subscription is not None
+            if is_active_member:
+                is_active_member = request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
             return render(request, self.template_name, {
                 "plans": plans, 
                 "col_length": col_length,
-                "key": settings.STRIPE_PUBLISHABLE_KEY,
                 "is_active_member": is_active_member
                 })
         else:
@@ -179,7 +183,6 @@ class EnrollView(View):
                     return render(request, self.template_name, {
                         "plans": plans, 
                         "col_length": col_length,
-                        "key": settings.STRIPE_PUBLISHABLE_KEY,
                         "success": "You are successfully enrolled as a creator. Your plan type is " + str(subscription.plan_type),
                         "is_active_member": True
                         })
@@ -188,116 +191,128 @@ class EnrollView(View):
                     return render(request, self.template_name, {
                         "plans": plans, 
                         "col_length": col_length,
-                        "key": settings.STRIPE_PUBLISHABLE_KEY,
                         "message": "Coupon code expired or invalid",
                         "is_active_member": is_active_member
                         })
 
         return HttpResponseRedirect("/interview_questions/")
 
-def make_payment(request):
-    template_name = 'registration/enroll.html' 
+def reactivate_questions(user):
+        num_questions_reactivate = get_max_questions(user.subscription.plan_type)
+        user_questions = InterviewQuestion.objects.filter(creator=user)[:num_questions_reactivate]
+        if len(user_questions) > 0:
+            for user_question in user_questions:
+                if user_question.is_disabled:
+                    user_question.is_disabled = False
+                    user_question.save()
+
+def cancel_auto_renewal(request):
     if request.method == 'POST':
-        plans = get_paid_plans()
-        col_length = math.floor(12.0 / len(plans))
-        if not request.user.is_authenticated:
-            return render(request, template_name, {
-                        "plans": plans, 
-                        "col_length": col_length,
-                        "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "message": "You are not logged in",
-                        "is_active_member": False
-                        })
-        if ('amount' not in request.POST or 'description' not in request.POST or 'stripeToken' not in request.POST):
-            is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
-            return render(request, template_name, {
-                        "plans": plans, 
-                        "col_length": col_length,
-                        "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "message": "There was an error processing your payment",
-                        "is_active_member": is_active_member
-                        })
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        if request.user.stripe_subscription_id is not None and len(request.user.stripe_subscription_id) > 0:
+            change_obj = stripe.Subscription.modify(
+                request.user.stripe_subscription_id,
+                cancel_at_period_end=True
+            )
+            if "cancel_at_period_end" in change_obj and change_obj["cancel_at_period_end"]:
+                request.user.auto_renew = False
+                request.user.save()
+            return JsonResponse({"success": True})
+    return JsonResponse({"success": False})
 
-        stripe.api_key = settings.STRIPE_SECRET_KEY 
-        amount = request.POST['amount']
-        description = request.POST['description']
-        stripe_token = request.POST['stripeToken']
+def activate_auto_renewal(request):
+    if request.method == 'POST':
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        if request.user.stripe_subscription_id is not None and len(request.user.stripe_subscription_id) > 0:
+            change_obj = stripe.Subscription.modify(
+                request.user.stripe_subscription_id,
+                cancel_at_period_end=True
+            )
+            if "cancel_at_period_end" in change_obj and not change_obj["cancel_at_period_end"]:
+                request.user.auto_renew = True
+                request.user.save()
+            return JsonResponse({"success": True})
+    return JsonResponse({"success": False})
 
-        charge = stripe.Charge.create(
-            amount=amount,
-            currency='usd',
-            description=description,
-            source=stripe_token
+def enroll_in_membership(request):
+    if request.method == 'POST':
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        request_body_json = json.loads(request.body.decode('utf-8'))
+        payment_method = request_body_json["payment_method"] if "payment_method" in request_body_json else ""
+        num_questions = int(request_body_json["num_questions"]) if "num_questions" in request_body_json else 0
+
+        if len(payment_method) < 1:
+            return JsonResponse({"success": False, "message": "No Payment Method Provided"})
+        
+        if num_questions not in get_num_questions_plans():
+            return JsonResponse({"success": False, "message": "Plan Selected Does Not Exist"})
+
+        # process payment method - change if new 
+        if payment_method != request.user.payment_method:
+            request.user.payment_method = payment_method
+            stripe_customer_obj = stripe.Customer.create(
+                email=request.user.email,
+                payment_method=payment_method,
+                invoice_settings={
+                    'default_payment_method': payment_method,
+                },
+            )
+            request.user.customer_id = stripe_customer_obj["id"]
+            request.user.save()
+
+        # create the subscription
+        subscription = stripe.Subscription.create(
+            customer=request.user.customer_id,
+            items=[
+                {
+                'plan': 'plan_GMXujyhkuri2ZQ',
+                'quantity': num_questions,
+                },
+            ],
+            expand=['latest_invoice.payment_intent']
         )
-        if charge:
-            # edit the user and make them a member
-            plan = get_plan_by_price(float(amount)/100)
-            user = request.user
-            subscription = user.subscription
-            # see if user is currently on plan
-            now = datetime.now(timezone.utc)
-            is_on_plan = subscription.terminated_on and subscription.plan_type != 'SHY' and subscription.terminated_on > now
-            # see if on plan and changing
-            if is_on_plan and subscription.plan_type != plan:
-                # reset termination to be 31 days from now and change plan type
-                end_date = now + timedelta(days=31)
-                subscription.plan_type = plan
-                subscription.terminated_on = end_date
-                subscription.save()
-                user.save()
-                # reactivate questions if needeed
-                self.reactivate_questions(user)
-                return render(request, template_name, {
-                            "plans": plans, 
-                            "col_length": col_length,
-                            "key": settings.STRIPE_PUBLISHABLE_KEY,
-                            "success": "You are successfully enrolled as a creator. Your plan type is " + str(plan),
-                            "is_active_member": True
-                            })
-            else:
-                # see if termination day - if so then start after terminated
-                end = now
-                if is_on_plan:
-                        end = subscription.terminated_on
-                        is_on_plan = True
-                end_date = end + timedelta(days=31)
 
-                if not is_on_plan:
-                    subscription.initiated_on = now
+        # see if succeeded
+        if not subscription["status"] == "active":
+            if subscription["status"] == "incomplete":
+                return JsonResponse({"success": False, "message": "Your card was declined"})
+            return JsonResponse({"success": False, "message": "There was an error processing your card"})
+        payment_status = subscription["latest_invoice"]["payment_intent"]["status"]
+        if not (payment_status != "succeeded" or payment_status != "paid"):
+            return JsonResponse({"success": False, "message": "There was an error processing your card"})
 
-                subscription.plan_type = plan
-                subscription.terminated_on = end_date
-                subscription.save()
-                user.save()
-                # reactivate questions if needeed
-                self.reactivate_questions(user)
-                return render(request, template_name, {
-                            "plans": plans, 
-                            "col_length": col_length,
-                            "key": settings.STRIPE_PUBLISHABLE_KEY,
-                            "success": "You are successfully enrolled as a creator. Your plan type is " + str(plan),
-                            "is_active_member": True
-                            })
-        else:
-            is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
-            return render(request, template_name, {
-                        "plans": plans, 
-                        "col_length": col_length,
-                        "key": settings.STRIPE_PUBLISHABLE_KEY,
-                        "message": "There was an error processing your payment",
-                        "is_active_member": is_active_member
-                        })
+        request.user.stripe_subscription_id = subscription["id"]
+        request.user.auto_renew = True
+
+        # give the user membership
+        plan = get_plan_by_num_questions(num_questions)
+        now = datetime.now(timezone.utc)
+        end_date = now + timedelta(days=31)
+
+        user_subscription = request.user.subscription
+        user_subscription.plan_type = plan
+        user_subscription.terminated_on = end_date
+        user_subscription.save()
+        
+        request.user.save()
+
+        # reactivate questions if needeed
+        reactivate_questions(request.user)
+
+        return JsonResponse({"success": True, "message": "You have successfully purchased a creator membership for " + str(num_questions) + " questions."})
+
 
 class AccountView(View):
     template_name = 'info/account.html'   
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             terminated_time = ""
+            auto_renew = "On" if request.user.auto_renew else "Off"
             if request.user.is_from_company:
                  is_active_member = request.user.is_authenticated and request.user.subscription.plan_type != 'SHY' and request.user.subscription.terminated_on > datetime.now(timezone.utc)
                  if is_active_member:
                      terminated_time = request.user.subscription.terminated_on.strftime('%b %d, %Y, %I:%M%p') + " (UTC Timezone)"
-            return render(request, self.template_name, {"user": request.user, "terminated_time": terminated_time})
+            return render(request, self.template_name, {"user": request.user, "terminated_time": terminated_time, "auto_renew": auto_renew})
         return HttpResponseRedirect("/")
 
     def post(self, request,  *args, **kwargs):

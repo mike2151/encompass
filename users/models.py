@@ -16,6 +16,12 @@ class SiteUser(AbstractUser):
     user_role = models.CharField(max_length=256, null=True, blank=True)
 
     subscription = models.ForeignKey('Subscription', on_delete=models.SET_NULL, null=True)
+    
+    # stripe
+    payment_method = models.CharField(max_length=256, null=True, blank=True)
+    customer_id = models.CharField(max_length=256, null=True, blank=True)
+    stripe_subscription_id = models.CharField(max_length=256, null=True, blank=True)
+    auto_renew = models.BooleanField(default=False)
 
     num_questions_made = models.IntegerField(default=0)
 
