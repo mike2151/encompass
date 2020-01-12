@@ -31,7 +31,7 @@ class InterviewQuestion(models.Model):
     banned_imports = models.TextField(null=True, blank=True)
 
     id = models.BigIntegerField(primary_key=True, default=make_pk)
-    display_id = models.BigIntegerField(default=make_pk, unique=True)
+    display_id = models.BigIntegerField(default=make_pk, unique=True, db_index=True)
     
     is_open = models.BooleanField(default=False)
 
